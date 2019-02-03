@@ -252,3 +252,24 @@ Integer.toString(num);
 ```
 - <span style="background-color: yellow;">Difference between int and Interger???</span>
 - `result += s.charAt(i)-'A'+1;`
+- HashMap `map.getOrDefault(n, default)`
+- 二维List的声明方法 `List<List<Integer>> = new ArrayList<List<Integer>>();`
+- List<List<Integer>> allrows `allrows.add(new ArrayList<Integer>(row))` [reference](https://leetcode.com/problems/pascals-triangle/discuss/38141/My-concise-solution-in-Java)
+
+从[LeetCode 118](https://leetcode.com/problems/pascals-triangle/)中学习 二维数组的声明，`list.add(0,1)`, `list.set(i, j)`, `allrows.add(new ArrayList<Integer>(row))`
+```java
+class Solution {
+    public List<List<Integer>> generate(int numRows) {
+        List<List<Integer>> output = new ArrayList<List<Integer>>();
+        List<Integer> row = new ArrayList<Integer>();
+        for(int i=0; i<numRows; i++){
+            row.add(0, 1);
+            for(int j=1; j<row.size()-1; j++){
+                row.set(j, row.get(j)+row.get(j+1));
+            }
+            output.add(new ArrayList<Integer>(row));
+        }
+        return output;
+    }
+}
+```

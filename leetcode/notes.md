@@ -285,8 +285,179 @@ class Solution {
 }
 ```
 
+### 121. Best Time to Buy and Sell Stock
+- [Link](https://leetcode.com/problems/best-time-to-buy-and-sell-stock/)
+- Tags: Array, Dynamic Programming
+- Stars: 2
 
+#### my original solution 20190201
+不需要数组，保存当前的maxProfit和minPrice
+```java
+class Solution {
+    public int maxProfit(int[] prices) {
+        if(prices == null || prices.length == 0)
+            return 0;
+        int minPrice = prices[0];
+        int maxProfit = 0;
+        for(int i=1; i<prices.length; i++){
+            if(minPrice > prices[i])
+                minPrice = prices[i];
+            maxProfit = Math.max(maxProfit, prices[i] - minPrice);
+        }
+        return maxProfit;
+    }
+}
+```
 
+#### DP
+max subarray problem, using Kadane's Algorithm.
+```java
+class Solution {
+    public int maxProfit(int[] prices) {
+        if(prices.length == 0)
+            return 0;
+        int[] dp = new int[prices.length];
+        // dp[i] means maxProfit we can get in the contiguous subarray ended up with prices[i]
+        for(int i=1; i<prices.length; i++){
+            dp[i] = Math.max(0, dp[i-1] + prices[i] - prices[i-1]);
+        }
+        int maxProfit = 0;
+        for(int i=0; i<dp.length; i++)
+            if(maxProfit < dp[i])
+                maxProfit = dp[i];
+        return maxProfit;
+    }
+}
+```
+The space of the algorithm above can be further optimized:
+```java
+class Solution {
+    public int maxProfit(int[] prices) {
+        if(prices.length == 0)
+            return 0;
+        int maxProfit = 0, dp = 0;
+        for(int i=1; i<prices.length; i++){
+            dp = Math.max(0, dp + prices[i] - prices[i-1]);
+            maxProfit = Math.max(maxProfit, dp);
+        }
+        return maxProfit;
+    }
+}
+```
+Notice that we only care about differences of the prices array.
+
+### 21. Merge Two Sorted Lists
+- [Link](https://leetcode.com/problems/merge-two-sorted-lists/)
+- Tags: Linked List
+- Stars: 1
+
+#### iterative (my soluton)
+```java
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        ListNode root = new ListNode(0), curr = root;
+        while(l1 != null && l2 != null){
+            if(l1.val < l2.val){
+                curr.next = l1;
+                l1 = l1.next;
+            }
+            else {
+                curr.next = l2;
+                l2 = l2.next;
+            }
+            curr = curr.next;
+        }
+        curr.next = l1!=null ? l1 : l2;
+        return root.next;
+    }
+}
+```
+
+#### recursive 
+```java
+class Solution {
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        if(l1 == null) return l2;
+        if(l2 == null) return l1;
+        ListNode root;
+        if(l1.val < l2.val){
+            root = l1;
+            root.next = mergeTwoLists(l1.next, l2);
+        }
+        else {
+            root = l2;
+            root.next = mergeTwoLists(l1, l2.next);
+        }
+        return root;
+    }
+}
+```
+
+### 202. Happy Number
+- [Link](https://leetcode.com/problems/happy-number/)
+- Tags: Hash Table, Math
+- Stars: 2
+
+#### HashSet
+```java
+class Solution {
+    public boolean isHappy(int n) {
+        HashSet<Integer> st = new HashSet<Integer>();
+        while(!st.contains(n)){
+            if(n == 1)
+                return true;
+            st.add(n);
+            String str = Integer.toString(n);
+            n = 0;
+            for(int i=0; i<str.length(); i++){
+                int a = str.charAt(i) - '0';
+                n += a*a;
+            }
+        }
+        return false;
+    }
+}
+```
+
+#### Floyd Cycle detection algorithm
+The best video to learn about Floyd Cycle detection : [https://www.youtube.com/watch?v=LUm2ABqAs1w](https://www.youtube.com/watch?v=LUm2ABqAs1w)
+
+```java
+class Solution {
+    public boolean isHappy(int n) {
+        int slow=n, fast=n;
+        do {
+            slow = digitsSquareSum(slow);
+            fast = digitsSquareSum(fast);
+            fast = digitsSquareSum(fast);
+        }
+        while(slow != fast);
+        if(slow == 1) return true;
+        return false;
+    }
+    
+    private int digitsSquareSum(int n){
+        int result = 0;
+        while(n>0){
+            int digit = (n%10);
+            result += digit * digit;
+            n /= 10;
+        }
+        return result;
+    }
+}
+```
+
+#### Math
+[Reference](https://leetcode.com/problems/happy-number/discuss/56918/All-you-need-to-know-about-testing-happy-number!)
 
 
 

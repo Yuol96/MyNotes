@@ -1344,4 +1344,23 @@ Example of inheriting from an interface
 </pre></div></li>
 <li><span style="background-color: yellow;">Difference between int and Interger???</span></li>
 <li><code>result += s.charAt(i)-'A'+1;</code></li>
-</ul></article></body></html>
+<li>HashMap <code>map.getOrDefault(n, default)</code></li>
+<li>二维List的声明方法 <code>List&lt;List&lt;Integer&gt;&gt; = new ArrayList&lt;List&lt;Integer&gt;&gt;();</code></li>
+<li>List<List<Integer>&gt; allrows <code>allrows.add(new ArrayList&lt;Integer&gt;(row))</code> <a href="https://leetcode.com/problems/pascals-triangle/discuss/38141/My-concise-solution-in-Java">reference</a></li>
+</ul>
+<p>从<a href="https://leetcode.com/problems/pascals-triangle/">LeetCode 118</a>中学习 二维数组的声明，<code>list.add(0,1)</code>, <code>list.set(i, j)</code>, <code>allrows.add(new ArrayList&lt;Integer&gt;(row))</code>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="nf">generate</span><span class="o">(</span><span class="kt">int</span> <span class="n">numRows</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="n">output</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;();</span>
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">row</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;();</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">numRows</span><span class="o">;</span> <span class="n">i</span><span class="o">++){</span>
+            <span class="n">row</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">);</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">row</span><span class="o">.</span><span class="na">size</span><span class="o">()-</span><span class="mi">1</span><span class="o">;</span> <span class="n">j</span><span class="o">++){</span>
+                <span class="n">row</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">j</span><span class="o">,</span> <span class="n">row</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">j</span><span class="o">)+</span><span class="n">row</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="o">));</span>
+            <span class="o">}</span>
+            <span class="n">output</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;(</span><span class="n">row</span><span class="o">));</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">output</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div></p></article></body></html>
