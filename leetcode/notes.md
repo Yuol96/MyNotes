@@ -1,4 +1,5 @@
 [TOC]
+# LeetCode Questions
 
 ## Top Interview Questions
 
@@ -456,8 +457,35 @@ class Solution {
 }
 ```
 
+### 326. Power of Three
+- [Link](https://leetcode.com/problems/power-of-three/)
+- Tags: Math
+- Stars: 3
+
 #### Math
-[Reference](https://leetcode.com/problems/happy-number/discuss/56918/All-you-need-to-know-about-testing-happy-number!)
+```java
+class Solution {
+    public boolean isPowerOfThree(int n) {
+        // 1162261467 = 3**19 < 2**31-1 < 3**20
+        return (n>0 && 1162261467%n == 0);
+    }
+}
+```
+
+# TODO List
+
+## recursive to non-recursive
+
+- 101. Symmetric Tree
+
+## Math
+
+- 202. Happy Number
+https://leetcode.com/problems/happy-number/discuss/56918/All-you-need-to-know-about-testing-happy-number!
+
+## Bit Manipulation
+
+- (n-1)在位运算中的作用？
 
 
 
