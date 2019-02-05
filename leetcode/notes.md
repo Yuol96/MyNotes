@@ -472,6 +472,111 @@ class Solution {
 }
 ```
 
+### 198. House Robber
+- [Link](https://leetcode.com/problems/house-robber/)
+- Tags: Dynamic Programming
+- Stars: 1
+
+#### DP iterative
+```java
+class Solution {
+    public int rob(int[] nums) {
+        if(nums.length == 0)
+            return 0;
+        if(nums.length == 1)
+            return nums[0];
+        int a = nums[0], b = nums[1];
+        if(nums.length == 2)
+            return Math.max(a, b);
+        int c = a + nums[2];
+        for(int i=3; i<nums.length; i++){
+            int temp = Math.max(a+nums[i], b+nums[i]);
+            a = b;
+            b = c;
+            c = temp;
+        }
+        return Math.max(b, c);
+    }
+}
+```
+
+#### DP recursive
+```java
+class Solution {
+    private HashMap<Integer, Integer> map;
+    public Solution() {
+        map = new HashMap<Integer, Integer>();
+    }
+    public int rob(int[] nums) {
+        return rob(nums, nums.length-1);
+    }
+    public int rob(int[] nums, int i){
+        if(i < 0)
+            return 0;
+        if(i == 0)
+            return nums[0];
+        if(i == 1)
+            return Math.max(nums[0], nums[1]);
+        if(map.containsKey(i))
+            return map.get(i);
+        map.put(i, Math.max(rob(nums, i-1), rob(nums, i-2) + nums[i]));
+        return map.get(i);
+    }
+}
+```
+
+### 66. Plus One
+- [Link](https://leetcode.com/problems/plus-one/)
+- Tags: Array, Math
+- Stars: 1
+
+#### 数组初始化
+注意：默认初始化，数组元素相当于对象的成员变量，默认值跟成员变量的规则一样。**数字0**，布尔false，char\u0000，引用：null
+
+本题不适合把`Arrays.asList()`转化为List, `.asList`方法不适用于基本数据类型（byte,short,int,long,float,double,boolean）
+```java
+class Solution {
+    public int[] plusOne(int[] digits) {
+        for(int i=digits.length-1; i>=0; i--){
+            if(digits[i]<9){
+                digits[i]++;
+                return digits;
+            }
+            digits[i] = 0;
+        }
+        int[] ret = new int[digits.length+1];
+        ret[0] = 1;
+        return ret;
+    }
+}
+```
+
+### 1. Two Sum
+- [Link](https://leetcode.com/problems/two-sum/)
+- Tags: Array, Hash Table
+- Stars: 2
+
+#### HashMap
+```java
+class Solution {
+    HashMap<Integer, Integer> map;
+    
+    public int[] twoSum(int[] nums, int target) {
+        map = new HashMap<Integer, Integer>();
+        for(int i=0; i<nums.length; i++){
+            if(map.containsKey(target-nums[i])){
+                int[] ret = {map.get(target-nums[i]), i};
+                return ret;
+            }
+            else {
+                map.put(nums[i], i);
+            }
+        }
+        return null;
+    }
+}
+```
+
 # TODO List
 
 ## recursive to non-recursive
