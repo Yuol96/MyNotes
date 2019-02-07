@@ -706,6 +706,197 @@ class MinStack {
 }
 ```
 
+
+### 234. Palindrome Linked List
+- [Link](https://leetcode.com/problems/palindrome-linked-list/)
+- Tags: Linked List, Two Pointers
+- Stars: 1
+
+#### halve and reverse
+```java
+class Solution {
+    public boolean isPalindrome(ListNode head) {
+        if(head == null) return true;
+        
+        int count = countListNode(head);
+        ListNode mid = moveToMid(head, count);
+        if(count%2==0){
+            ListNode temp = mid.next;
+            mid.next = null;
+            mid = temp;
+        }
+        ListNode reverse = getReversedList(mid);
+        while(reverse!=null && head!=null){
+            if(reverse.val != head.val)
+                return false;
+            reverse = reverse.next;
+            head = head.next;
+        }
+        return true;
+    }
+    private int countListNode(ListNode head){
+        int count = 0;
+        while(head!=null){
+            count++;
+            head = head.next;
+        }
+        return count;
+    }
+    private ListNode moveToMid(ListNode head, int count){
+        ListNode p = head;
+        for(int i=0; i<count/2-1; i++){
+            p = p.next;
+        }
+        if(count%2==1) p = p.next;
+        return p;
+    }
+    private ListNode getReversedList(ListNode head){
+        ListNode newhead = null;
+        while(head!=null){
+            ListNode temp = head.next;
+            head.next = newhead;
+            newhead = head;
+            head = temp;
+        }
+        return newhead;
+    }
+    // private void printList(ListNode head){
+    //     while(head!=null){
+    //         System.out.printf("%d ", head.val);
+    //         head = head.next;
+    //     }
+    //     System.out.println();
+    // }
+}
+```
+
+### 14. Longest Common Prefix
+- [Link](https://leetcode.com/problems/longest-common-prefix/)
+- Tags: String
+- Stars: 1
+
+#### compare chars in each position
+```java
+class Solution {
+    public String longestCommonPrefix(String[] strs) {
+        if(strs.length==0) return "";
+        int count = 0, minLen = Integer.MAX_VALUE;
+        for(String s: strs)
+            if(minLen>s.length())
+                minLen = s.length();
+        while(count<minLen){
+            char c = strs[0].charAt(count);
+            for(int i=1; i<strs.length; i++){
+                if(strs[i].charAt(count)!=c)
+                    return strs[0].substring(0, count);
+            }
+            count++;
+        }
+        return strs[0].substring(0, count);
+    }
+}
+```
+#### String.indexOf
+```java
+class Solution {
+    public String longestCommonPrefix(String[] strs) {
+        if(strs == null || strs.length == 0)    return "";
+        String pre = strs[0];
+        int i = 1;
+        while(i < strs.length){
+            while(strs[i].indexOf(pre) != 0)
+                pre = pre.substring(0,pre.length()-1);
+            i++;
+        }
+        return pre;
+    }
+}
+```
+#### sort and compare the first and last String
+```java
+class Solution {
+    public String longestCommonPrefix(String[] strs) {
+        if(strs == null || strs.length == 0)    return "";
+        Arrays.sort(strs);
+        int count = 0;
+        String a=strs[0], b=strs[strs.length-1];
+        for(int i=0; i<a.length(); i++){
+            if(b.length()>i && b.charAt(i)==a.charAt(i))
+                count++;
+            else
+                return a.substring(0, count);
+        }
+        return a.substring(0, count);
+    }
+}
+```
+
+### 160. Intersection of Two Linked Lists
+- [Link](https://leetcode.com/problems/intersection-of-two-linked-lists/)
+- Tags: Linked List
+- Stars: 1
+
+#### turning into a loop
+We don't need to know the length of each lists. We just want to ensure that two pointers reach the intersection point at the same time. 
+```java
+public class Solution {
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        if(headA==null||headB==null)
+            return null;
+        ListNode p=headA, q=headB;
+        boolean switchA=false, switchB=false;
+        while(p!=q){
+            if(p.next!=null)
+                p = p.next;
+            else if(!switchA){
+                p = headB;
+                switchA = true;
+            }
+            else return null;
+            if(q.next!=null)
+                q = q.next;
+            else if(!switchB){
+                q = headA;
+                switchB = true;
+            }
+            else return null;
+        }
+        return p;
+    }
+}
+```
+
+#### get lengths and eliminate differences
+```java
+public class Solution {
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        int lenA = getLen(headA), lenB = getLen(headB);
+        while(lenA>lenB){
+            headA = headA.next;
+            lenA--;
+        }
+        while(lenB>lenA){
+            headB = headB.next;
+            lenB--;
+        }
+        while(headA!=headB){
+            headA = headA.next;
+            headB = headB.next;
+        }
+        return headA;
+    }
+    private int getLen(ListNode head){
+        int count = 0;
+        ListNode p = head;
+        while(p!=null){
+            p = p.next;
+            count++;
+        }
+        return count;
+    }
+}
+```
+
 # TODO List
 
 ## recursive to non-recursive

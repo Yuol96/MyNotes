@@ -1136,6 +1136,21 @@ body .markdown-body
 <li><a href="#only-use-one-stack">only use one Stack</a></li>
 </ul>
 </li>
+<li><a href="#234-palindrome-linked-list">234. Palindrome Linked List</a><ul>
+<li><a href="#halve-and-reverse">halve and reverse</a></li>
+</ul>
+</li>
+<li><a href="#14-longest-common-prefix">14. Longest Common Prefix</a><ul>
+<li><a href="#compare-chars-in-each-position">compare chars in each position</a></li>
+<li><a href="#stringindexof">String.indexOf</a></li>
+<li><a href="#sort-and-compare-the-first-and-last-string">sort and compare the first and last String</a></li>
+</ul>
+</li>
+<li><a href="#160-intersection-of-two-linked-lists">160. Intersection of Two Linked Lists</a><ul>
+<li><a href="#turning-into-a-loop">turning into a loop</a></li>
+<li><a href="#get-lengths-and-eliminate-differences">get lengths and eliminate differences</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -1825,6 +1840,194 @@ Notice that we only care about differences of the prices array.</p>
 <span class="o">}</span>
 </pre></div></li>
 </ol>
+<h3 id="234-palindrome-linked-list">234. Palindrome Linked List<a class="headerlink" href="#234-palindrome-linked-list" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/palindrome-linked-list/">Link</a></li>
+<li>Tags: Linked List, Two Pointers</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="halve-and-reverse">halve and reverse<a class="headerlink" href="#halve-and-reverse" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isPalindrome</span><span class="o">(</span><span class="n">ListNode</span> <span class="n">head</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">head</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+
+        <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="n">countListNode</span><span class="o">(</span><span class="n">head</span><span class="o">);</span>
+        <span class="n">ListNode</span> <span class="n">mid</span> <span class="o">=</span> <span class="n">moveToMid</span><span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">count</span><span class="o">);</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">count</span><span class="o">%</span><span class="mi">2</span><span class="o">==</span><span class="mi">0</span><span class="o">){</span>
+            <span class="n">ListNode</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">mid</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+            <span class="n">mid</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+            <span class="n">mid</span> <span class="o">=</span> <span class="n">temp</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">ListNode</span> <span class="n">reverse</span> <span class="o">=</span> <span class="n">getReversedList</span><span class="o">(</span><span class="n">mid</span><span class="o">);</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">reverse</span><span class="o">!=</span><span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">head</span><span class="o">!=</span><span class="kc">null</span><span class="o">){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">reverse</span><span class="o">.</span><span class="na">val</span> <span class="o">!=</span> <span class="n">head</span><span class="o">.</span><span class="na">val</span><span class="o">)</span>
+                <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+            <span class="n">reverse</span> <span class="o">=</span> <span class="n">reverse</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+            <span class="n">head</span> <span class="o">=</span> <span class="n">head</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="nf">countListNode</span><span class="o">(</span><span class="n">ListNode</span> <span class="n">head</span><span class="o">){</span>
+        <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">head</span><span class="o">!=</span><span class="kc">null</span><span class="o">){</span>
+            <span class="n">count</span><span class="o">++;</span>
+            <span class="n">head</span> <span class="o">=</span> <span class="n">head</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">count</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="n">ListNode</span> <span class="nf">moveToMid</span><span class="o">(</span><span class="n">ListNode</span> <span class="n">head</span><span class="o">,</span> <span class="kt">int</span> <span class="n">count</span><span class="o">){</span>
+        <span class="n">ListNode</span> <span class="n">p</span> <span class="o">=</span> <span class="n">head</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">count</span><span class="o">/</span><span class="mi">2</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span> <span class="n">i</span><span class="o">++){</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">count</span><span class="o">%</span><span class="mi">2</span><span class="o">==</span><span class="mi">1</span><span class="o">)</span> <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+        <span class="k">return</span> <span class="n">p</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="n">ListNode</span> <span class="nf">getReversedList</span><span class="o">(</span><span class="n">ListNode</span> <span class="n">head</span><span class="o">){</span>
+        <span class="n">ListNode</span> <span class="n">newhead</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">head</span><span class="o">!=</span><span class="kc">null</span><span class="o">){</span>
+            <span class="n">ListNode</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">head</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+            <span class="n">head</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">newhead</span><span class="o">;</span>
+            <span class="n">newhead</span> <span class="o">=</span> <span class="n">head</span><span class="o">;</span>
+            <span class="n">head</span> <span class="o">=</span> <span class="n">temp</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">newhead</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="c1">// private void printList(ListNode head){</span>
+    <span class="c1">//     while(head!=null){</span>
+    <span class="c1">//         System.out.printf(&quot;%d &quot;, head.val);</span>
+    <span class="c1">//         head = head.next;</span>
+    <span class="c1">//     }</span>
+    <span class="c1">//     System.out.println();</span>
+    <span class="c1">// }</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3 id="14-longest-common-prefix">14. Longest Common Prefix<a class="headerlink" href="#14-longest-common-prefix" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/longest-common-prefix/">Link</a></li>
+<li>Tags: String</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="compare-chars-in-each-position">compare chars in each position<a class="headerlink" href="#compare-chars-in-each-position" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">longestCommonPrefix</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">strs</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">strs</span><span class="o">.</span><span class="na">length</span><span class="o">==</span><span class="mi">0</span><span class="o">)</span> <span class="k">return</span> <span class="s">&quot;&quot;</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="o">,</span> <span class="n">minLen</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">MAX_VALUE</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="n">String</span> <span class="n">s</span><span class="o">:</span> <span class="n">strs</span><span class="o">)</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">minLen</span><span class="o">&gt;</span><span class="n">s</span><span class="o">.</span><span class="na">length</span><span class="o">())</span>
+                <span class="n">minLen</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="na">length</span><span class="o">();</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">count</span><span class="o">&lt;</span><span class="n">minLen</span><span class="o">){</span>
+            <span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="n">strs</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">charAt</span><span class="o">(</span><span class="n">count</span><span class="o">);</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">strs</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++){</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">strs</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">charAt</span><span class="o">(</span><span class="n">count</span><span class="o">)!=</span><span class="n">c</span><span class="o">)</span>
+                    <span class="k">return</span> <span class="n">strs</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">substring</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">count</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="n">count</span><span class="o">++;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">strs</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">substring</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">count</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h4 id="stringindexof">String.indexOf<a class="headerlink" href="#stringindexof" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">longestCommonPrefix</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">strs</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">strs</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">strs</span><span class="o">.</span><span class="na">length</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>    <span class="k">return</span> <span class="s">&quot;&quot;</span><span class="o">;</span>
+        <span class="n">String</span> <span class="n">pre</span> <span class="o">=</span> <span class="n">strs</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">strs</span><span class="o">.</span><span class="na">length</span><span class="o">){</span>
+            <span class="k">while</span><span class="o">(</span><span class="n">strs</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">indexOf</span><span class="o">(</span><span class="n">pre</span><span class="o">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">)</span>
+                <span class="n">pre</span> <span class="o">=</span> <span class="n">pre</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span><span class="n">pre</span><span class="o">.</span><span class="na">length</span><span class="o">()-</span><span class="mi">1</span><span class="o">);</span>
+            <span class="n">i</span><span class="o">++;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">pre</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h4 id="sort-and-compare-the-first-and-last-string">sort and compare the first and last String<a class="headerlink" href="#sort-and-compare-the-first-and-last-string" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">longestCommonPrefix</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">strs</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">strs</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">strs</span><span class="o">.</span><span class="na">length</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>    <span class="k">return</span> <span class="s">&quot;&quot;</span><span class="o">;</span>
+        <span class="n">Arrays</span><span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="n">strs</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="n">String</span> <span class="n">a</span><span class="o">=</span><span class="n">strs</span><span class="o">[</span><span class="mi">0</span><span class="o">],</span> <span class="n">b</span><span class="o">=</span><span class="n">strs</span><span class="o">[</span><span class="n">strs</span><span class="o">.</span><span class="na">length</span><span class="o">-</span><span class="mi">1</span><span class="o">];</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">a</span><span class="o">.</span><span class="na">length</span><span class="o">();</span> <span class="n">i</span><span class="o">++){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">b</span><span class="o">.</span><span class="na">length</span><span class="o">()&gt;</span><span class="n">i</span> <span class="o">&amp;&amp;</span> <span class="n">b</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">)==</span><span class="n">a</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">))</span>
+                <span class="n">count</span><span class="o">++;</span>
+            <span class="k">else</span>
+                <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">count</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">count</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3 id="160-intersection-of-two-linked-lists">160. Intersection of Two Linked Lists<a class="headerlink" href="#160-intersection-of-two-linked-lists" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/intersection-of-two-linked-lists/">Link</a></li>
+<li>Tags: Linked List</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="turning-into-a-loop">turning into a loop<a class="headerlink" href="#turning-into-a-loop" title="Permanent link"></a></h4>
+<p>We don&rsquo;t need to know the length of each lists. We just want to ensure that two pointers reach the intersection point at the same time. 
+<div class="codehilite"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">ListNode</span> <span class="nf">getIntersectionNode</span><span class="o">(</span><span class="n">ListNode</span> <span class="n">headA</span><span class="o">,</span> <span class="n">ListNode</span> <span class="n">headB</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">headA</span><span class="o">==</span><span class="kc">null</span><span class="o">||</span><span class="n">headB</span><span class="o">==</span><span class="kc">null</span><span class="o">)</span>
+            <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="n">ListNode</span> <span class="n">p</span><span class="o">=</span><span class="n">headA</span><span class="o">,</span> <span class="n">q</span><span class="o">=</span><span class="n">headB</span><span class="o">;</span>
+        <span class="kt">boolean</span> <span class="n">switchA</span><span class="o">=</span><span class="kc">false</span><span class="o">,</span> <span class="n">switchB</span><span class="o">=</span><span class="kc">false</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">p</span><span class="o">!=</span><span class="n">q</span><span class="o">){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">p</span><span class="o">.</span><span class="na">next</span><span class="o">!=</span><span class="kc">null</span><span class="o">)</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+            <span class="k">else</span> <span class="k">if</span><span class="o">(!</span><span class="n">switchA</span><span class="o">){</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="n">headB</span><span class="o">;</span>
+                <span class="n">switchA</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="k">else</span> <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">q</span><span class="o">.</span><span class="na">next</span><span class="o">!=</span><span class="kc">null</span><span class="o">)</span>
+                <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+            <span class="k">else</span> <span class="k">if</span><span class="o">(!</span><span class="n">switchB</span><span class="o">){</span>
+                <span class="n">q</span> <span class="o">=</span> <span class="n">headA</span><span class="o">;</span>
+                <span class="n">switchB</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="k">else</span> <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">p</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div></p>
+<h4 id="get-lengths-and-eliminate-differences">get lengths and eliminate differences<a class="headerlink" href="#get-lengths-and-eliminate-differences" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">ListNode</span> <span class="nf">getIntersectionNode</span><span class="o">(</span><span class="n">ListNode</span> <span class="n">headA</span><span class="o">,</span> <span class="n">ListNode</span> <span class="n">headB</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">lenA</span> <span class="o">=</span> <span class="n">getLen</span><span class="o">(</span><span class="n">headA</span><span class="o">),</span> <span class="n">lenB</span> <span class="o">=</span> <span class="n">getLen</span><span class="o">(</span><span class="n">headB</span><span class="o">);</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">lenA</span><span class="o">&gt;</span><span class="n">lenB</span><span class="o">){</span>
+            <span class="n">headA</span> <span class="o">=</span> <span class="n">headA</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+            <span class="n">lenA</span><span class="o">--;</span>
+        <span class="o">}</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">lenB</span><span class="o">&gt;</span><span class="n">lenA</span><span class="o">){</span>
+            <span class="n">headB</span> <span class="o">=</span> <span class="n">headB</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+            <span class="n">lenB</span><span class="o">--;</span>
+        <span class="o">}</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">headA</span><span class="o">!=</span><span class="n">headB</span><span class="o">){</span>
+            <span class="n">headA</span> <span class="o">=</span> <span class="n">headA</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+            <span class="n">headB</span> <span class="o">=</span> <span class="n">headB</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">headA</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="nf">getLen</span><span class="o">(</span><span class="n">ListNode</span> <span class="n">head</span><span class="o">){</span>
+        <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="n">ListNode</span> <span class="n">p</span> <span class="o">=</span> <span class="n">head</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">p</span><span class="o">!=</span><span class="kc">null</span><span class="o">){</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+            <span class="n">count</span><span class="o">++;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">count</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
 <h1 id="todo-list">TODO List<a class="headerlink" href="#todo-list" title="Permanent link"></a></h1>
 <h2 id="recursive-to-non-recursive">recursive to non-recursive<a class="headerlink" href="#recursive-to-non-recursive" title="Permanent link"></a></h2>
 <ul>
