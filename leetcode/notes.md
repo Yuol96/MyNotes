@@ -897,6 +897,80 @@ public class Solution {
 }
 ```
 
+### 28. Implement strStr()
+- [Link](https://leetcode.com/problems/implement-strstr/)
+- Tags: Two Pointers, String
+- Stars: 2
+
+#### KMP
+[原理讲解(忽略代码部分)](https://m.toutiaocdn.com/group/6578243698759303688/?iid=59744622620&app=news_article&timestamp=1549524948&group_id=6578243698759303688&tt_from=copy_link&utm_source=copy_link&utm_medium=toutiao_ios&utm_campaign=client_share)
+```java
+class Solution {
+    public int strStr(String haystack, String needle) {
+        int[] next = getNextArray(needle);
+        int i=0, j=0;
+        while(j<needle.length() && i<haystack.length()){
+            while(haystack.charAt(i)!=needle.charAt(j) && j>0){
+                j = next[j];
+            }
+            if(haystack.charAt(i)==needle.charAt(j))
+                j++;
+            i++;
+        }
+        if(j==needle.length())
+            return i-needle.length();
+        return -1;
+    }
+    private int[] getNextArray(String s){
+        int[] next = new int[s.length()];
+        for(int i=2; i<s.length(); i++){
+            int maxCommonLen = next[i-1];
+            while(maxCommonLen>0 && s.charAt(i-1) != s.charAt(maxCommonLen)){
+                maxCommonLen = next[maxCommonLen];
+            }
+            if(s.charAt(i-1) == s.charAt(maxCommonLen))
+                next[i] = maxCommonLen+1;
+        }
+        return next;
+    }
+}
+```
+
+### 190. Reverse Bits
+- [Link](https://leetcode.com/problems/reverse-bits/)
+- Tags: Bit Manipulation
+- Stars: 1
+
+#### move bit one by one
+```java
+public class Solution {
+    // you need treat n as an unsigned value
+    public int reverseBits(int n) {
+        int result = 0;
+        for(int i=0; i<32; i++){
+            result |= ((n&1)<<(31-i));
+            n = n>>>1;
+        }
+        return result;
+    }
+}
+```
+
+#### divide and conquer
+```java
+public class Solution {
+    // you need treat n as an unsigned value
+    public int reverseBits(int n) {
+        n = (n>>>16) | (n<<16);
+        n = ((n&0xFF00FF00)>>>8) | ((n&0x00FF00FF)<<8);
+        n = ((n&0xF0F0F0F0)>>>4) | ((n&0x0F0F0F0F)<<4);
+        n = ((n&0xCCCCCCCC)>>>2) | ((n&0x33333333)<<2);
+        n = ((n&0xAAAAAAAA)>>>1) | ((n&0x55555555)<<1);
+        return n;
+    }
+}
+```
+
 # TODO List
 
 ## recursive to non-recursive

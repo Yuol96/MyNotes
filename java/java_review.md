@@ -325,3 +325,8 @@ class Solution {
     }
 }
 ```
+- `Arrays.toString(int[] nums)`, `Arrays.sort(int[] nums)`
+- `str.toLowerCase()`, `Character.isLetterOrDigit(char c)`
+- [在Java中，不存在Unsigned无符号数据类型，但可以轻而易举的完成Unsigned转换。](https://blog.csdn.net/qq_26386171/article/details/54564127)
+- Java has the operator ">>>" to perform logical right shifts, but because the logical and arithmetic left-shift operations are identical, there is no "<<<" operator in Java. For those of you who are confused.
+- [Java Array、List、Set互相转化](https://blog.csdn.net/u014532901/article/details/78820124)

@@ -1151,6 +1151,15 @@ body .markdown-body
 <li><a href="#get-lengths-and-eliminate-differences">get lengths and eliminate differences</a></li>
 </ul>
 </li>
+<li><a href="#28-implement-strstr">28. Implement strStr()</a><ul>
+<li><a href="#kmp">KMP</a></li>
+</ul>
+</li>
+<li><a href="#190-reverse-bits">190. Reverse Bits</a><ul>
+<li><a href="#move-bit-one-by-one">move bit one by one</a></li>
+<li><a href="#divide-and-conquer_1">divide and conquer</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -2024,6 +2033,78 @@ Notice that we only care about differences of the prices array.</p>
             <span class="n">count</span><span class="o">++;</span>
         <span class="o">}</span>
         <span class="k">return</span> <span class="n">count</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3 id="28-implement-strstr">28. Implement strStr()<a class="headerlink" href="#28-implement-strstr" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/implement-strstr/">Link</a></li>
+<li>Tags: Two Pointers, String</li>
+<li>Stars: 2</li>
+</ul>
+<h4 id="kmp">KMP<a class="headerlink" href="#kmp" title="Permanent link"></a></h4>
+<p><a href="https://m.toutiaocdn.com/group/6578243698759303688/?iid=59744622620&amp;app=news_article&amp;timestamp=1549524948&amp;group_id=6578243698759303688&amp;tt_from=copy_link&amp;utm_source=copy_link&amp;utm_medium=toutiao_ios&amp;utm_campaign=client_share">原理讲解(忽略代码部分)</a>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">strStr</span><span class="o">(</span><span class="n">String</span> <span class="n">haystack</span><span class="o">,</span> <span class="n">String</span> <span class="n">needle</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">next</span> <span class="o">=</span> <span class="n">getNextArray</span><span class="o">(</span><span class="n">needle</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">,</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">j</span><span class="o">&lt;</span><span class="n">needle</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">haystack</span><span class="o">.</span><span class="na">length</span><span class="o">()){</span>
+            <span class="k">while</span><span class="o">(</span><span class="n">haystack</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">)!=</span><span class="n">needle</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">j</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="n">j</span><span class="o">&gt;</span><span class="mi">0</span><span class="o">){</span>
+                <span class="n">j</span> <span class="o">=</span> <span class="n">next</span><span class="o">[</span><span class="n">j</span><span class="o">];</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">haystack</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">)==</span><span class="n">needle</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">j</span><span class="o">))</span>
+                <span class="n">j</span><span class="o">++;</span>
+            <span class="n">i</span><span class="o">++;</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">j</span><span class="o">==</span><span class="n">needle</span><span class="o">.</span><span class="na">length</span><span class="o">())</span>
+            <span class="k">return</span> <span class="n">i</span><span class="o">-</span><span class="n">needle</span><span class="o">.</span><span class="na">length</span><span class="o">();</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">int</span><span class="o">[]</span> <span class="nf">getNextArray</span><span class="o">(</span><span class="n">String</span> <span class="n">s</span><span class="o">){</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">next</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">s</span><span class="o">.</span><span class="na">length</span><span class="o">()];</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">2</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">s</span><span class="o">.</span><span class="na">length</span><span class="o">();</span> <span class="n">i</span><span class="o">++){</span>
+            <span class="kt">int</span> <span class="n">maxCommonLen</span> <span class="o">=</span> <span class="n">next</span><span class="o">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">];</span>
+            <span class="k">while</span><span class="o">(</span><span class="n">maxCommonLen</span><span class="o">&gt;</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">!=</span> <span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">maxCommonLen</span><span class="o">)){</span>
+                <span class="n">maxCommonLen</span> <span class="o">=</span> <span class="n">next</span><span class="o">[</span><span class="n">maxCommonLen</span><span class="o">];</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">==</span> <span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">maxCommonLen</span><span class="o">))</span>
+                <span class="n">next</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">maxCommonLen</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">next</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div></p>
+<h3 id="190-reverse-bits">190. Reverse Bits<a class="headerlink" href="#190-reverse-bits" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/reverse-bits/">Link</a></li>
+<li>Tags: Bit Manipulation</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="move-bit-one-by-one">move bit one by one<a class="headerlink" href="#move-bit-one-by-one" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="c1">// you need treat n as an unsigned value</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">reverseBits</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">32</span><span class="o">;</span> <span class="n">i</span><span class="o">++){</span>
+            <span class="n">result</span> <span class="o">|=</span> <span class="o">((</span><span class="n">n</span><span class="o">&amp;</span><span class="mi">1</span><span class="o">)&lt;&lt;(</span><span class="mi">31</span><span class="o">-</span><span class="n">i</span><span class="o">));</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="n">n</span><span class="o">&gt;&gt;&gt;</span><span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h4 id="divide-and-conquer_1">divide and conquer<a class="headerlink" href="#divide-and-conquer_1" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="c1">// you need treat n as an unsigned value</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">reverseBits</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="o">(</span><span class="n">n</span><span class="o">&gt;&gt;&gt;</span><span class="mi">16</span><span class="o">)</span> <span class="o">|</span> <span class="o">(</span><span class="n">n</span><span class="o">&lt;&lt;</span><span class="mi">16</span><span class="o">);</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="o">((</span><span class="n">n</span><span class="o">&amp;</span><span class="mh">0xFF00FF00</span><span class="o">)&gt;&gt;&gt;</span><span class="mi">8</span><span class="o">)</span> <span class="o">|</span> <span class="o">((</span><span class="n">n</span><span class="o">&amp;</span><span class="mh">0x00FF00FF</span><span class="o">)&lt;&lt;</span><span class="mi">8</span><span class="o">);</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="o">((</span><span class="n">n</span><span class="o">&amp;</span><span class="mh">0xF0F0F0F0</span><span class="o">)&gt;&gt;&gt;</span><span class="mi">4</span><span class="o">)</span> <span class="o">|</span> <span class="o">((</span><span class="n">n</span><span class="o">&amp;</span><span class="mh">0x0F0F0F0F</span><span class="o">)&lt;&lt;</span><span class="mi">4</span><span class="o">);</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="o">((</span><span class="n">n</span><span class="o">&amp;</span><span class="mh">0xCCCCCCCC</span><span class="o">)&gt;&gt;&gt;</span><span class="mi">2</span><span class="o">)</span> <span class="o">|</span> <span class="o">((</span><span class="n">n</span><span class="o">&amp;</span><span class="mh">0x33333333</span><span class="o">)&lt;&lt;</span><span class="mi">2</span><span class="o">);</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="o">((</span><span class="n">n</span><span class="o">&amp;</span><span class="mh">0xAAAAAAAA</span><span class="o">)&gt;&gt;&gt;</span><span class="mi">1</span><span class="o">)</span> <span class="o">|</span> <span class="o">((</span><span class="n">n</span><span class="o">&amp;</span><span class="mh">0x55555555</span><span class="o">)&lt;&lt;</span><span class="mi">1</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">n</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span>
 </pre></div>
