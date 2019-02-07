@@ -274,3 +274,54 @@ class Solution {
 }
 ```
 - 无符号右移用`>>>`，有符号用`>>`
+- 注意`++`的使用技巧
+[Source: 26. Remove Duplicates from Sorted Array](https://leetcode.com/problems/remove-duplicates-from-sorted-array/)
+```java
+// nums[count] = nums[i];
+// count++;
+nums[count++] = nums[i];
+```
+- The use of `StringBuilder`
+[Source: 38. Count and Say](https://leetcode.com/problems/count-and-say/)
+```java
+class Solution {
+    public String countAndSay(int n) {
+        if(n==1)
+            return "1";
+        String str = countAndSay(n-1);
+        StringBuilder result = new StringBuilder();
+        char last = str.charAt(0);
+        int count = 1;
+        for(int i=1; i<str.length(); i++){
+            if(str.charAt(i) != last){
+                // result = result + count + last;
+                result.append(count).append(last);
+                last = str.charAt(i);
+                count = 1;
+            }
+            else count++;
+        }
+        result.append(count).append(last);
+        return result.toString();
+    }
+}
+```
+- Use of `Stack<T>`
+[Source: 20. Valid Parentheses](https://leetcode.com/problems/valid-parentheses/)
+```java
+class Solution {
+    public boolean isValid(String s) {
+        Stack<Character> st = new Stack<Character>();
+        for(int i=0; i<s.length(); i++){
+            char c = s.charAt(i);
+            if(c=='(') st.push(')');
+            else if(c=='[') st.push(']');
+            else if(c=='{') st.push('}');
+            else{
+                if(st.empty() || st.pop() !=c) return false;
+            }
+        }
+        return st.empty();
+    }
+}
+```

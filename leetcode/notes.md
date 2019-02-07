@@ -577,6 +577,135 @@ class Solution {
 }
 ```
 
+### 172. Factorial Trailing Zeroes
+- [Link](https://leetcode.com/problems/factorial-trailing-zeroes/)
+- Tags: Math
+- Stars: 2
+
+#### Increment (Time Limit Exceeded)
+Time: O(n)
+```java
+class Solution {
+    public int trailingZeroes(int n) {
+        int count = 0;
+        for(int i=1; i<=n; i++){
+            int temp = i;
+            while(temp%5 == 0 && temp>0){
+                count++;
+                temp /= 5;
+            }
+        }
+        return count;
+    }
+}
+```
+
+#### Recursive
+1\*2\*3 --multiply by three 5-> 1\*2\*3\*4\***5**\*6\*7\*8\*9\***10**\*11\*12\*13\*14\***15**
+
+Time: O(logn)
+```java
+class Solution {
+    public int trailingZeroes(int n) {
+        if(n<5)
+            return 0;
+        return trailingZeroes(n/5) + n/5;
+    }
+}
+```
+
+#### Iterative
+Similar to the Recursive method
+```java
+class Solution {
+    public int trailingZeroes(int n) {
+        int count = 0;
+        while(n>4){
+            n /= 5;
+            count += n;
+        }
+        return count;
+    }
+}
+```
+
+### 155. Min Stack
+- [Link](https://leetcode.com/problems/min-stack/)
+- Tags: Stack, Design
+- Stars: 3
+
+#### Use two stacks
+Store series of minValue into another stack to obtain O(1) time!
+```java
+class MinStack {
+    Stack<Integer> minst, numst;
+
+    public MinStack() {
+        minst = new Stack<Integer>();
+        numst = new Stack<Integer>();
+    }
+    
+    public void push(int x) {
+        numst.push(x);
+        if(minst.empty()) minst.push(x);
+        else{
+            minst.push(Math.min(minst.peek(), x));
+        }
+    }
+    
+    public void pop() {
+        minst.pop();
+        numst.pop();
+    }
+    
+    public int top() {
+        return numst.peek();
+    }
+    
+    public int getMin() {
+        return minst.peek();
+    }
+}
+```
+
+#### only use one Stack
+1. Use only one stack by storing the gap between min value and current value in it. 
+2. Since we store differences of integers, we need to convert it into `Long`. 
+```java
+class MinStack {
+    long min;
+    Stack<Long> st;
+
+    public MinStack() {
+        st = new Stack<Long>();
+        min = Integer.MAX_VALUE;
+    }
+    
+    public void push(int x) {
+        st.push(x-min);
+        if(x<min)
+            min = x;
+    }
+    
+    public void pop() {
+        long temp = st.pop();
+        if(temp<0)
+            min -= temp;
+    }
+    
+    public int top() {
+        long temp = st.peek();
+        if(temp<0)
+            return (int)min;
+        return (int)(temp + min);
+    }
+    
+    public int getMin() {
+        return (int)min;
+    }
+}
+```
+
 # TODO List
 
 ## recursive to non-recursive
