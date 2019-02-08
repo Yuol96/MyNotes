@@ -1,5 +1,5 @@
 [TOC]
-# LeetCode Questions
+# Top Hits
 
 ## Top Interview Questions
 
@@ -551,32 +551,6 @@ class Solution {
 }
 ```
 
-### 1. Two Sum
-- [Link](https://leetcode.com/problems/two-sum/)
-- Tags: Array, Hash Table
-- Stars: 2
-
-#### HashMap
-```java
-class Solution {
-    HashMap<Integer, Integer> map;
-    
-    public int[] twoSum(int[] nums, int target) {
-        map = new HashMap<Integer, Integer>();
-        for(int i=0; i<nums.length; i++){
-            if(map.containsKey(target-nums[i])){
-                int[] ret = {map.get(target-nums[i]), i};
-                return ret;
-            }
-            else {
-                map.put(nums[i], i);
-            }
-        }
-        return null;
-    }
-}
-```
-
 ### 172. Factorial Trailing Zeroes
 - [Link](https://leetcode.com/problems/factorial-trailing-zeroes/)
 - Tags: Math
@@ -1102,6 +1076,247 @@ class Solution {
 }
 ```
 
+# Topics
+
+## Backtracking Questions
+[Reference](https://leetcode.com/problems/permutations/discuss/18239/A-general-approach-to-backtracking-questions-in-Java-(Subsets-Permutations-Combination-Sum-Palindrome-Partioning))
+
+**Backtrack == 发散式DFS**
+
+### 78. Subsets
+- [Link](https://leetcode.com/problems/subsets/)
+- Tags: Array, Backtracking, Bit Manipulation
+- Stars: 1
+
+#### General Approach
+```java
+class Solution {
+    List<List<Integer>> result;
+    public List<List<Integer>> subsets(int[] nums) {
+        result = new ArrayList<>();
+        backtrack(new ArrayList<Integer>(), nums, 0);
+        return result;
+    }
+    
+    private void backtrack(List<Integer> currList, int[] nums, int start){
+        result.add(new ArrayList<>(currList));
+        for(int i=start; i<nums.length; i++){
+            currList.add(nums[i]);
+            backtrack(currList, nums, i+1);
+            currList.remove(currList.size()-1);
+        }
+    }
+}
+```
+
+#### My solution (Faster!)
+```java
+class Solution {
+    List<List<Integer>> result;
+    
+    public List<List<Integer>> subsets(int[] nums) {
+        result = new ArrayList<>();
+        DFS(nums, 0, new ArrayList<Integer>());
+        return result;
+    }
+    private void DFS(int[] nums, int k, List<Integer> currList){
+        if(k==nums.length){
+            result.add(currList);
+            return ;
+        }
+        DFS(nums, k+1, new ArrayList<>(currList));
+        currList.add(nums[k]);
+        DFS(nums, k+1, currList);
+    }
+}
+```
+
+### 90. Subsets II
+- [Link](https://leetcode.com/problems/subsets-ii/)
+- Tags: Array, Backtracking
+- Stars: 1
+
+#### General Approach
+```java
+class Solution {
+    List<List<Integer>> result;
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        result = new ArrayList<>();
+        Arrays.sort(nums);
+        backtrack(new ArrayList<Integer>(), nums, 0);
+        return result;
+    }
+    private void backtrack(List<Integer> currList, int[] nums, int start){
+        result.add(new ArrayList<>(currList));
+        for(int i=start; i<nums.length; i++){
+            if(i==start || nums[i-1] != nums[i]){
+                currList.add(nums[i]);
+                backtrack(currList, nums, i+1);
+                currList.remove(currList.size()-1);
+            }
+        }
+    }
+}
+```
+
+#### My Solution
+```java
+class Solution {
+    List<List<Integer>> result;
+    
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        result = new ArrayList<>();
+        Arrays.sort(nums);
+        backtrack(new ArrayList<Integer>(), nums, 0);
+        return result;
+    }
+    
+    private void backtrack(List<Integer> currList, int[] nums, int start){
+        if(start==nums.length) {
+            result.add(currList);
+            return ;
+        }
+        int end = start;
+        while(end<nums.length && nums[end] == nums[start])
+            end++;
+        for(int i = start+1; i<=end; i++){
+            List<Integer> temp = new ArrayList<>(currList);
+            for(int j=start; j<i; j++)
+                temp.add(nums[j]);
+            backtrack(temp, nums, end);
+        }
+        backtrack(currList, nums, end);
+    }
+}
+```
+
+### 46. Permutations
+- [Link](https://leetcode.com/problems/permutations/)
+- Tags: Backtracking
+- Stars: 1
+
+#### My Backtracking Solution
+```java
+class Solution {
+    List<List<Integer>> result;
+    public List<List<Integer>> permute(int[] nums) {
+        result = new ArrayList<>();
+        if(nums.length == 0) return result;
+        List<Integer> firstList = new ArrayList<>();
+        firstList.add(nums[0]);
+        result.add(firstList);
+        backtrack(nums, 1);
+        return result;
+    }
+    private void backtrack(int[] nums, int k){
+        if(k == nums.length)
+            return ;
+        int len = result.size();
+        for(int i=0; i<len; i++){
+            List<Integer> list = result.get(i);
+            for(int j=0; j<list.size(); j++){
+                List<Integer> temp = new ArrayList<>(list);
+                temp.add(j, nums[k]);
+                result.add(temp);
+            }
+            list.add(list.size(), nums[k]);
+        }
+        backtrack(nums, k+1);
+    }
+}
+```
+
+### 22. Generate Parentheses
+- [Link](https://leetcode.com/problems/generate-parentheses/)
+- Tags: String, Backtracking
+- Stars: 1
+
+[YouTube Video](https://www.youtube.com/watch?v=sz1qaKt0KGQ)
+
+#### My Backtracking Solution
+```java
+class Solution {
+    List<String> result;
+    public List<String> generateParenthesis(int n) {
+        result = new ArrayList<>();
+        backtrack(new StringBuilder(), n, 0);
+        return result;
+    }
+    private void backtrack(StringBuilder sb, int left, int right){
+        if(left == 0 && right == 0){
+            result.add(sb.toString());
+            return ;
+        }
+        if(left>0){
+            sb.append('(');
+            backtrack(sb, left-1, right+1);
+            sb.delete(sb.length()-1, sb.length());
+        }
+        if(right>0){
+            sb.append(')');
+            backtrack(sb, left, right-1);
+            sb.delete(sb.length()-1, sb.length());
+        }
+    }
+}
+```
+
+## N Sums Questions
+
+### 1. Two Sum
+- [Link](https://leetcode.com/problems/two-sum/)
+- Tags: Array, Hash Table
+- Stars: 1
+
+#### HashMap
+```java
+class Solution {
+    HashMap<Integer, Integer> map;
+    
+    public int[] twoSum(int[] nums, int target) {
+        map = new HashMap<Integer, Integer>();
+        for(int i=0; i<nums.length; i++){
+            if(map.containsKey(target-nums[i])){
+                int[] ret = {map.get(target-nums[i]), i};
+                return ret;
+            }
+            else {
+                map.put(nums[i], i);
+            }
+        }
+        return null;
+    }
+}
+```
+
+### 454. 4Sum II
+- [Link](https://leetcode.com/problems/4sum-ii/)
+- Tags: Hash Table, Binary Search
+- Stars: 2
+
+#### HashMap + two sum
+```java
+class Solution {
+    public int fourSumCount(int[] A, int[] B, int[] C, int[] D) {
+        int result = 0;
+        HashMap<Integer, Integer> map1 = twoSum(A, B);
+        HashMap<Integer, Integer> map2 = twoSum(C, D);
+        for(Map.Entry<Integer, Integer> e1: map1.entrySet()){
+            if(map2.containsKey(-e1.getKey())){
+                result += e1.getValue() * map2.get(-e1.getKey());
+            }
+        }
+        return result;
+    }
+    private HashMap<Integer, Integer> twoSum(int[] A, int[] B){
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int a: A)
+            for(int b: B)
+                map.put(a+b, map.getOrDefault(a+b, 0) + 1);
+        return map;
+    }
+}
+```
 
 # TODO List
 

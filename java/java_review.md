@@ -335,9 +335,10 @@ class Solution {
 - `Arrays.fill(f, false)`
 - `ArrayList.subList(from, to).clear()` [Reference](https://www.cnblogs.com/ljdblog/p/6251387.html)
 - [347. Top K Frequent Elements](https://leetcode.com/problems/top-k-frequent-elements/)
-    - `HashMap<Integer, List<Integer>> map = new HashMap<>()` 后面的`<>`中的内容可省略.
+    - `HashMap<Integer, List<Integer>> map = new HashMap<>()` and `new ArrayList<>(list)` 后面的`<>`中的内容可省略.
     - `List<T>.addAll(List<T> list);`
     - `PriorityQueue<Map.Entry<Integer, Integer>> maxHeap = new PriorityQueue<>((a,b)->(b.getValue()-a.getValue()))`, `for(Map.Entry<Integer, Integer> entry: map.entrySet())` 
     - lambda function 
         - [Reference1](https://www.cnblogs.com/franson-2016/p/5593080.html)
         - [Reference2](https://www.jianshu.com/p/bde3699f37e5)
+- `Arrays.copyOfRange(arr, i, j)`
