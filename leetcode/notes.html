@@ -1167,6 +1167,11 @@ body .markdown-body
 <li><a href="#347-top-k-frequent-elements">347. Top K Frequent Elements</a><ul>
 <li><a href="#hashmap">HashMap</a></li>
 <li><a href="#maxheap-and-mapentry">maxHeap and Map.Entry</a></li>
+<li><a href="#treemap">TreeMap</a></li>
+</ul>
+</li>
+<li><a href="#384-shuffle-an-array">384. Shuffle an Array</a><ul>
+<li><a href="#swap-step-by-step">swap step by step</a></li>
 </ul>
 </li>
 </ul>
@@ -2232,6 +2237,7 @@ Notice that we only care about differences of the prices array.</p>
 <span class="o">}</span>
 </pre></div>
 
+<h4 id="treemap">TreeMap<a class="headerlink" href="#treemap" title="Permanent link"></a></h4>
 <div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="nf">topKFrequent</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">,</span> <span class="kt">int</span> <span class="n">k</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">Integer</span><span class="o">&gt;</span> <span class="n">map</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">Integer</span><span class="o">&gt;();</span>
@@ -2251,6 +2257,41 @@ Notice that we only care about differences of the prices array.</p>
             <span class="n">k</span> <span class="o">-=</span> <span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">().</span><span class="na">size</span><span class="o">();</span>
         <span class="o">}</span>
         <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3 id="384-shuffle-an-array">384. Shuffle an Array<a class="headerlink" href="#384-shuffle-an-array" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/shuffle-an-array/">Link</a></li>
+<li>Tags: Design</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="swap-step-by-step">swap step by step<a class="headerlink" href="#swap-step-by-step" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="nf">Solution</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">arr</span> <span class="o">=</span> <span class="n">nums</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="cm">/** Resets the array to its original configuration and return it. */</span>
+    <span class="kd">public</span> <span class="kt">int</span><span class="o">[]</span> <span class="nf">reset</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">arr</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="cm">/** Returns a random shuffling of the array. */</span>
+    <span class="kd">public</span> <span class="kt">int</span><span class="o">[]</span> <span class="nf">shuffle</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">arr</span><span class="o">==</span><span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">newArr</span> <span class="o">=</span> <span class="n">arr</span><span class="o">.</span><span class="na">clone</span><span class="o">();</span>
+        <span class="n">Random</span> <span class="n">rand</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Random</span><span class="o">();</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">newArr</span><span class="o">.</span><span class="na">length</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span> <span class="n">i</span><span class="o">&gt;=</span><span class="mi">1</span><span class="o">;</span> <span class="n">i</span><span class="o">--){</span>
+            <span class="kt">int</span> <span class="n">randpos</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">);</span>
+            <span class="n">swap</span><span class="o">(</span><span class="n">newArr</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">randpos</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">newArr</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">swap</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">,</span><span class="kt">int</span> <span class="n">i</span><span class="o">,</span><span class="kt">int</span> <span class="n">j</span><span class="o">){</span>
+        <span class="kt">int</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+        <span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">nums</span><span class="o">[</span><span class="n">j</span><span class="o">];</span>
+        <span class="n">nums</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="n">temp</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span>
 </pre></div>

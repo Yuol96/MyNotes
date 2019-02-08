@@ -1052,6 +1052,7 @@ class Solution {
 }
 ```
 
+#### TreeMap
 ```java
 class Solution {
     public List<Integer> topKFrequent(int[] nums, int k) {
@@ -1072,6 +1073,41 @@ class Solution {
             k -= entry.getValue().size();
         }
         return result;
+    }
+}
+```
+
+### 384. Shuffle an Array
+- [Link](https://leetcode.com/problems/shuffle-an-array/)
+- Tags: Design
+- Stars: 1
+
+#### swap step by step
+```java
+class Solution {
+    private int[] arr;
+    public Solution(int[] nums) {
+        arr = nums;
+    }
+    /** Resets the array to its original configuration and return it. */
+    public int[] reset() {
+        return arr;
+    }
+    /** Returns a random shuffling of the array. */
+    public int[] shuffle() {
+        if(arr==null) return null;
+        int[] newArr = arr.clone();
+        Random rand = new Random();
+        for(int i=newArr.length-1; i>=1; i--){
+            int randpos = rand.nextInt(i+1);
+            swap(newArr, i, randpos);
+        }
+        return newArr;
+    }
+    private static void swap(int[] nums,int i,int j){
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
     }
 }
 ```

@@ -72,6 +72,8 @@ System.out.print("%d ", num);
 ```java
 Random rand = new Random();
 int idx = rand.nextInt(10);
+
+Math.random()
 ```
 ### java.util.ArrayList
 
@@ -284,6 +286,8 @@ class Solution {
 nums[count++] = nums[i];
 ```
 - The use of `StringBuilder`
+[Ref](https://blog.csdn.net/qq_33366229/article/details/78325689)
+
 [Source: 38. Count and Say](https://leetcode.com/problems/count-and-say/)
 ```java
 class Solution {
@@ -342,3 +346,4 @@ class Solution {
         - [Reference1](https://www.cnblogs.com/franson-2016/p/5593080.html)
         - [Reference2](https://www.jianshu.com/p/bde3699f37e5)
 - `Arrays.copyOfRange(arr, i, j)`
+- `nums.clone()` where `nums` is `int[]`
