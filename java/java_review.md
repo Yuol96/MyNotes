@@ -117,6 +117,8 @@ for(String s: st) {...}
 ### Comparator
 method1: `Collections.sort(list,Comparator<T>);`
 
+Collections.sort(list，Collections.reverseOrder())
+
 method2: `list.sort(Comparator<T>)`
 
 ```java
@@ -330,3 +332,12 @@ class Solution {
 - [在Java中，不存在Unsigned无符号数据类型，但可以轻而易举的完成Unsigned转换。](https://blog.csdn.net/qq_26386171/article/details/54564127)
 - Java has the operator ">>>" to perform logical right shifts, but because the logical and arithmetic left-shift operations are identical, there is no "<<<" operator in Java. For those of you who are confused.
 - [Java Array、List、Set互相转化](https://blog.csdn.net/u014532901/article/details/78820124)
+- `Arrays.fill(f, false)`
+- `ArrayList.subList(from, to).clear()` [Reference](https://www.cnblogs.com/ljdblog/p/6251387.html)
+- [347. Top K Frequent Elements](https://leetcode.com/problems/top-k-frequent-elements/)
+    - `HashMap<Integer, List<Integer>> map = new HashMap<>()` 后面的`<>`中的内容可省略.
+    - `List<T>.addAll(List<T> list);`
+    - `PriorityQueue<Map.Entry<Integer, Integer>> maxHeap = new PriorityQueue<>((a,b)->(b.getValue()-a.getValue()))`, `for(Map.Entry<Integer, Integer> entry: map.entrySet())` 
+    - lambda function 
+        - [Reference1](https://www.cnblogs.com/franson-2016/p/5593080.html)
+        - [Reference2](https://www.jianshu.com/p/bde3699f37e5)

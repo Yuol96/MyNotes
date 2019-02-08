@@ -971,11 +971,144 @@ public class Solution {
 }
 ```
 
+### 189. Rotate Array
+- [Link](https://leetcode.com/problems/rotate-array/)
+- Tags: Array
+- Stars: 1
+
+#### rotate partially
+Attention that `k` needs to be reduced to [0, nums.length).
+```java
+class Solution {
+    public void rotate(int[] nums, int k) {
+        k %= nums.length;
+        rotate(nums, 0, nums.length-k-1);
+        rotate(nums, nums.length-k, nums.length-1);
+        rotate(nums, 0, nums.length-1);
+    }
+    private void rotate(int[] nums, int l, int r){
+        while(l<r)
+            swap(nums, l++, r--);
+    }
+    private void swap(int[] nums, int i, int j){
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
+```
+
+### 238. Product of Array Except Self
+- [Link](https://leetcode.com/problems/product-of-array-except-self/)
+- Tags: Array
+- Stars: 1
+
+#### Use only one array
+```java
+class Solution {
+    public int[] productExceptSelf(int[] nums) {
+        int[] left = new int[nums.length];
+        // int[] right = new int[nums.length];
+        left[0] = 1;
+        for(int i=1; i<nums.length; i++)
+            left[i] = left[i-1]*nums[i-1];
+        // right[nums.length-1] = 1;
+        int right = 1;
+        for(int i=nums.length-2; i>=0; i--){
+            // right[i] = right[i+1]*nums[i+1];
+            right *= nums[i+1];
+            left[i] *= right;
+        }
+        // for(int i=0; i<nums.length; i++)
+        //     left[i] *= right[i];
+        return left;
+    }
+}
+```
+
+### 347. Top K Frequent Elements
+- [Link](https://leetcode.com/problems/top-k-frequent-elements/)
+- Tags: Hash Table, Heap
+- Stars: 1
+
+#### HashMap
+```java
+class Solution {
+    public List<Integer> topKFrequent(int[] nums, int k) {
+        HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+        for(int num: nums)
+            map.put(num, map.getOrDefault(num, 0) + 1);
+        HashMap<Integer, List<Integer>> freq2list = new HashMap<Integer, List<Integer>>();
+        for(int num: map.keySet()){
+            int freq = map.get(num);
+            if(freq2list.get(freq)==null)
+                freq2list.put(freq, new ArrayList<Integer>());
+            freq2list.get(freq).add(num);
+        }
+        List<Integer> result = new ArrayList<Integer>();
+        for(int i=nums.length; i>=1 && k>0; i--){
+            if(freq2list.containsKey(i)){
+                result.addAll(freq2list.get(i));
+                k -= freq2list.get(i).size();
+            }
+        }
+        return result;
+    }
+}
+```
+
+#### maxHeap and Map.Entry
+```java
+class Solution {
+    public List<Integer> topKFrequent(int[] nums, int k) {
+        HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+        for(int num: nums)
+            map.put(num, map.getOrDefault(num, 0) + 1);
+        PriorityQueue<Map.Entry<Integer, Integer>> maxHeap = new PriorityQueue<>((a,b)->(b.getValue()-a.getValue()));
+        for(Map.Entry<Integer, Integer> entry: map.entrySet()){
+            maxHeap.add(entry);
+        }
+        List<Integer> result = new ArrayList<Integer>();
+        while(k>0){
+            result.add(maxHeap.poll().getKey());
+            k--;
+        }
+        return result;
+    }
+}
+```
+
+```java
+class Solution {
+    public List<Integer> topKFrequent(int[] nums, int k) {
+        HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+        for(int num: nums)
+            map.put(num, map.getOrDefault(num, 0) + 1);
+        TreeMap<Integer, List<Integer>> freq2list = new TreeMap<>();
+        for(int num: map.keySet()){
+            int freq = map.get(num);
+            if(freq2list.get(freq) == null)
+                freq2list.put(freq, new ArrayList<Integer>());
+            freq2list.get(freq).add(num);
+        }
+        List<Integer> result = new ArrayList<Integer>();
+        while(k>0){
+            Map.Entry<Integer, List<Integer>> entry = freq2list.pollLastEntry();
+            result.addAll(entry.getValue());
+            k -= entry.getValue().size();
+        }
+        return result;
+    }
+}
+```
+
+
 # TODO List
 
 ## recursive to non-recursive
 
 - 101. Symmetric Tree
+- 94. Binary Tree Inorder Traversal
 
 ## Math
 

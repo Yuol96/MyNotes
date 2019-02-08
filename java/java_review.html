@@ -1188,6 +1188,7 @@ body .markdown-body
 
 <h3 id="comparator">Comparator<a class="headerlink" href="#comparator" title="Permanent link"></a></h3>
 <p>method1: <code>Collections.sort(list,Comparator&lt;T&gt;);</code></p>
+<p>Collections.sort(list，Collections.reverseOrder())</p>
 <p>method2: <code>list.sort(Comparator&lt;T&gt;)</code></p>
 <div class="codehilite"><pre><span class="n">Collections</span><span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="n">list</span><span class="o">,</span> <span class="k">new</span> <span class="n">Comparator</span><span class="o">&lt;</span><span class="n">Student</span><span class="o">&gt;()</span> <span class="o">{</span>
     <span class="nd">@Override</span>
@@ -1416,4 +1417,14 @@ Example of inheriting from an interface
 - <code>Arrays.toString(int[] nums)</code>, <code>Arrays.sort(int[] nums)</code>
 - <code>str.toLowerCase()</code>, <code>Character.isLetterOrDigit(char c)</code>
 - <a href="https://blog.csdn.net/qq_26386171/article/details/54564127">在Java中，不存在Unsigned无符号数据类型，但可以轻而易举的完成Unsigned转换。</a>
-- Java has the operator &ldquo;&gt;&gt;&gt;&rdquo; to perform logical right shifts, but because the logical and arithmetic left-shift operations are identical, there is no &ldquo;&lt;&lt;&lt;&rdquo; operator in Java. For those of you who are confused.</p></article></body></html>
+- Java has the operator &ldquo;&gt;&gt;&gt;&rdquo; to perform logical right shifts, but because the logical and arithmetic left-shift operations are identical, there is no &ldquo;&lt;&lt;&lt;&rdquo; operator in Java. For those of you who are confused.
+- <a href="https://blog.csdn.net/u014532901/article/details/78820124">Java Array、List、Set互相转化</a>
+- <code>Arrays.fill(f, false)</code>
+- <code>ArrayList.subList(from, to).clear()</code> <a href="https://www.cnblogs.com/ljdblog/p/6251387.html">Reference</a>
+- <a href="https://leetcode.com/problems/top-k-frequent-elements/">347. Top K Frequent Elements</a>
+    - <code>HashMap&lt;Integer, List&lt;Integer&gt;&gt; map = new HashMap&lt;&gt;()</code> 后面的<code>&lt;&gt;</code>中的内容可省略.
+    - <code>List&lt;T&gt;.addAll(List&lt;T&gt; list);</code>
+    - <code>PriorityQueue&lt;Map.Entry&lt;Integer, Integer&gt;&gt; maxHeap = new PriorityQueue&lt;&gt;((a,b)-&gt;(b.getValue()-a.getValue()))</code>, <code>for(Map.Entry&lt;Integer, Integer&gt; entry: map.entrySet())</code> 
+    - lambda function 
+        - <a href="https://www.cnblogs.com/franson-2016/p/5593080.html">Reference1</a>
+        - <a href="https://www.jianshu.com/p/bde3699f37e5">Reference2</a></p></article></body></html>
