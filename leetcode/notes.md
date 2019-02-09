@@ -1112,6 +1112,93 @@ class Solution {
 }
 ```
 
+### 378. Kth Smallest Element in a Sorted Matrix
+- [Link](https://leetcode.com/problems/kth-smallest-element-in-a-sorted-matrix/)
+- Tags: Binary Search, Heap
+- Stars: 3
+
+#### Max Heap
+```java
+public class Solution {
+    public int kthSmallest(int[][] matrix, int k) {
+        int n = matrix.length;
+        PriorityQueue<Tuple> qu = new PriorityQueue<>();
+        for(int i=0; i<n; i++){
+            qu.add(new Tuple(0, i, matrix[0][i]));
+        }
+        Tuple temp = qu.peek();
+        for(int i=0; i<k; i++){
+            temp = qu.poll();
+            if(temp.row < n-1)
+                qu.add(new Tuple(temp.row+1, temp.col, matrix[temp.row+1][temp.col]));
+        }
+        return temp.val;
+    }
+}
+class Tuple implements Comparable<Tuple> {
+    int row, col, val;
+    public Tuple(int x, int y, int v){
+        row = x; col = y; val = v;
+    }
+    @Override
+    public int compareTo(Tuple o){
+        return this.val - o.val;
+    }
+}
+```
+
+#### Binary Search
+1. Attention: when `count == k`, `mid` might not exists in `matrix`, so we need to get the largest element that is less than or equal to `mid` in `matrix`. Therefore, we have `getMaxlte`.
+2. There's a situation that might break the while loop, i.e., there are more than one elements that have the same value as the kth smallest. When this happens, r will goes below l, and it breaks the while loop. Therefore, we need to return `l` instead of an arbitrary number outside the while loop. 
+3. The whole picture of this algorithm:
+> The key point for any binary search is to figure out the "Search Space". For me, I think there are two kind of "Search Space" -- index and range(the range from the smallest number to the biggest number). Most usually, when the array is sorted in one direction, we can use index as "search space", when the array is unsorted and we are going to find a specific number, we can use "range". Similar to [this question](#287-find-the-duplicate-number).
+
+```java
+class Solution {
+    public int kthSmallest(int[][] matrix, int k) {
+        int n = matrix.length;
+        int l = matrix[0][0], r = matrix[n-1][n-1];
+        while(l<=r){
+            int mid = l + ((r-l)>>1);
+            int count = countlte(matrix, mid);
+            if(count == k)
+                return getMaxlte(matrix, mid);
+            else if(count > k)
+                r = mid - 1;
+            else 
+                l = mid + 1;
+        }
+        return l;
+    }
+    private int countlte(int[][] matrix, int target){
+        int n = matrix.length, count = 0;
+        for(int[] row: matrix){
+            int j = n;
+            while(j>0 && row[j-1] > target)
+                j--;
+            count += j;
+        }
+        return count;
+    }
+    private int getMaxlte(int[][] matrix, int target){
+        int maxVal = Integer.MIN_VALUE;
+        int n = matrix.length;
+        for(int[] row: matrix)
+            for(int ele: row)
+                if(ele <= target && maxVal < ele)
+                    maxVal = ele;
+        return maxVal;
+    }
+    
+}
+```
+
+### 287. Find the Duplicate Number
+- [Link](https://leetcode.com/problems/find-the-duplicate-number/)
+- Tags: Array, Two Pointers, Binary Search
+- Stars: 3
+
+
 # Topics
 
 ## Backtracking Questions

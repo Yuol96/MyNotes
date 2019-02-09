@@ -1174,6 +1174,12 @@ body .markdown-body
 <li><a href="#swap-step-by-step">swap step by step</a></li>
 </ul>
 </li>
+<li><a href="#378-kth-smallest-element-in-a-sorted-matrix">378. Kth Smallest Element in a Sorted Matrix</a><ul>
+<li><a href="#max-heap">Max Heap</a></li>
+<li><a href="#binary-search">Binary Search</a></li>
+</ul>
+</li>
+<li><a href="#287-find-the-duplicate-number">287. Find the Duplicate Number</a></li>
 </ul>
 </li>
 </ul>
@@ -2296,6 +2302,95 @@ Notice that we only care about differences of the prices array.</p>
 <span class="o">}</span>
 </pre></div>
 
+<h3 id="378-kth-smallest-element-in-a-sorted-matrix">378. Kth Smallest Element in a Sorted Matrix<a class="headerlink" href="#378-kth-smallest-element-in-a-sorted-matrix" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/kth-smallest-element-in-a-sorted-matrix/">Link</a></li>
+<li>Tags: Binary Search, Heap</li>
+<li>Stars: 3</li>
+</ul>
+<h4 id="max-heap">Max Heap<a class="headerlink" href="#max-heap" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">kthSmallest</span><span class="o">(</span><span class="kt">int</span><span class="o">[][]</span> <span class="n">matrix</span><span class="o">,</span> <span class="kt">int</span> <span class="n">k</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+        <span class="n">PriorityQueue</span><span class="o">&lt;</span><span class="n">Tuple</span><span class="o">&gt;</span> <span class="n">qu</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PriorityQueue</span><span class="o">&lt;&gt;();</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span> <span class="n">i</span><span class="o">++){</span>
+            <span class="n">qu</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">Tuple</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">matrix</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="n">i</span><span class="o">]));</span>
+        <span class="o">}</span>
+        <span class="n">Tuple</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">qu</span><span class="o">.</span><span class="na">peek</span><span class="o">();</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">k</span><span class="o">;</span> <span class="n">i</span><span class="o">++){</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="n">qu</span><span class="o">.</span><span class="na">poll</span><span class="o">();</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">temp</span><span class="o">.</span><span class="na">row</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">)</span>
+                <span class="n">qu</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">Tuple</span><span class="o">(</span><span class="n">temp</span><span class="o">.</span><span class="na">row</span><span class="o">+</span><span class="mi">1</span><span class="o">,</span> <span class="n">temp</span><span class="o">.</span><span class="na">col</span><span class="o">,</span> <span class="n">matrix</span><span class="o">[</span><span class="n">temp</span><span class="o">.</span><span class="na">row</span><span class="o">+</span><span class="mi">1</span><span class="o">][</span><span class="n">temp</span><span class="o">.</span><span class="na">col</span><span class="o">]));</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">temp</span><span class="o">.</span><span class="na">val</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="kd">class</span> <span class="nc">Tuple</span> <span class="kd">implements</span> <span class="n">Comparable</span><span class="o">&lt;</span><span class="n">Tuple</span><span class="o">&gt;</span> <span class="o">{</span>
+    <span class="kt">int</span> <span class="n">row</span><span class="o">,</span> <span class="n">col</span><span class="o">,</span> <span class="n">val</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="nf">Tuple</span><span class="o">(</span><span class="kt">int</span> <span class="n">x</span><span class="o">,</span> <span class="kt">int</span> <span class="n">y</span><span class="o">,</span> <span class="kt">int</span> <span class="n">v</span><span class="o">){</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="n">x</span><span class="o">;</span> <span class="n">col</span> <span class="o">=</span> <span class="n">y</span><span class="o">;</span> <span class="n">val</span> <span class="o">=</span> <span class="n">v</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">compareTo</span><span class="o">(</span><span class="n">Tuple</span> <span class="n">o</span><span class="o">){</span>
+        <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">val</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="na">val</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h4 id="binary-search">Binary Search<a class="headerlink" href="#binary-search" title="Permanent link"></a></h4>
+<ol>
+<li>Attention: when <code>count == k</code>, <code>mid</code> might not exists in <code>matrix</code>, so we need to get the largest element that is less than or equal to <code>mid</code> in <code>matrix</code>. Therefore, we have <code>getMaxlte</code>.</li>
+<li>There&rsquo;s a situation that might break the while loop, i.e., there are more than one elements that have the same value as the kth smallest. When this happens, r will goes below l, and it breaks the while loop. Therefore, we need to return <code>l</code> instead of an arbitrary number outside the while loop. </li>
+<li>The whole picture of this algorithm:<blockquote>
+<p>The key point for any binary search is to figure out the &ldquo;Search Space&rdquo;. For me, I think there are two kind of &ldquo;Search Space&rdquo; &ndash; index and range(the range from the smallest number to the biggest number). Most usually, when the array is sorted in one direction, we can use index as &ldquo;search space&rdquo;, when the array is unsorted and we are going to find a specific number, we can use &ldquo;range&rdquo;. Similar to <a href="#287-find-the-duplicate-number">this question</a>.</p>
+</blockquote>
+</li>
+</ol>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">kthSmallest</span><span class="o">(</span><span class="kt">int</span><span class="o">[][]</span> <span class="n">matrix</span><span class="o">,</span> <span class="kt">int</span> <span class="n">k</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">l</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="mi">0</span><span class="o">],</span> <span class="n">r</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">][</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">];</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">l</span><span class="o">&lt;=</span><span class="n">r</span><span class="o">){</span>
+            <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="n">l</span> <span class="o">+</span> <span class="o">((</span><span class="n">r</span><span class="o">-</span><span class="n">l</span><span class="o">)&gt;&gt;</span><span class="mi">1</span><span class="o">);</span>
+            <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="n">countlte</span><span class="o">(</span><span class="n">matrix</span><span class="o">,</span> <span class="n">mid</span><span class="o">);</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">count</span> <span class="o">==</span> <span class="n">k</span><span class="o">)</span>
+                <span class="k">return</span> <span class="n">getMaxlte</span><span class="o">(</span><span class="n">matrix</span><span class="o">,</span> <span class="n">mid</span><span class="o">);</span>
+            <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">count</span> <span class="o">&gt;</span> <span class="n">k</span><span class="o">)</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+            <span class="k">else</span> 
+                <span class="n">l</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">l</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="nf">countlte</span><span class="o">(</span><span class="kt">int</span><span class="o">[][]</span> <span class="n">matrix</span><span class="o">,</span> <span class="kt">int</span> <span class="n">target</span><span class="o">){</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="na">length</span><span class="o">,</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">row</span><span class="o">:</span> <span class="n">matrix</span><span class="o">){</span>
+            <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">n</span><span class="o">;</span>
+            <span class="k">while</span><span class="o">(</span><span class="n">j</span><span class="o">&gt;</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">row</span><span class="o">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">target</span><span class="o">)</span>
+                <span class="n">j</span><span class="o">--;</span>
+            <span class="n">count</span> <span class="o">+=</span> <span class="n">j</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">count</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="nf">getMaxlte</span><span class="o">(</span><span class="kt">int</span><span class="o">[][]</span> <span class="n">matrix</span><span class="o">,</span> <span class="kt">int</span> <span class="n">target</span><span class="o">){</span>
+        <span class="kt">int</span> <span class="n">maxVal</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">MIN_VALUE</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">row</span><span class="o">:</span> <span class="n">matrix</span><span class="o">)</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">ele</span><span class="o">:</span> <span class="n">row</span><span class="o">)</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">ele</span> <span class="o">&lt;=</span> <span class="n">target</span> <span class="o">&amp;&amp;</span> <span class="n">maxVal</span> <span class="o">&lt;</span> <span class="n">ele</span><span class="o">)</span>
+                    <span class="n">maxVal</span> <span class="o">=</span> <span class="n">ele</span><span class="o">;</span>
+        <span class="k">return</span> <span class="n">maxVal</span><span class="o">;</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+
+<h3 id="287-find-the-duplicate-number">287. Find the Duplicate Number<a class="headerlink" href="#287-find-the-duplicate-number" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/find-the-duplicate-number/">Link</a></li>
+<li>Tags: Array, Two Pointers, Binary Search</li>
+<li>Stars: 3</li>
+</ul>
 <h1 id="topics">Topics<a class="headerlink" href="#topics" title="Permanent link"></a></h1>
 <h2 id="backtracking-questions">Backtracking Questions<a class="headerlink" href="#backtracking-questions" title="Permanent link"></a></h2>
 <p><a href="https://leetcode.com/problems/permutations/discuss/18239/A-general-approach-to-backtracking-questions-in-Java-(Subsets-Permutations-Combination-Sum-Palindrome-Partioning)">Reference</a></p>
