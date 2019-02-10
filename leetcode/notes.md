@@ -1409,6 +1409,65 @@ public class NestedIterator implements Iterator<Integer> {
 }
 ```
 
+### 48. Rotate Image
+- [Link](https://leetcode.com/problems/rotate-image/)
+- Tags: Array
+- Stars: 1
+
+#### Onion
+```java
+class Solution {
+    public void rotate(int[][] matrix) {
+        // rotate(matrix, 0, matrix.length-1);
+        for(int i=0, j=matrix.length-1; i<j; i++, j--){
+            rotate(matrix, i, j);
+        }
+    }
+    private void rotate(int[][] matrix, int min, int max){
+        if(min >= max) return ;
+        int len = max-min;
+        for(int i=0; i<len; i++){
+            int temp = matrix[min][min+i];
+            matrix[min][min+i] = matrix[max-i][min];
+            matrix[max-i][min] = matrix[max][max-i];
+            matrix[max][max-i] = matrix[min+i][max];
+            matrix[min+i][max] = temp;
+        }
+        // rotate(matrix, min+1, max-1);
+    }
+}
+```
+
+#### swap
+```java
+class Solution {
+    public void rotate(int[][] matrix) {
+        reverse(matrix);
+        int n = matrix.length;
+        for(int i=0; i<n; i++)
+            for(int j=i+1; j<n; j++)
+                diagSwap(matrix, i, j);
+    }
+    private void reverse(int[][] matrix){
+        int l=0, r=matrix.length-1;
+        while(l<r)
+            swap(matrix, l++, r--);
+    }
+    private void swap(int[][] matrix, int i, int j){
+        int[] temp = matrix[i];
+        matrix[i] = matrix[j];
+        matrix[j] = temp;
+    }
+    private void diagSwap(int[][] matrix, int i, int j){
+        int temp = matrix[i][j];
+        matrix[i][j] = matrix[j][i];
+        matrix[j][i] = temp;
+    }
+}
+```
+
+
+
 # Topics
 
 ## Backtracking Questions

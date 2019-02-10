@@ -347,3 +347,4 @@ class Solution {
         - [Reference2](https://www.jianshu.com/p/bde3699f37e5)
 - `Arrays.copyOfRange(arr, i, j)`
 - `nums.clone()` where `nums` is `int[]`
+- `Collections.reverse(List<T> list)`

@@ -1195,6 +1195,11 @@ body .markdown-body
 <li><a href="#real-iterator">real iterator</a></li>
 </ul>
 </li>
+<li><a href="#48-rotate-image">48. Rotate Image</a><ul>
+<li><a href="#onion">Onion</a></li>
+<li><a href="#swap">swap</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -2606,6 +2611,62 @@ Notice that we only care about differences of the prices array.</p>
             <span class="o">}</span>
         <span class="o">}</span>
         <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3 id="48-rotate-image">48. Rotate Image<a class="headerlink" href="#48-rotate-image" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/rotate-image/">Link</a></li>
+<li>Tags: Array</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="onion">Onion<a class="headerlink" href="#onion" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">rotate</span><span class="o">(</span><span class="kt">int</span><span class="o">[][]</span> <span class="n">matrix</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// rotate(matrix, 0, matrix.length-1);</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">,</span> <span class="n">j</span><span class="o">=</span><span class="n">matrix</span><span class="o">.</span><span class="na">length</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">j</span><span class="o">;</span> <span class="n">i</span><span class="o">++,</span> <span class="n">j</span><span class="o">--){</span>
+            <span class="n">rotate</span><span class="o">(</span><span class="n">matrix</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">rotate</span><span class="o">(</span><span class="kt">int</span><span class="o">[][]</span> <span class="n">matrix</span><span class="o">,</span> <span class="kt">int</span> <span class="n">min</span><span class="o">,</span> <span class="kt">int</span> <span class="n">max</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">min</span> <span class="o">&gt;=</span> <span class="n">max</span><span class="o">)</span> <span class="k">return</span> <span class="o">;</span>
+        <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">max</span><span class="o">-</span><span class="n">min</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">len</span><span class="o">;</span> <span class="n">i</span><span class="o">++){</span>
+            <span class="kt">int</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">[</span><span class="n">min</span><span class="o">][</span><span class="n">min</span><span class="o">+</span><span class="n">i</span><span class="o">];</span>
+            <span class="n">matrix</span><span class="o">[</span><span class="n">min</span><span class="o">][</span><span class="n">min</span><span class="o">+</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">[</span><span class="n">max</span><span class="o">-</span><span class="n">i</span><span class="o">][</span><span class="n">min</span><span class="o">];</span>
+            <span class="n">matrix</span><span class="o">[</span><span class="n">max</span><span class="o">-</span><span class="n">i</span><span class="o">][</span><span class="n">min</span><span class="o">]</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">[</span><span class="n">max</span><span class="o">][</span><span class="n">max</span><span class="o">-</span><span class="n">i</span><span class="o">];</span>
+            <span class="n">matrix</span><span class="o">[</span><span class="n">max</span><span class="o">][</span><span class="n">max</span><span class="o">-</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">[</span><span class="n">min</span><span class="o">+</span><span class="n">i</span><span class="o">][</span><span class="n">max</span><span class="o">];</span>
+            <span class="n">matrix</span><span class="o">[</span><span class="n">min</span><span class="o">+</span><span class="n">i</span><span class="o">][</span><span class="n">max</span><span class="o">]</span> <span class="o">=</span> <span class="n">temp</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="c1">// rotate(matrix, min+1, max-1);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h4 id="swap">swap<a class="headerlink" href="#swap" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">rotate</span><span class="o">(</span><span class="kt">int</span><span class="o">[][]</span> <span class="n">matrix</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">reverse</span><span class="o">(</span><span class="n">matrix</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span>
+                <span class="n">diagSwap</span><span class="o">(</span><span class="n">matrix</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">reverse</span><span class="o">(</span><span class="kt">int</span><span class="o">[][]</span> <span class="n">matrix</span><span class="o">){</span>
+        <span class="kt">int</span> <span class="n">l</span><span class="o">=</span><span class="mi">0</span><span class="o">,</span> <span class="n">r</span><span class="o">=</span><span class="n">matrix</span><span class="o">.</span><span class="na">length</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">l</span><span class="o">&lt;</span><span class="n">r</span><span class="o">)</span>
+            <span class="n">swap</span><span class="o">(</span><span class="n">matrix</span><span class="o">,</span> <span class="n">l</span><span class="o">++,</span> <span class="n">r</span><span class="o">--);</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">swap</span><span class="o">(</span><span class="kt">int</span><span class="o">[][]</span> <span class="n">matrix</span><span class="o">,</span> <span class="kt">int</span> <span class="n">i</span><span class="o">,</span> <span class="kt">int</span> <span class="n">j</span><span class="o">){</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+        <span class="n">matrix</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">[</span><span class="n">j</span><span class="o">];</span>
+        <span class="n">matrix</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="n">temp</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">diagSwap</span><span class="o">(</span><span class="kt">int</span><span class="o">[][]</span> <span class="n">matrix</span><span class="o">,</span> <span class="kt">int</span> <span class="n">i</span><span class="o">,</span> <span class="kt">int</span> <span class="n">j</span><span class="o">){</span>
+        <span class="kt">int</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">];</span>
+        <span class="n">matrix</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">[</span><span class="n">j</span><span class="o">][</span><span class="n">i</span><span class="o">];</span>
+        <span class="n">matrix</span><span class="o">[</span><span class="n">j</span><span class="o">][</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">temp</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span>
 </pre></div>
