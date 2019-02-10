@@ -1338,6 +1338,77 @@ class Solution {
 }
 ```
 
+### 341. Flatten Nested List Iterator
+- [Link](https://leetcode.com/problems/flatten-nested-list-iterator/)
+- Tags: Stack, Design
+- Stars: 2
+
+#### not real iterator
+```java
+public class NestedIterator implements Iterator<Integer> {
+    Stack<NestedInteger> st;
+    public NestedIterator(List<NestedInteger> nestedList) {
+        st = new Stack<>();
+        for(int i=nestedList.size()-1; i>=0; i--)
+            st.push(nestedList.get(i));
+    }
+    @Override
+    public Integer next() {
+        if(!hasNext()) return null;
+        return st.pop().getInteger();
+    }
+    @Override
+    public boolean hasNext() {
+        while(!st.empty()){
+            NestedInteger curr = st.peek();
+            if(curr.isInteger()){
+                return true;
+            }
+            else{
+                st.pop();
+                List<NestedInteger> list = curr.getList();
+                for(int i=list.size()-1; i>=0; i--)
+                    st.push(list.get(i));
+            }
+        }
+        return false;
+    }
+}
+```
+
+#### real iterator
+```java
+public class NestedIterator implements Iterator<Integer> {
+    Stack<ListIterator<NestedInteger>> st;
+    public NestedIterator(List<NestedInteger> nestedList) {
+        st = new Stack<>();
+        st.push(nestedList.listIterator());
+    }
+    @Override
+    public Integer next() {
+        if(!hasNext()) return null;
+        return st.peek().next().getInteger();
+    }
+    @Override
+    public boolean hasNext() {
+        while(!st.empty()){
+            if(!st.peek().hasNext()){
+                st.pop();
+            }
+            else{
+                NestedInteger curr = st.peek().next();
+                if(curr.isInteger()) {
+                    st.peek().previous();
+                    return true;
+                }
+                st.push(curr.getList().listIterator());
+            }
+        }
+        return false;
+    }
+}
+```
+
 # Topics
 
 ## Backtracking Questions
