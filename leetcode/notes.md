@@ -1147,11 +1147,14 @@ class Tuple implements Comparable<Tuple> {
 }
 ```
 
+<span id="378-binary-search"></span>
 #### Binary Search
 1. Attention: when `count == k`, `mid` might not exists in `matrix`, so we need to get the largest element that is less than or equal to `mid` in `matrix`. Therefore, we have `getMaxlte`.
 2. There's a situation that might break the while loop, i.e., there are more than one elements that have the same value as the kth smallest. When this happens, r will goes below l, and it breaks the while loop. Therefore, we need to return `l` instead of an arbitrary number outside the while loop. 
 3. The whole picture of this algorithm:
-> The key point for any binary search is to figure out the "Search Space". For me, I think there are two kind of "Search Space" -- index and range(the range from the smallest number to the biggest number). Most usually, when the array is sorted in one direction, we can use index as "search space", when the array is unsorted and we are going to find a specific number, we can use "range". Similar to [this question](#287-find-the-duplicate-number).
+> The key point for any binary search is to figure out the "Search Space". For me, I think there are two kind of "Search Space" -- index and range(the range from the smallest number to the biggest number). Most usually, when the array is sorted in one direction, we can use index as "search space", when the array is unsorted and we are going to find a specific number, we can use "range". 
+
+Similar to [287. Find the Duplicate Number](#287-binary-search).
 
 ```java
 class Solution {
@@ -1198,6 +1201,142 @@ class Solution {
 - Tags: Array, Two Pointers, Binary Search
 - Stars: 3
 
+<span id="287-binary-search"></span>
+#### Binary Search
+Similar to [378. Kth Smallest Element in a Sorted Matrix](#378-binary-search)
+```java
+class Solution {
+    public int findDuplicate(int[] nums) {
+        int n = nums.length - 1;
+        int l = 1, r = n;
+        while(l<r){
+            int mid = l + ((r-l)>>1);
+            int count = countLTE(nums, mid);
+            if(count > mid)
+                r = mid;
+            else
+                l = mid + 1;
+        }
+        return l;
+    }
+    private int countLTE(int[] nums, int target){
+        int count = 0;
+        for(int num: nums)
+            if(num <= target)
+                count++;
+        return count;
+    }
+}
+```
+
+<span id="287-two-pointers"></span>
+#### slow-fast two pointers
+Similar to [142. Linked List Cycle II](#142-two-pointers)
+```java
+class Solution {
+    public int findDuplicate(int[] nums) {
+        int slow = 0, fast = 0;
+        do {
+            slow = nums[slow];
+            fast = nums[nums[fast]];
+        }
+        while(slow!=fast);
+        fast = 0;
+        while(slow != fast){
+            slow = nums[slow];
+            fast = nums[fast];
+        }
+        return slow;
+    }
+}
+```
+
+### 142. Linked List Cycle II
+- [Link](https://leetcode.com/problems/linked-list-cycle-ii/)
+- Tags: Linked List, Two Pointers
+- Stars: 2
+
+<span id="142-two-pointers"></span>
+#### slow-fast two pointers
+Similar to [287. Find the Duplicate Number](#287-two-pointers)
+```java
+public class Solution {
+    public ListNode detectCycle(ListNode head) {
+        if(head == null) return null;
+        ListNode slow = head, fast = head;
+        do{
+            if(fast.next == null || fast.next.next == null)
+                return null;
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        while(slow != fast);
+        fast = head;
+        while(slow != fast){
+            slow = slow.next;
+            fast = fast.next;
+        }
+        return slow;
+    }
+}
+```
+
+### 328. Odd Even Linked List
+- [Link](https://leetcode.com/problems/odd-even-linked-list/)
+- Tags: Linked List
+- Stars: 1
+
+```java
+class Solution {
+    public ListNode oddEvenList(ListNode head) {
+        if(head == null) return null;
+        ListNode curr = head, odd = head, even = head.next;
+        while(curr.next != null){
+            ListNode temp = curr.next;
+            curr.next = temp.next;
+            curr = temp;
+        }
+        curr = odd;
+        while(curr.next != null)
+            curr = curr.next;
+        curr.next = even;
+        return odd;
+    }
+}
+```
+
+### 102. Binary Tree Level Order Traversal
+- [Link](https://leetcode.com/problems/binary-tree-level-order-traversal/)
+- Tags: Tree, BFS
+- Stars: 1
+
+```java
+class Solution {
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        List<List<Integer>> result = new ArrayList<>();
+        if(root == null) return result;
+        Queue<TreeNode> qu = new LinkedList<>();
+        qu.add(root);
+        List<Integer> row = new ArrayList<>();
+        int count = 1;
+        while(!qu.isEmpty()){
+            TreeNode temp = qu.poll();
+            if(temp.left != null)
+                qu.add(temp.left);
+            if(temp.right != null)
+                qu.add(temp.right);
+            row.add(temp.val);
+            count--;
+            if(count == 0){
+                count = qu.size();
+                result.add(row);
+                row = new ArrayList<>();
+            }
+        }
+        return result;
+    }
+}
+```
 
 # Topics
 
