@@ -348,3 +348,5 @@ class Solution {
 - `Arrays.copyOfRange(arr, i, j)`
 - `nums.clone()` where `nums` is `int[]`
 - `Collections.reverse(List<T> list)`
+- `Java中的方法不可以有默认参数，只能通过重载来实现`
+-  char在Java中是16位的，因为Java用的是Unicode。

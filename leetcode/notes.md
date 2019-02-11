@@ -1466,7 +1466,225 @@ class Solution {
 }
 ```
 
+### 62. Unique Paths
+- [Link](https://leetcode.com/problems/unique-paths/)
+- Tags: Array, Dynamic Programming
+- Stars: 2
 
+#### DP
+This is a space-optimized DP solution. `dp[i][j] = dp[i-1][j] + dp[i][j-1]`
+```java
+class Solution {
+    public int uniquePaths(int m, int n) {
+        if(m==1 || n==1) return 1;
+        int min = Math.min(m, n), max = Math.max(m, n);
+        int[] dp = new int[min];
+        for(int i=0; i<min; i++)
+            dp[i] = 1;
+        for(int i=0; i<max-1; i++)
+            for(int j=1; j<min; j++)
+                dp[j] += dp[j-1];
+        return dp[min-1];
+    }
+}
+```
+
+#### Math
+This is a tricky solution. By observing the DP matrix,
+```
+1   1   1   1
+1   2   3   4
+1   3   6   10
+1   4   10  20
+1   5   15  35
+1   6   21  56
+```
+we can see a Pascal's triangle in the diagonal direction.
+Therefore, we have formula `$C_{m+n-2}^{m-1}$` for the final result.
+
+```java
+class Solution {
+    public int uniquePaths(int m, int n) {
+        m--; n--;
+        int min = Math.min(m, n);
+        if(min == 0) return 1;
+        long a = factorial(m+n, m+n-min+1);
+        long b = factorial(min, 1);
+        return (int)(a/b);
+    }
+    private long factorial(int max, int min){
+        long result = (long)min;
+        for(int i=min+1; i<=max; i++)
+            result *= i;
+        return result;
+    }
+}
+```
+
+### 215. Kth Largest Element in an Array
+- [Link](https://leetcode.com/problems/kth-largest-element-in-an-array/)
+- Tags: Divide and Conquer, Heap
+- Stars: 4
+
+#### Quick Selection
+```java
+class Solution {
+    public int findKthLargest(int[] nums, int k) {
+        int l = 0, r = nums.length-1;
+        while(l<r){
+            int idx = partition(nums, l, r);
+            if(idx+1 == k) return nums[idx];
+            else if(idx+1 > k) r = idx-1; //
+            else l = idx+1; // how can this line deal with duplicates??
+        }
+        return nums[k-1];
+    }
+    private int partition(int[] nums, int l, int r){
+        int i=l, j=r+1;
+        while(true){
+            while(nums[++i] > nums[l] && i<r);
+            while(nums[l] > nums[--j] && j>l);
+            if(i>=j) break;
+            swap(nums, i, j);
+        }
+        swap(nums, l, j); //  It's j!! not i!!
+        return j;  //  It's j!! not i!!
+    }
+    private void swap(int[] nums, int i, int j){
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
+```
+
+### 49. Group Anagrams
+- [Link](https://leetcode.com/problems/group-anagrams/)
+- Tags: Hash Table, Sting
+- Stars: 1
+
+#### Encoding String into Integer by primes
+```java
+class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        HashMap<Integer, List<String>> map = new HashMap<>();
+        // int[] primes = getPrimes();
+        int[] primes = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101};
+        for(String s: strs){
+            int num = getNum(primes, s);
+            if(!map.containsKey(num))
+                map.put(num, new ArrayList<>());
+            map.get(num).add(s);
+        }
+        List<List<String>> result = new ArrayList<>();
+        for(List<String> list : map.values()){
+            result.add(list);
+        }
+        return result;
+    }
+    // private int[] getPrimes(){
+    //     int[] primes = new int[26];
+    //     int k=0;
+    //     int N = 102;
+    //     boolean[] isPrime = new boolean[N];
+    //     for(int i=2; i<N; i++)
+    //         isPrime[i] = true;
+    //     for(int i=2; i<N; i++){
+    //         if(isPrime[i]){
+    //             primes[k++] = i;
+    //             if(k==26)  return primes;
+    //             for(int j=i+i; j<N; j+=i)
+    //                 isPrime[j] = false;
+    //         }
+    //     }
+    //     return null;
+    // }
+    private int getNum(int[] primes, String s){
+        int result = 1;
+        for(int i=0; i<s.length(); i++)
+            result *= primes[s.charAt(i)-'a'];
+        return result;
+    }
+}
+```
+
+#### Hashable Array
+1. When implementing `HashArray.equals()`, the parameter `o` must be of type `Object`!!
+2. Pay attention to the usage of `map.computeIfAbsent` and its return value. 
+```java
+class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        HashMap<HashArray, List<String>> map = new HashMap<>();
+        for(String s: strs){
+            HashArray ha = new HashArray(s);
+            map.computeIfAbsent(ha, key->new ArrayList<>()).add(s);
+        }
+        List<List<String>> result = new ArrayList<>();
+        for(List<String> list: map.values())
+            result.add(list);
+        return result;
+    }
+}
+class HashArray {
+    int[] arr = new int[26];
+    public HashArray(String s){
+        for(char c: s.toCharArray())
+            arr[c-'a']++;
+    }
+    public boolean equals(Object o) {
+        return Arrays.equals(this.arr, ((HashArray)o).arr);
+    }
+    public int hashCode(){
+        return Arrays.hashCode(arr);
+    }
+}
+```
+
+### 289. Game of Life
+- [Link](https://leetcode.com/problems/game-of-life/)
+- Tags: Array
+- Stars: 1
+
+#### Encoding all possible states
+The key idea is to encode all 4 possible transitions:  
+    live -> live,  1  
+    live -> dead,  -1  
+    dead -> live,  2  
+    dead -> dead.  0  
+
+In this way, we can calculate `num = (Math.abs(board[i][j])&1)`
+```java
+class Solution {
+    public void gameOfLife(int[][] board) {
+        for(int i=0; i<board.length; i++)
+            for(int j=0; j<board[0].length; j++){
+                int num = countCells(board, i, j);
+                if(board[i][j] == 1)
+                    if(num<2 || num>3) 
+                        board[i][j] = -1;
+                else
+                    if(num == 3)
+                        board[i][j] = 2;
+            }
+        for(int i=0; i<board.length; i++)
+            for(int j=0; j<board[0].length; j++){
+                if(board[i][j] == -1) board[i][j] = 0;
+                if(board[i][j] == 2) board[i][j] = 1;
+            }
+    }
+    private int countCells(int[][] board,int x,int y){
+        int count = 0;
+        for(int i=x-1; i<=x+1; i++)
+            for(int j=y-1; j<=y+1; j++){
+                if(i==x && j==y) continue;
+                if(i>=0 && j>=0 && i<board.length && j<board[0].length){
+                    count += (Math.abs(board[i][j])&1);
+                }
+            }
+        return count;
+    }
+}
+```
 
 # Topics
 
