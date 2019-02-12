@@ -1686,6 +1686,205 @@ class Solution {
 }
 ```
 
+### 11. Container With Most Water
+- [Link](https://leetcode.com/problems/container-with-most-water/)
+- Tags: Array, Two Pointers
+- Stars: 3
+
+#### Not My Solution
+[Here is an awesome explanation!](https://leetcode.com/problems/container-with-most-water/discuss/6099/Yet-another-way-to-see-what-happens-in-the-O(n)-algorithm)
+```java
+class Solution {
+    public int maxArea(int[] height) {
+        int l = 0, r = height.length-1;
+        int area = Integer.MIN_VALUE;
+        while(l<r){
+            area = Math.max(area, Math.min(height[l], height[r])*(r-l));
+            if(height[l] < height[r]) l++;
+            else r--;
+        }
+        return area;
+    }
+}
+```
+
+### 380. Insert Delete GetRandom O(1)
+- [Link](https://leetcode.com/problems/insert-delete-getrandom-o1/)
+- Tags: Array, Hash Table, Design
+- Stars: 3
+
+#### Tomb
+```java
+class RandomizedSet {
+    HashMap<Integer, Integer> map;
+    List<Integer> list;
+    Random rand;
+    /** Initialize your data structure here. */
+    public RandomizedSet() {
+        rand = new Random();
+        map = new HashMap<>();
+        list = new ArrayList<>();
+    }
+    /** Inserts a value to the set. Returns true if the set did not already contain the specified element. */
+    public boolean insert(int val) {
+        if(map.containsKey(val)) 
+            return false;
+        map.put(val, list.size());
+        list.add(val);
+        return true;
+    }
+    /** Removes a value from the set. Returns true if the set contained the specified element. */
+    public boolean remove(int val) {
+        if(!map.containsKey(val)) 
+            return false;
+        int idx = map.get(val);
+        list.set(idx, null);
+        map.remove(val);
+        if(map.size() <= list.size()/2){
+            map = new HashMap<>();
+            List<Integer> newList = new ArrayList<>();
+            for(int i=0; i<list.size(); i++){
+                Integer num = list.get(i);
+                if(num != null){
+                    map.put(num, newList.size());
+                    newList.add(num);
+                }
+            }
+            list = newList;
+        }
+        return true;
+    }
+    /** Get a random element from the set. */
+    public int getRandom() {
+        while(true){
+            int idx = rand.nextInt(list.size());
+            Integer num = list.get(idx);
+            if(num!=null) return num;
+        }
+    }
+}
+```
+
+#### swap
+```java
+class RandomizedSet {
+    HashMap<Integer, Integer> map;
+    List<Integer> list;
+    Random rand;
+    /** Initialize your data structure here. */
+    public RandomizedSet() {
+        rand = new Random();
+        map = new HashMap<>();
+        list = new ArrayList<>();
+    }
+    /** Inserts a value to the set. Returns true if the set did not already contain the specified element. */
+    public boolean insert(int val) {
+        if(map.containsKey(val)) 
+            return false;
+        map.put(val, list.size());
+        list.add(val);
+        return true;
+    }
+    /** Removes a value from the set. Returns true if the set contained the specified element. */
+    public boolean remove(int val) {
+        if(!map.containsKey(val))  return false;
+        int idx = map.get(val);
+        if(idx < list.size()-1){
+            int lastone = list.get(list.size()-1);
+            map.put(lastone, idx);
+            list.set(idx, lastone);
+        }
+        list.remove(list.size()-1);
+        map.remove(val);
+        return true;
+    }
+    /** Get a random element from the set. */
+    public int getRandom() {
+        return list.get(rand.nextInt(list.size()));
+    }
+}
+```
+
+### 36. Valid Sudoku
+- [Link](https://leetcode.com/problems/valid-sudoku/)
+- Tags: Hash Table
+- Stars: 3
+
+#### Encoding by self-defined Class
+type == 0 --> row  
+type == 1 --> col  
+type == 2 --> 3x3 block  
+```java
+class Solution {
+    public boolean isValidSudoku(char[][] board) {
+        HashSet<Tuple> st = new HashSet<>(3*81);
+        for(int i=0; i<9; i++)
+            for(int j=0; j<9; j++)
+                if(board[i][j] != '.'){
+                    char c = board[i][j];
+                    if(!st.add(new Tuple(0, i, c)) ||
+                       !st.add(new Tuple(1, j, c)) ||
+                       !st.add(new Tuple(2, i/3, j/3 ,c)))
+                        return false;
+                }
+        return true;
+    }
+}
+class Tuple {
+    int type, i, j;
+    char c;
+    public Tuple(int t, int k, char ch){
+        this(t, k, k, ch);
+    }
+    public Tuple(int t, int x, int y, char ch){
+        c = ch;
+        type = t;
+        i = x;
+        j = y;
+    }
+    public boolean equals(Object o){
+        Tuple obj = (Tuple) o;
+        if(this.type != obj.type || this.c!=obj.c) return false;
+        if(type == 0) return this.i==obj.i;
+        if(type == 1) return this.j==obj.j;
+        else return this.i==obj.i && this.j==obj.j;
+    }
+    public int hashCode(){
+        return (Integer.hashCode(type) +
+            Integer.hashCode(i) +
+            Integer.hashCode(j) +
+            Integer.hashCode(c));
+    }
+}
+```
+
+#### Encoding by native String
+"r%d%c" --> row  
+"c%d%c" --> col  
+"b%d%d%c" --> 3x3 block  
+```java
+class Solution {
+    public boolean isValidSudoku(char[][] board) {
+        HashSet<String> st = new HashSet<>();
+        for(int i=0; i<9; i++)
+            for(int j=0; j<9; j++)
+                if(board[i][j] != '.'){
+                    char ch = board[i][j];
+                    if(!st.add("r"+i+ch) || 
+                       !st.add("c"+j+ch) || 
+                       !st.add("b"+i/3+j/3+ch))
+                        return false;
+                }
+        return true;
+    }
+}
+```
+
+### 75. Sort Colors
+- [Link](https://leetcode.com/problems/sort-colors/)
+- Tags: Array, Two Pointers, Sort
+- Stars: 1
+
 # Topics
 
 ## Backtracking Questions

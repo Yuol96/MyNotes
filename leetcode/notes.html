@@ -1218,6 +1218,21 @@ body .markdown-body
 <li><a href="#encoding-all-possible-states">Encoding all possible states</a></li>
 </ul>
 </li>
+<li><a href="#11-container-with-most-water">11. Container With Most Water</a><ul>
+<li><a href="#not-my-solution">Not My Solution</a></li>
+</ul>
+</li>
+<li><a href="#380-insert-delete-getrandom-o1">380. Insert Delete GetRandom O(1)</a><ul>
+<li><a href="#tomb">Tomb</a></li>
+<li><a href="#swap_1">swap</a></li>
+</ul>
+</li>
+<li><a href="#36-valid-sudoku">36. Valid Sudoku</a><ul>
+<li><a href="#encoding-by-self-defined-class">Encoding by self-defined Class</a></li>
+<li><a href="#encoding-by-native-string">Encoding by native String</a></li>
+</ul>
+</li>
+<li><a href="#75-sort-colors">75. Sort Colors</a></li>
 </ul>
 </li>
 </ul>
@@ -2903,6 +2918,201 @@ Therefore, we have formula <code>$C_{m+n-2}^{m-1}$</code> for the final result.<
     <span class="o">}</span>
 <span class="o">}</span>
 </pre></div></p>
+<h3 id="11-container-with-most-water">11. Container With Most Water<a class="headerlink" href="#11-container-with-most-water" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/container-with-most-water/">Link</a></li>
+<li>Tags: Array, Two Pointers</li>
+<li>Stars: 3</li>
+</ul>
+<h4 id="not-my-solution">Not My Solution<a class="headerlink" href="#not-my-solution" title="Permanent link"></a></h4>
+<p><a href="https://leetcode.com/problems/container-with-most-water/discuss/6099/Yet-another-way-to-see-what-happens-in-the-O(n)-algorithm">Here is an awesome explanation!</a>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">maxArea</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">height</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">l</span> <span class="o">=</span> <span class="mi">0</span><span class="o">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">height</span><span class="o">.</span><span class="na">length</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">area</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">MIN_VALUE</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">l</span><span class="o">&lt;</span><span class="n">r</span><span class="o">){</span>
+            <span class="n">area</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">area</span><span class="o">,</span> <span class="n">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">height</span><span class="o">[</span><span class="n">l</span><span class="o">],</span> <span class="n">height</span><span class="o">[</span><span class="n">r</span><span class="o">])*(</span><span class="n">r</span><span class="o">-</span><span class="n">l</span><span class="o">));</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">height</span><span class="o">[</span><span class="n">l</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">height</span><span class="o">[</span><span class="n">r</span><span class="o">])</span> <span class="n">l</span><span class="o">++;</span>
+            <span class="k">else</span> <span class="n">r</span><span class="o">--;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">area</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div></p>
+<h3 id="380-insert-delete-getrandom-o1">380. Insert Delete GetRandom O(1)<a class="headerlink" href="#380-insert-delete-getrandom-o1" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/insert-delete-getrandom-o1/">Link</a></li>
+<li>Tags: Array, Hash Table, Design</li>
+<li>Stars: 3</li>
+</ul>
+<h4 id="tomb">Tomb<a class="headerlink" href="#tomb" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">RandomizedSet</span> <span class="o">{</span>
+    <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">Integer</span><span class="o">&gt;</span> <span class="n">map</span><span class="o">;</span>
+    <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">list</span><span class="o">;</span>
+    <span class="n">Random</span> <span class="n">rand</span><span class="o">;</span>
+    <span class="cm">/** Initialize your data structure here. */</span>
+    <span class="kd">public</span> <span class="nf">RandomizedSet</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">rand</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Random</span><span class="o">();</span>
+        <span class="n">map</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+        <span class="n">list</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+    <span class="o">}</span>
+    <span class="cm">/** Inserts a value to the set. Returns true if the set did not already contain the specified element. */</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">insert</span><span class="o">(</span><span class="kt">int</span> <span class="n">val</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">map</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">val</span><span class="o">))</span> 
+            <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">val</span><span class="o">,</span> <span class="n">list</span><span class="o">.</span><span class="na">size</span><span class="o">());</span>
+        <span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">val</span><span class="o">);</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="cm">/** Removes a value from the set. Returns true if the set contained the specified element. */</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">remove</span><span class="o">(</span><span class="kt">int</span> <span class="n">val</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(!</span><span class="n">map</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">val</span><span class="o">))</span> 
+            <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">val</span><span class="o">);</span>
+        <span class="n">list</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">idx</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+        <span class="n">map</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">val</span><span class="o">);</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">map</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">&lt;=</span> <span class="n">list</span><span class="o">.</span><span class="na">size</span><span class="o">()/</span><span class="mi">2</span><span class="o">){</span>
+            <span class="n">map</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+            <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">newList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">list</span><span class="o">.</span><span class="na">size</span><span class="o">();</span> <span class="n">i</span><span class="o">++){</span>
+                <span class="n">Integer</span> <span class="n">num</span> <span class="o">=</span> <span class="n">list</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">num</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+                    <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">num</span><span class="o">,</span> <span class="n">newList</span><span class="o">.</span><span class="na">size</span><span class="o">());</span>
+                    <span class="n">newList</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">num</span><span class="o">);</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+            <span class="n">list</span> <span class="o">=</span> <span class="n">newList</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="cm">/** Get a random element from the set. */</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getRandom</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">while</span><span class="o">(</span><span class="kc">true</span><span class="o">){</span>
+            <span class="kt">int</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="n">list</span><span class="o">.</span><span class="na">size</span><span class="o">());</span>
+            <span class="n">Integer</span> <span class="n">num</span> <span class="o">=</span> <span class="n">list</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">idx</span><span class="o">);</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">num</span><span class="o">!=</span><span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="n">num</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h4 id="swap_1">swap<a class="headerlink" href="#swap_1" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">RandomizedSet</span> <span class="o">{</span>
+    <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">Integer</span><span class="o">&gt;</span> <span class="n">map</span><span class="o">;</span>
+    <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">list</span><span class="o">;</span>
+    <span class="n">Random</span> <span class="n">rand</span><span class="o">;</span>
+    <span class="cm">/** Initialize your data structure here. */</span>
+    <span class="kd">public</span> <span class="nf">RandomizedSet</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">rand</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Random</span><span class="o">();</span>
+        <span class="n">map</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+        <span class="n">list</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+    <span class="o">}</span>
+    <span class="cm">/** Inserts a value to the set. Returns true if the set did not already contain the specified element. */</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">insert</span><span class="o">(</span><span class="kt">int</span> <span class="n">val</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">map</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">val</span><span class="o">))</span> 
+            <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">val</span><span class="o">,</span> <span class="n">list</span><span class="o">.</span><span class="na">size</span><span class="o">());</span>
+        <span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">val</span><span class="o">);</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="cm">/** Removes a value from the set. Returns true if the set contained the specified element. */</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">remove</span><span class="o">(</span><span class="kt">int</span> <span class="n">val</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(!</span><span class="n">map</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">val</span><span class="o">))</span>  <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">val</span><span class="o">);</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="n">list</span><span class="o">.</span><span class="na">size</span><span class="o">()-</span><span class="mi">1</span><span class="o">){</span>
+            <span class="kt">int</span> <span class="n">lastone</span> <span class="o">=</span> <span class="n">list</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">list</span><span class="o">.</span><span class="na">size</span><span class="o">()-</span><span class="mi">1</span><span class="o">);</span>
+            <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">lastone</span><span class="o">,</span> <span class="n">idx</span><span class="o">);</span>
+            <span class="n">list</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">idx</span><span class="o">,</span> <span class="n">lastone</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="n">list</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">list</span><span class="o">.</span><span class="na">size</span><span class="o">()-</span><span class="mi">1</span><span class="o">);</span>
+        <span class="n">map</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">val</span><span class="o">);</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="cm">/** Get a random element from the set. */</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getRandom</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">list</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">rand</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="n">list</span><span class="o">.</span><span class="na">size</span><span class="o">()));</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3 id="36-valid-sudoku">36. Valid Sudoku<a class="headerlink" href="#36-valid-sudoku" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/valid-sudoku/">Link</a></li>
+<li>Tags: Hash Table</li>
+<li>Stars: 3</li>
+</ul>
+<h4 id="encoding-by-self-defined-class">Encoding by self-defined Class<a class="headerlink" href="#encoding-by-self-defined-class" title="Permanent link"></a></h4>
+<p>type == 0 &ndash;&gt; row<br />
+type == 1 &ndash;&gt; col<br />
+type == 2 &ndash;&gt; 3x3 block<br />
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isValidSudoku</span><span class="o">(</span><span class="kt">char</span><span class="o">[][]</span> <span class="n">board</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Tuple</span><span class="o">&gt;</span> <span class="n">st</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;&gt;(</span><span class="mi">3</span><span class="o">*</span><span class="mi">81</span><span class="o">);</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">9</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="mi">9</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">board</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">!=</span> <span class="sc">&#39;.&#39;</span><span class="o">){</span>
+                    <span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="n">board</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">];</span>
+                    <span class="k">if</span><span class="o">(!</span><span class="n">st</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">Tuple</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">c</span><span class="o">))</span> <span class="o">||</span>
+                       <span class="o">!</span><span class="n">st</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">Tuple</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="n">j</span><span class="o">,</span> <span class="n">c</span><span class="o">))</span> <span class="o">||</span>
+                       <span class="o">!</span><span class="n">st</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">Tuple</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="n">i</span><span class="o">/</span><span class="mi">3</span><span class="o">,</span> <span class="n">j</span><span class="o">/</span><span class="mi">3</span> <span class="o">,</span><span class="n">c</span><span class="o">)))</span>
+                        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+                <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="kd">class</span> <span class="nc">Tuple</span> <span class="o">{</span>
+    <span class="kt">int</span> <span class="n">type</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">;</span>
+    <span class="kt">char</span> <span class="n">c</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="nf">Tuple</span><span class="o">(</span><span class="kt">int</span> <span class="n">t</span><span class="o">,</span> <span class="kt">int</span> <span class="n">k</span><span class="o">,</span> <span class="kt">char</span> <span class="n">ch</span><span class="o">){</span>
+        <span class="k">this</span><span class="o">(</span><span class="n">t</span><span class="o">,</span> <span class="n">k</span><span class="o">,</span> <span class="n">k</span><span class="o">,</span> <span class="n">ch</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="nf">Tuple</span><span class="o">(</span><span class="kt">int</span> <span class="n">t</span><span class="o">,</span> <span class="kt">int</span> <span class="n">x</span><span class="o">,</span> <span class="kt">int</span> <span class="n">y</span><span class="o">,</span> <span class="kt">char</span> <span class="n">ch</span><span class="o">){</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">ch</span><span class="o">;</span>
+        <span class="n">type</span> <span class="o">=</span> <span class="n">t</span><span class="o">;</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">x</span><span class="o">;</span>
+        <span class="n">j</span> <span class="o">=</span> <span class="n">y</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">equals</span><span class="o">(</span><span class="n">Object</span> <span class="n">o</span><span class="o">){</span>
+        <span class="n">Tuple</span> <span class="n">obj</span> <span class="o">=</span> <span class="o">(</span><span class="n">Tuple</span><span class="o">)</span> <span class="n">o</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">type</span> <span class="o">!=</span> <span class="n">obj</span><span class="o">.</span><span class="na">type</span> <span class="o">||</span> <span class="k">this</span><span class="o">.</span><span class="na">c</span><span class="o">!=</span><span class="n">obj</span><span class="o">.</span><span class="na">c</span><span class="o">)</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">type</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">i</span><span class="o">==</span><span class="n">obj</span><span class="o">.</span><span class="na">i</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">type</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">j</span><span class="o">==</span><span class="n">obj</span><span class="o">.</span><span class="na">j</span><span class="o">;</span>
+        <span class="k">else</span> <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">i</span><span class="o">==</span><span class="n">obj</span><span class="o">.</span><span class="na">i</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="o">.</span><span class="na">j</span><span class="o">==</span><span class="n">obj</span><span class="o">.</span><span class="na">j</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">hashCode</span><span class="o">(){</span>
+        <span class="k">return</span> <span class="o">(</span><span class="n">Integer</span><span class="o">.</span><span class="na">hashCode</span><span class="o">(</span><span class="n">type</span><span class="o">)</span> <span class="o">+</span>
+            <span class="n">Integer</span><span class="o">.</span><span class="na">hashCode</span><span class="o">(</span><span class="n">i</span><span class="o">)</span> <span class="o">+</span>
+            <span class="n">Integer</span><span class="o">.</span><span class="na">hashCode</span><span class="o">(</span><span class="n">j</span><span class="o">)</span> <span class="o">+</span>
+            <span class="n">Integer</span><span class="o">.</span><span class="na">hashCode</span><span class="o">(</span><span class="n">c</span><span class="o">));</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div></p>
+<h4 id="encoding-by-native-string">Encoding by native String<a class="headerlink" href="#encoding-by-native-string" title="Permanent link"></a></h4>
+<p>&ldquo;r%d%c&rdquo; &ndash;&gt; row<br />
+&ldquo;c%d%c&rdquo; &ndash;&gt; col<br />
+&ldquo;b%d%d%c&rdquo; &ndash;&gt; 3x3 block<br />
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isValidSudoku</span><span class="o">(</span><span class="kt">char</span><span class="o">[][]</span> <span class="n">board</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">st</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;&gt;();</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">9</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="mi">9</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">board</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">!=</span> <span class="sc">&#39;.&#39;</span><span class="o">){</span>
+                    <span class="kt">char</span> <span class="n">ch</span> <span class="o">=</span> <span class="n">board</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">];</span>
+                    <span class="k">if</span><span class="o">(!</span><span class="n">st</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">&quot;r&quot;</span><span class="o">+</span><span class="n">i</span><span class="o">+</span><span class="n">ch</span><span class="o">)</span> <span class="o">||</span> 
+                       <span class="o">!</span><span class="n">st</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">&quot;c&quot;</span><span class="o">+</span><span class="n">j</span><span class="o">+</span><span class="n">ch</span><span class="o">)</span> <span class="o">||</span> 
+                       <span class="o">!</span><span class="n">st</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">&quot;b&quot;</span><span class="o">+</span><span class="n">i</span><span class="o">/</span><span class="mi">3</span><span class="o">+</span><span class="n">j</span><span class="o">/</span><span class="mi">3</span><span class="o">+</span><span class="n">ch</span><span class="o">))</span>
+                        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+                <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div></p>
+<h3 id="75-sort-colors">75. Sort Colors<a class="headerlink" href="#75-sort-colors" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/sort-colors/">Link</a></li>
+<li>Tags: Array, Two Pointers, Sort</li>
+<li>Stars: 1</li>
+</ul>
 <h1 id="topics">Topics<a class="headerlink" href="#topics" title="Permanent link"></a></h1>
 <h2 id="backtracking-questions">Backtracking Questions<a class="headerlink" href="#backtracking-questions" title="Permanent link"></a></h2>
 <p><a href="https://leetcode.com/problems/permutations/discuss/18239/A-general-approach-to-backtracking-questions-in-Java-(Subsets-Permutations-Combination-Sum-Palindrome-Partioning)">Reference</a></p>
