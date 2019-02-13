@@ -1251,6 +1251,21 @@ body .markdown-body
 <li><a href="#bfs_1">BFS</a></li>
 </ul>
 </li>
+<li><a href="#279-perfect-squares">279. Perfect Squares</a><ul>
+<li><a href="#static-dp-298ms">static DP 298ms</a></li>
+<li><a href="#dp-25ms">DP 25ms</a></li>
+<li><a href="#bfs-87ms">BFS 87ms</a></li>
+</ul>
+</li>
+<li><a href="#240-search-a-2d-matrix-ii">240. Search a 2D Matrix II</a><ul>
+<li><a href="#bst">BST</a></li>
+</ul>
+</li>
+<li><a href="#300-longest-increasing-subsequence">300. Longest Increasing Subsequence</a><ul>
+<li><a href="#dp-on2">DP O(n^2)</a></li>
+<li><a href="#binary-search-onlogn">binary search O(nlogn)</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -1273,6 +1288,10 @@ body .markdown-body
 </li>
 <li><a href="#22-generate-parentheses">22. Generate Parentheses</a><ul>
 <li><a href="#my-backtracking-solution_1">My Backtracking Solution</a></li>
+</ul>
+</li>
+<li><a href="#17-letter-combinations-of-a-phone-number">17. Letter Combinations of a Phone Number</a><ul>
+<li><a href="#simple-backtracking">simple backtracking</a></li>
 </ul>
 </li>
 </ul>
@@ -2423,16 +2442,14 @@ Notice that we only care about differences of the prices array.</p>
 <span class="o">}</span>
 </pre></div>
 
-<p><span id="378-binary-search"></span></p>
 <h4 id="binary-search">Binary Search<a class="headerlink" href="#binary-search" title="Permanent link"></a></h4>
-<ol>
-<li>Attention: when <code>count == k</code>, <code>mid</code> might not exists in <code>matrix</code>, so we need to get the largest element that is less than or equal to <code>mid</code> in <code>matrix</code>. Therefore, we have <code>getMaxlte</code>.</li>
-<li>There&rsquo;s a situation that might break the while loop, i.e., there are more than one elements that have the same value as the kth smallest. When this happens, r will goes below l, and it breaks the while loop. Therefore, we need to return <code>l</code> instead of an arbitrary number outside the while loop. </li>
-<li>The whole picture of this algorithm:<blockquote>
+<p><span id="378-binary-search"></span>
+1. Attention: when <code>count == k</code>, <code>mid</code> might not exists in <code>matrix</code>, so we need to get the largest element that is less than or equal to <code>mid</code> in <code>matrix</code>. Therefore, we have <code>getMaxlte</code>.
+2. There&rsquo;s a situation that might break the while loop, i.e., there are more than one elements that have the same value as the kth smallest. When this happens, r will goes below l, and it breaks the while loop. Therefore, we need to return <code>l</code> instead of an arbitrary number outside the while loop. 
+3. The whole picture of this algorithm:</p>
+<blockquote>
 <p>The key point for any binary search is to figure out the &ldquo;Search Space&rdquo;. For me, I think there are two kind of &ldquo;Search Space&rdquo; &ndash; index and range(the range from the smallest number to the biggest number). Most usually, when the array is sorted in one direction, we can use index as &ldquo;search space&rdquo;, when the array is unsorted and we are going to find a specific number, we can use &ldquo;range&rdquo;. </p>
 </blockquote>
-</li>
-</ol>
 <p>Similar to <a href="#287-binary-search">287. Find the Duplicate Number</a>.</p>
 <div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="kt">int</span> <span class="nf">kthSmallest</span><span class="o">(</span><span class="kt">int</span><span class="o">[][]</span> <span class="n">matrix</span><span class="o">,</span> <span class="kt">int</span> <span class="n">k</span><span class="o">)</span> <span class="o">{</span>
@@ -2479,9 +2496,9 @@ Notice that we only care about differences of the prices array.</p>
 <li>Tags: Array, Two Pointers, Binary Search</li>
 <li>Stars: 3</li>
 </ul>
-<p><span id="287-binary-search"></span></p>
 <h4 id="binary-search_1">Binary Search<a class="headerlink" href="#binary-search_1" title="Permanent link"></a></h4>
-<p>Similar to <a href="#378-binary-search">378. Kth Smallest Element in a Sorted Matrix</a>
+<p><span id="287-binary-search"></span>
+Similar to <a href="#378-binary-search">378. Kth Smallest Element in a Sorted Matrix</a>
 <div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="kt">int</span> <span class="nf">findDuplicate</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">)</span> <span class="o">{</span>
         <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
@@ -2505,9 +2522,9 @@ Notice that we only care about differences of the prices array.</p>
     <span class="o">}</span>
 <span class="o">}</span>
 </pre></div></p>
-<p><span id="287-two-pointers"></span></p>
 <h4 id="slow-fast-two-pointers_1">slow-fast two pointers<a class="headerlink" href="#slow-fast-two-pointers_1" title="Permanent link"></a></h4>
-<p>Similar to <a href="#142-two-pointers">142. Linked List Cycle II</a>
+<p><span id="287-two-pointers"></span>
+Similar to <a href="#142-two-pointers">142. Linked List Cycle II</a>
 <div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="kt">int</span> <span class="nf">findDuplicate</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">)</span> <span class="o">{</span>
         <span class="kt">int</span> <span class="n">slow</span> <span class="o">=</span> <span class="mi">0</span><span class="o">,</span> <span class="n">fast</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
@@ -2531,9 +2548,9 @@ Notice that we only care about differences of the prices array.</p>
 <li>Tags: Linked List, Two Pointers</li>
 <li>Stars: 2</li>
 </ul>
-<p><span id="142-two-pointers"></span></p>
 <h4 id="slow-fast-two-pointers_2">slow-fast two pointers<a class="headerlink" href="#slow-fast-two-pointers_2" title="Permanent link"></a></h4>
-<p>Similar to <a href="#287-two-pointers">287. Find the Duplicate Number</a>
+<p><span id="142-two-pointers"></span>
+Similar to <a href="#287-two-pointers">287. Find the Duplicate Number</a>
 <div class="codehilite"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="n">ListNode</span> <span class="nf">detectCycle</span><span class="o">(</span><span class="n">ListNode</span> <span class="n">head</span><span class="o">)</span> <span class="o">{</span>
         <span class="k">if</span><span class="o">(</span><span class="n">head</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
@@ -2585,9 +2602,9 @@ Notice that we only care about differences of the prices array.</p>
 <li>Tags: Tree, BFS</li>
 <li>Stars: 1</li>
 </ul>
-<p><span id="102-BFS"></span></p>
 <h4 id="bfs">BFS<a class="headerlink" href="#bfs" title="Permanent link"></a></h4>
-<p>Similar to <a href="#103-BFS">103. Binary Tree Zigzag Level Order Traversal</a>
+<p><span id="102-BFS"></span>
+Similar to <a href="#103-BFS">103. Binary Tree Zigzag Level Order Traversal</a>
 <div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="nf">levelOrder</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
@@ -3219,9 +3236,9 @@ type == 2 &ndash;&gt; 3x3 block<br />
 <li>Tags: Stack, Tree, BFS</li>
 <li>Stars: 1</li>
 </ul>
-<p><span id="103-BFS"></span></p>
 <h4 id="bfs_1">BFS<a class="headerlink" href="#bfs_1" title="Permanent link"></a></h4>
-<p>Similar to <a href="#102-BFS">102. Binary Tree Level Order Traversal</a>
+<p><span id="103-BFS"></span>
+Similar to <a href="#102-BFS">102. Binary Tree Level Order Traversal</a>
 <div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="nf">zigzagLevelOrder</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
@@ -3250,6 +3267,154 @@ type == 2 &ndash;&gt; 3x3 block<br />
         <span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">,</span> <span class="n">j</span><span class="o">=</span><span class="n">list</span><span class="o">.</span><span class="na">size</span><span class="o">()-</span><span class="mi">1</span><span class="o">;</span>
         <span class="k">while</span><span class="o">(</span><span class="n">i</span><span class="o">&lt;</span><span class="n">j</span><span class="o">)</span>
             <span class="n">Collections</span><span class="o">.</span><span class="na">swap</span><span class="o">(</span><span class="n">list</span><span class="o">,</span> <span class="n">i</span><span class="o">++,</span> <span class="n">j</span><span class="o">--);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div></p>
+<h3 id="279-perfect-squares">279. Perfect Squares<a class="headerlink" href="#279-perfect-squares" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/perfect-squares/">Link</a></li>
+<li>Tags: Math, Dynamic Programming, BFS</li>
+<li>Stars: 2</li>
+</ul>
+<h4 id="static-dp-298ms">static DP 298ms<a class="headerlink" href="#static-dp-298ms" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kt">int</span> <span class="n">maxSq</span><span class="o">;</span>
+    <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">map</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">numSquares</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">maxSq</span> <span class="o">=</span> <span class="n">getSquares</span><span class="o">(</span><span class="n">n</span><span class="o">);</span>
+        <span class="n">map</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+        <span class="k">return</span> <span class="n">getNumSquares</span><span class="o">(</span><span class="n">n</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="nf">getNumSquares</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">n</span><span class="o">&lt;=</span><span class="mi">0</span><span class="o">)</span> <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">map</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">n</span><span class="o">))</span> <span class="k">return</span> <span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">n</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">min</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">MAX_VALUE</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;=</span><span class="n">maxSq</span><span class="o">;</span> <span class="n">i</span><span class="o">++){</span>
+            <span class="kt">int</span> <span class="n">sq</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="n">i</span><span class="o">;</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">sq</span><span class="o">&gt;</span><span class="n">n</span><span class="o">)</span> <span class="k">break</span><span class="o">;</span>
+            <span class="n">min</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">min</span><span class="o">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">getNumSquares</span><span class="o">(</span><span class="n">n</span><span class="o">-</span><span class="n">sq</span><span class="o">));</span>
+        <span class="o">}</span>
+        <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">n</span><span class="o">,</span> <span class="n">min</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">min</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="nf">getSquares</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">){</span>
+        <span class="kt">int</span> <span class="n">l</span><span class="o">=</span><span class="mi">1</span><span class="o">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">46340</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">l</span><span class="o">&lt;</span><span class="n">r</span><span class="o">){</span>
+            <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="n">l</span> <span class="o">+</span> <span class="o">((</span><span class="n">r</span><span class="o">-</span><span class="n">l</span><span class="o">)&gt;&gt;</span><span class="mi">1</span><span class="o">);</span>
+            <span class="kt">int</span> <span class="n">sq</span> <span class="o">=</span> <span class="n">mid</span><span class="o">*</span><span class="n">mid</span><span class="o">;</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">sq</span> <span class="o">==</span> <span class="n">n</span><span class="o">)</span> <span class="k">return</span> <span class="n">mid</span><span class="o">;</span>
+            <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">sq</span> <span class="o">&gt;</span> <span class="n">n</span><span class="o">)</span> <span class="n">r</span> <span class="o">=</span> <span class="n">mid</span><span class="o">;</span>
+            <span class="k">else</span> <span class="n">l</span> <span class="o">=</span> <span class="n">mid</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">l</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h4 id="dp-25ms">DP 25ms<a class="headerlink" href="#dp-25ms" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">numSquares</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">dp</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="o">];</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">2</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">MAX_VALUE</span><span class="o">;</span>
+        <span class="n">dp</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">2</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;=</span><span class="n">n</span><span class="o">;</span> <span class="n">i</span><span class="o">++){</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span> <span class="n">j</span><span class="o">*</span><span class="n">j</span><span class="o">&lt;=</span><span class="n">i</span><span class="o">;</span> <span class="n">j</span><span class="o">++){</span>
+                <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">],</span> <span class="mi">1</span><span class="o">+</span><span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">-</span><span class="n">j</span><span class="o">*</span><span class="n">j</span><span class="o">]);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">dp</span><span class="o">[</span><span class="n">n</span><span class="o">];</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h4 id="bfs-87ms">BFS 87ms<a class="headerlink" href="#bfs-87ms" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">numSquares</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Queue</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">qu</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+        <span class="n">qu</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">n</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">1</span><span class="o">,</span> <span class="n">level</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(!</span><span class="n">qu</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+            <span class="kt">int</span> <span class="n">curr</span> <span class="o">=</span> <span class="n">qu</span><span class="o">.</span><span class="na">poll</span><span class="o">();</span>
+            <span class="n">count</span><span class="o">--;</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">curr</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="k">return</span> <span class="n">level</span><span class="o">;</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span> <span class="n">i</span><span class="o">*</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">curr</span><span class="o">;</span> <span class="n">i</span><span class="o">++){</span>
+                <span class="kt">int</span> <span class="n">val</span> <span class="o">=</span> <span class="n">curr</span><span class="o">-</span><span class="n">i</span><span class="o">*</span><span class="n">i</span><span class="o">;</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">val</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="k">return</span> <span class="n">level</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span>
+                <span class="n">qu</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">val</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">count</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+                <span class="n">count</span> <span class="o">=</span> <span class="n">qu</span><span class="o">.</span><span class="na">size</span><span class="o">();</span>
+                <span class="n">level</span><span class="o">++;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3 id="240-search-a-2d-matrix-ii">240. Search a 2D Matrix II<a class="headerlink" href="#240-search-a-2d-matrix-ii" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/search-a-2d-matrix-ii/">Link</a></li>
+<li>Tags: Binary Search, Divide and Conquer</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="bst">BST<a class="headerlink" href="#bst" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">searchMatrix</span><span class="o">(</span><span class="kt">int</span><span class="o">[][]</span> <span class="n">matrix</span><span class="o">,</span> <span class="kt">int</span> <span class="n">target</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">matrix</span><span class="o">.</span><span class="na">length</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">matrix</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span><span class="o">==</span><span class="mi">0</span><span class="o">)</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">m</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="na">length</span><span class="o">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">,</span> <span class="n">j</span><span class="o">=</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">i</span><span class="o">&lt;</span><span class="n">m</span> <span class="o">&amp;&amp;</span> <span class="n">j</span><span class="o">&gt;=</span><span class="mi">0</span><span class="o">){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">matrix</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">==</span> <span class="n">target</span><span class="o">)</span> <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+            <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">matrix</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">target</span><span class="o">)</span> <span class="n">i</span><span class="o">++;</span>
+            <span class="k">else</span> <span class="n">j</span><span class="o">--;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3 id="300-longest-increasing-subsequence">300. Longest Increasing Subsequence<a class="headerlink" href="#300-longest-increasing-subsequence" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/longest-increasing-subsequence/">Link</a></li>
+<li>Tags: Binary Search, Dynamic Programming</li>
+<li>Stars: 3</li>
+</ul>
+<h4 id="dp-on2">DP O(n^2)<a class="headerlink" href="#dp-on2" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">lengthOfLIS</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">dp</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">];</span>
+        <span class="n">Arrays</span><span class="o">.</span><span class="na">fill</span><span class="o">(</span><span class="n">dp</span><span class="o">,</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++){</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">i</span><span class="o">;</span> <span class="n">j</span><span class="o">++){</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]){</span>
+                    <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">],</span> <span class="mi">1</span><span class="o">+</span><span class="n">dp</span><span class="o">[</span><span class="n">j</span><span class="o">]);</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">dp</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">result</span> <span class="o">&lt;</span> <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">])</span> <span class="n">result</span> <span class="o">=</span> <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h4 id="binary-search-onlogn">binary search O(nlogn)<a class="headerlink" href="#binary-search-onlogn" title="Permanent link"></a></h4>
+<p><code>tails[i]</code> = the min value of the last elements of all subsequences with length of i+1
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">lengthOfLIS</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">tails</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">];</span>
+        <span class="kt">int</span> <span class="n">maxLen</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">num</span><span class="o">:</span> <span class="n">nums</span><span class="o">){</span>
+            <span class="kt">int</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">Arrays</span><span class="o">.</span><span class="na">binarySearch</span><span class="o">(</span><span class="n">tails</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">maxLen</span><span class="o">,</span> <span class="n">num</span><span class="o">);</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">idx</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">)</span> <span class="n">idx</span> <span class="o">=</span> <span class="o">-(</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="o">);</span>
+            <span class="n">tails</span><span class="o">[</span><span class="n">idx</span><span class="o">]</span> <span class="o">=</span> <span class="n">num</span><span class="o">;</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">maxLen</span> <span class="o">==</span> <span class="n">idx</span><span class="o">)</span> <span class="n">maxLen</span><span class="o">++;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">maxLen</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span>
 </pre></div></p>
@@ -3427,6 +3592,43 @@ type == 2 &ndash;&gt; 3x3 block<br />
             <span class="n">sb</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="sc">&#39;)&#39;</span><span class="o">);</span>
             <span class="n">backtrack</span><span class="o">(</span><span class="n">sb</span><span class="o">,</span> <span class="n">left</span><span class="o">,</span> <span class="n">right</span><span class="o">-</span><span class="mi">1</span><span class="o">);</span>
             <span class="n">sb</span><span class="o">.</span><span class="na">delete</span><span class="o">(</span><span class="n">sb</span><span class="o">.</span><span class="na">length</span><span class="o">()-</span><span class="mi">1</span><span class="o">,</span> <span class="n">sb</span><span class="o">.</span><span class="na">length</span><span class="o">());</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3 id="17-letter-combinations-of-a-phone-number">17. Letter Combinations of a Phone Number<a class="headerlink" href="#17-letter-combinations-of-a-phone-number" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/letter-combinations-of-a-phone-number/">Link</a></li>
+<li>Tags: String, Backtracking</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="simple-backtracking">simple backtracking<a class="headerlink" href="#simple-backtracking" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+    <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Character</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">map</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">letterCombinations</span><span class="o">(</span><span class="n">String</span> <span class="n">digits</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">digits</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">digits</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+        <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="sc">&#39;2&#39;</span><span class="o">,</span> <span class="s">&quot;abc&quot;</span><span class="o">);</span>
+        <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="sc">&#39;3&#39;</span><span class="o">,</span> <span class="s">&quot;def&quot;</span><span class="o">);</span>
+        <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="sc">&#39;4&#39;</span><span class="o">,</span> <span class="s">&quot;ghi&quot;</span><span class="o">);</span>
+        <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="sc">&#39;5&#39;</span><span class="o">,</span> <span class="s">&quot;jkl&quot;</span><span class="o">);</span>
+        <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="sc">&#39;6&#39;</span><span class="o">,</span> <span class="s">&quot;mno&quot;</span><span class="o">);</span>
+        <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="sc">&#39;7&#39;</span><span class="o">,</span> <span class="s">&quot;pqrs&quot;</span><span class="o">);</span>
+        <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="sc">&#39;8&#39;</span><span class="o">,</span> <span class="s">&quot;tuv&quot;</span><span class="o">);</span>
+        <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="sc">&#39;9&#39;</span><span class="o">,</span> <span class="s">&quot;wxyz&quot;</span><span class="o">);</span>
+        <span class="n">backtrack</span><span class="o">(</span><span class="n">digits</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="o">());</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">backtrack</span><span class="o">(</span><span class="n">String</span> <span class="n">digits</span><span class="o">,</span> <span class="kt">int</span> <span class="n">start</span><span class="o">,</span> <span class="n">StringBuilder</span> <span class="n">currsb</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">start</span> <span class="o">==</span> <span class="n">digits</span><span class="o">.</span><span class="na">length</span><span class="o">()){</span>
+            <span class="n">result</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">currsb</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+            <span class="k">return</span> <span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">char</span> <span class="n">c</span><span class="o">:</span> <span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">digits</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">start</span><span class="o">)).</span><span class="na">toCharArray</span><span class="o">()){</span>
+            <span class="n">currsb</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">c</span><span class="o">);</span>
+            <span class="n">backtrack</span><span class="o">(</span><span class="n">digits</span><span class="o">,</span> <span class="n">start</span><span class="o">+</span><span class="mi">1</span><span class="o">,</span> <span class="n">currsb</span><span class="o">);</span>
+            <span class="n">currsb</span><span class="o">.</span><span class="na">delete</span><span class="o">(</span><span class="n">currsb</span><span class="o">.</span><span class="na">length</span><span class="o">()-</span><span class="mi">1</span><span class="o">,</span> <span class="n">currsb</span><span class="o">.</span><span class="na">length</span><span class="o">());</span>
         <span class="o">}</span>
     <span class="o">}</span>
 <span class="o">}</span>

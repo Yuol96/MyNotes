@@ -1147,8 +1147,9 @@ class Tuple implements Comparable<Tuple> {
 }
 ```
 
-<span id="378-binary-search"></span>
+
 #### Binary Search
+<span id="378-binary-search"></span>
 1. Attention: when `count == k`, `mid` might not exists in `matrix`, so we need to get the largest element that is less than or equal to `mid` in `matrix`. Therefore, we have `getMaxlte`.
 2. There's a situation that might break the while loop, i.e., there are more than one elements that have the same value as the kth smallest. When this happens, r will goes below l, and it breaks the while loop. Therefore, we need to return `l` instead of an arbitrary number outside the while loop. 
 3. The whole picture of this algorithm:
@@ -1201,8 +1202,8 @@ class Solution {
 - Tags: Array, Two Pointers, Binary Search
 - Stars: 3
 
-<span id="287-binary-search"></span>
 #### Binary Search
+<span id="287-binary-search"></span>
 Similar to [378. Kth Smallest Element in a Sorted Matrix](#378-binary-search)
 ```java
 class Solution {
@@ -1229,8 +1230,9 @@ class Solution {
 }
 ```
 
-<span id="287-two-pointers"></span>
+
 #### slow-fast two pointers
+<span id="287-two-pointers"></span>
 Similar to [142. Linked List Cycle II](#142-two-pointers)
 ```java
 class Solution {
@@ -1256,8 +1258,9 @@ class Solution {
 - Tags: Linked List, Two Pointers
 - Stars: 2
 
-<span id="142-two-pointers"></span>
+
 #### slow-fast two pointers
+<span id="142-two-pointers"></span>
 Similar to [287. Find the Duplicate Number](#287-two-pointers)
 ```java
 public class Solution {
@@ -1311,8 +1314,9 @@ class Solution {
 - Tags: Tree, BFS
 - Stars: 1
 
-<span id="102-BFS"></span>
+
 #### BFS
+<span id="102-BFS"></span>
 Similar to [103. Binary Tree Zigzag Level Order Traversal](#103-BFS)
 ```java
 class Solution {
@@ -1962,8 +1966,8 @@ class Solution {
 - Tags: Stack, Tree, BFS
 - Stars: 1
 
-<span id="103-BFS"></span>
 #### BFS
+<span id="103-BFS"></span>
 Similar to [102. Binary Tree Level Order Traversal](#102-BFS)
 ```java
 class Solution {
@@ -1994,6 +1998,158 @@ class Solution {
         int i=0, j=list.size()-1;
         while(i<j)
             Collections.swap(list, i++, j--);
+    }
+}
+```
+
+### 279. Perfect Squares
+- [Link](https://leetcode.com/problems/perfect-squares/)
+- Tags: Math, Dynamic Programming, BFS
+- Stars: 2
+
+#### static DP 298ms
+```java
+class Solution {
+    int maxSq;
+    HashMap<Integer,Integer> map;
+    public int numSquares(int n) {
+        maxSq = getSquares(n);
+        map = new HashMap<>();
+        return getNumSquares(n);
+    }
+    private int getNumSquares(int n){
+        if(n<=0) return 0;
+        if(map.containsKey(n)) return map.get(n);
+        int min = Integer.MAX_VALUE;
+        for(int i=1; i<=maxSq; i++){
+            int sq = i*i;
+            if(sq>n) break;
+            min = Math.min(min, 1 + getNumSquares(n-sq));
+        }
+        map.put(n, min);
+        return min;
+    }
+    private int getSquares(int n){
+        int l=1, r=46340;
+        while(l<r){
+            int mid = l + ((r-l)>>1);
+            int sq = mid*mid;
+            if(sq == n) return mid;
+            else if(sq > n) r = mid;
+            else l = mid+1;
+        }
+        return l;
+    }
+}
+```
+
+#### DP 25ms
+```java
+class Solution {
+    public int numSquares(int n) {
+        int[] dp = new int[n+1];
+        for(int i=2; i<n+1; i++) dp[i] = Integer.MAX_VALUE;
+        dp[1] = 1;
+        for(int i=2; i<=n; i++){
+            for(int j=1; j*j<=i; j++){
+                dp[i] = Math.min(dp[i], 1+dp[i-j*j]);
+            }
+        }
+        return dp[n];
+    }
+}
+```
+
+#### BFS 87ms
+```java
+class Solution {
+    public int numSquares(int n) {
+        Queue<Integer> qu = new LinkedList<>();
+        qu.add(n);
+        int count = 1, level = 0;
+        while(!qu.isEmpty()){
+            int curr = qu.poll();
+            count--;
+            if(curr == 0) return level;
+            for(int i=1; i*i<=curr; i++){
+                int val = curr-i*i;
+                if(val == 0) return level+1;
+                qu.add(val);
+            }
+            if(count == 0){
+                count = qu.size();
+                level++;
+            }
+        }
+        return 0;
+    }
+}
+```
+
+### 240. Search a 2D Matrix II
+- [Link](https://leetcode.com/problems/search-a-2d-matrix-ii/)
+- Tags: Binary Search, Divide and Conquer
+- Stars: 1
+
+#### BST
+```java
+class Solution {
+    public boolean searchMatrix(int[][] matrix, int target) {
+        if(matrix.length == 0 || matrix[0].length==0) return false;
+        int m = matrix.length, n = matrix[0].length;
+        int i=0, j=n-1;
+        while(i<m && j>=0){
+            if(matrix[i][j] == target) return true;
+            else if(matrix[i][j] < target) i++;
+            else j--;
+        }
+        return false;
+    }
+}
+```
+
+### 300. Longest Increasing Subsequence
+- [Link](https://leetcode.com/problems/longest-increasing-subsequence/)
+- Tags: Binary Search, Dynamic Programming
+- Stars: 3
+
+#### DP O(n^2)
+```java
+class Solution {
+    public int lengthOfLIS(int[] nums) {
+        if(nums.length == 0) return 0;
+        int[] dp = new int[nums.length];
+        Arrays.fill(dp, 1);
+        for(int i=1; i<nums.length; i++){
+            for(int j=0; j<i; j++){
+                if(nums[j] < nums[i]){
+                    dp[i] = Math.max(dp[i], 1+dp[j]);
+                }
+            }
+        }
+        int result = 0;
+        for(int i=0; i<dp.length; i++){
+            if(result < dp[i]) result = dp[i];
+        }
+        return result;
+    }
+}
+```
+
+#### binary search O(nlogn)
+`tails[i]` = the min value of the last elements of all subsequences with length of i+1
+```java
+class Solution {
+    public int lengthOfLIS(int[] nums) {
+        int[] tails = new int[nums.length];
+        int maxLen = 0;
+        for(int num: nums){
+            int idx = Arrays.binarySearch(tails, 0, maxLen, num);
+            if(idx<0) idx = -(idx+1);
+            tails[idx] = num;
+            if(maxLen == idx) maxLen++;
+        }
+        return maxLen;
     }
 }
 ```
@@ -2178,6 +2334,43 @@ class Solution {
             sb.append(')');
             backtrack(sb, left, right-1);
             sb.delete(sb.length()-1, sb.length());
+        }
+    }
+}
+```
+
+### 17. Letter Combinations of a Phone Number
+- [Link](https://leetcode.com/problems/letter-combinations-of-a-phone-number/)
+- Tags: String, Backtracking
+- Stars: 1
+
+#### simple backtracking
+```java
+class Solution {
+    List<String> result = new ArrayList<>();
+    HashMap<Character, String> map = new HashMap<>();
+    public List<String> letterCombinations(String digits) {
+        if(digits == null || digits.length() == 0) return result;
+        map.put('2', "abc");
+        map.put('3', "def");
+        map.put('4', "ghi");
+        map.put('5', "jkl");
+        map.put('6', "mno");
+        map.put('7', "pqrs");
+        map.put('8', "tuv");
+        map.put('9', "wxyz");
+        backtrack(digits, 0, new StringBuilder());
+        return result;
+    }
+    private void backtrack(String digits, int start, StringBuilder currsb){
+        if(start == digits.length()){
+            result.add(currsb.toString());
+            return ;
+        }
+        for(char c: map.get(digits.charAt(start)).toCharArray()){
+            currsb.append(c);
+            backtrack(digits, start+1, currsb);
+            currsb.delete(currsb.length()-1, currsb.length());
         }
     }
 }
