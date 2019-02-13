@@ -1,6 +1,6 @@
 **My Java Solutions for LeetCode problems**  
 
-![#f03c15](https://placehold.it/15/f03c15/000000?text=+) ![#f03c15](https://placehold.it/15/f03c15/000000?text=+) If you are interested in [my Python Solutions](https://github.com/Yuol96/leetcode-notes), please visit [this repo](https://github.com/Yuol96/leetcode-notes) of mine. ![#f03c15](https://placehold.it/15/f03c15/000000?text=+) ![#f03c15](https://placehold.it/15/f03c15/000000?text=+)
+**If you are interested in [my Python Solutions](https://github.com/Yuol96/leetcode-notes), please visit [this repo](https://github.com/Yuol96/leetcode-notes) of mine.**
 
 [TOC]
 # Top Hits
