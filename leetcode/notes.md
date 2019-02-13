@@ -1286,6 +1286,7 @@ public class Solution {
 - Tags: Linked List
 - Stars: 1
 
+#### two heads
 ```java
 class Solution {
     public ListNode oddEvenList(ListNode head) {
@@ -1310,6 +1311,9 @@ class Solution {
 - Tags: Tree, BFS
 - Stars: 1
 
+<span id="102-BFS"></span>
+#### BFS
+Similar to [103. Binary Tree Zigzag Level Order Traversal](#103-BFS)
 ```java
 class Solution {
     public List<List<Integer>> levelOrder(TreeNode root) {
@@ -1885,6 +1889,115 @@ class Solution {
 - Tags: Array, Two Pointers, Sort
 - Stars: 1
 
+#### one pass solution
+two pointers
+```java
+class Solution {
+    public void sortColors(int[] nums) {
+        int curr=0, i=0, j=nums.length-1;
+        while(curr<=j){
+            if(nums[curr] == 2) swap(nums, curr, j--);
+            else if(nums[curr] == 1) curr++;
+            else swap(nums, curr++, i++);
+        }
+    }
+    private void swap(int[] nums, int i, int j){
+        if(nums[i] != nums[j]){
+            int temp = nums[i];
+            nums[i] = nums[j];
+            nums[j] = temp;
+        }
+    }
+}
+```
+
+#### two pass solution
+Count
+```java
+class Solution {
+    public void sortColors(int[] nums) {
+        int zeros=0, ones=0, twos=0;
+        for(int num: nums){
+            if(num==0) zeros++;
+            else if(num==1) ones++;
+            else twos++;
+        }
+        int i=0;
+        while(zeros-->0) nums[i++]=0;
+        while(ones-->0) nums[i++]=1;
+        while(twos-->0) nums[i++]=2;
+    }
+}
+```
+
+### 162. Find Peak Element
+- [Link](https://leetcode.com/problems/find-peak-element/)
+- Tags: Array, Binary Search
+- Stars: 1
+
+#### Binary Search differences of adjacent elements
+```java
+class Solution {
+    public int findPeakElement(int[] nums) {
+        if(nums.length == 0) return 0;
+        if(goesUp(nums, nums.length-1)) return nums.length-1;
+        int l=0, r=nums.length-1;
+        while(true){
+            int mid = l + ((r-l)>>1);
+            if(goesUp(nums, mid)) l = mid;
+            else r = mid;
+            if(l + 1 >= r) break;
+        }
+        return l;
+    }
+    private boolean goesUp(int[] nums, int idx){
+        if(idx == 0) return true;
+        return nums[idx]>nums[idx-1];
+    }
+}
+```
+
+### 103. Binary Tree Zigzag Level Order Traversal
+- [Link](https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/)
+- Tags: Stack, Tree, BFS
+- Stars: 1
+
+<span id="103-BFS"></span>
+#### BFS
+Similar to [102. Binary Tree Level Order Traversal](#102-BFS)
+```java
+class Solution {
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> result = new ArrayList<>();
+        if(root == null) return result;
+        Queue<TreeNode> qu = new LinkedList<>();
+        qu.add(root);
+        int count = 1;
+        List<Integer> list = new ArrayList<>();
+        while(!qu.isEmpty()){
+            TreeNode temp = qu.poll();
+            count--;
+            if(temp.left != null) qu.add(temp.left);
+            if(temp.right != null) qu.add(temp.right);
+            list.add(temp.val);
+            if(count == 0){
+                count = qu.size();
+                result.add(list);
+                list = new ArrayList<>();
+            }
+        }
+        for(int i=1; i<result.size(); i+=2)
+            reverse(result.get(i));
+        return result;
+    }
+    private void reverse(List<Integer> list){
+        int i=0, j=list.size()-1;
+        while(i<j)
+            Collections.swap(list, i++, j--);
+    }
+}
+```
+
 # Topics
 
 ## Backtracking Questions
@@ -2123,6 +2236,127 @@ class Solution {
             for(int b: B)
                 map.put(a+b, map.getOrDefault(a+b, 0) + 1);
         return map;
+    }
+}
+```
+
+# Weekly Contests
+
+## No. 96
+### 881. Boats to Save People
+- [Link](https://leetcode.com/problems/boats-to-save-people/)
+- Tags: Two Pointers, Greedy
+- Stars: 1
+
+#### two pointers
+```java
+class Solution {
+    public int numRescueBoats(int[] people, int limit) {
+        Arrays.sort(people);
+        int i=0, j=people.length-1;
+        int result = 0;
+        while(i<=j){
+            if(i==j){
+                result++;
+                break;
+            }
+            if(people[i]+people[j] > limit){
+                j--;
+            }
+            else{
+                i++;
+                j--;
+            }
+            result++;
+        }
+        return result;
+    }
+}
+```
+
+### 880. Decoded String at Index
+- [Link](https://leetcode.com/problems/decoded-string-at-index/)
+- Tags: Stack
+- Stars: 3
+
+#### Iterative
+```java
+class Solution {
+    public String decodeAtIndex(String S, int K) {
+        List<Tuple> list = getTuples(S);
+        int pos = -1;
+        for(int i=0; i<list.size(); i++)
+            if(list.get(i).accu >= K) pos = i;
+        int curr = K-1;
+        while(pos>0){
+            curr %= list.get(pos).curr;
+            if(curr >= list.get(pos-1).accu) {
+                curr -= list.get(pos-1).accu;
+                return Character.toString(list.get(pos).str.charAt(curr));
+            }
+            pos--;
+        }
+        curr %= list.get(0).curr;
+        return Character.toString(list.get(0).str.charAt(curr));
+    }
+    private List<Tuple> getTuples(String S){
+        S = S + "1";
+        List<Tuple> result = new ArrayList<>();
+        int lastIdx = 0;
+        for(int i=0; i<S.length(); i++){
+            char c = S.charAt(i);
+            if(!Character.isLetter(c)){
+                if(lastIdx == i){
+                    result.get(result.size()-1).repeat *= c-'0';
+                    lastIdx = i+1;
+                }
+                else {
+                    Tuple tup = new Tuple(S.substring(lastIdx, i), c-'0', i-lastIdx);
+                    result.add(tup);
+                    lastIdx = i+1;
+                }
+            }
+        }
+        result.get(0).accu = result.get(0).curr * result.get(0).repeat;
+        for(int i=1; i<result.size(); i++){
+            result.get(i).curr = (result.get(i-1).accu + result.get(i).curr);
+            result.get(i).accu = result.get(i).curr * result.get(i).repeat;
+        }
+        return result;
+    }
+}
+class Tuple{
+    String str;
+    int repeat;
+    long accu; // accumulative length after repeat
+    long curr; // accumulative length before repeat
+    public Tuple(String s, int r, long a){
+        str = s;
+        repeat = r;
+        curr = a;
+    }
+}
+```
+
+#### recursive
+Attention: strLen might OVERFLOW!!!!!!! Thus, we must use long. 
+```java
+class Solution {
+    public String decodeAtIndex(String S, int K) {
+        long strLen = 0;
+        for(int i=0; i<S.length(); i++){
+            char c = S.charAt(i);
+            if(Character.isLetter(c)){
+                if(++strLen == K) return Character.toString(c);
+            }
+            else {
+                int repeat = c-'0';
+                if(strLen * repeat >= K) 
+                    return decodeAtIndex(S.substring(0, i), (int)((K-1)%strLen+1));
+                strLen *= repeat;
+            }
+        }
+        return null;
     }
 }
 ```

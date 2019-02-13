@@ -350,3 +350,4 @@ class Solution {
 - `Collections.reverse(List<T> list)`
 - `Java中的方法不可以有默认参数，只能通过重载来实现`
 -  char在Java中是16位的，因为Java用的是Unicode。
+- `Collections.swap(List<?> list, int i, int j)`
