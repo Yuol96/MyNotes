@@ -1266,6 +1266,10 @@ body .markdown-body
 <li><a href="#binary-search-onlogn">binary search O(nlogn)</a></li>
 </ul>
 </li>
+<li><a href="#334-increasing-triplet-subsequence">334. Increasing Triplet Subsequence</a><ul>
+<li><a href="#binary-search_2">binary search</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -1292,6 +1296,10 @@ body .markdown-body
 </li>
 <li><a href="#17-letter-combinations-of-a-phone-number">17. Letter Combinations of a Phone Number</a><ul>
 <li><a href="#simple-backtracking">simple backtracking</a></li>
+</ul>
+</li>
+<li><a href="#200-number-of-islands">200. Number of Islands</a><ul>
+<li><a href="#dfs">DFS</a></li>
 </ul>
 </li>
 </ul>
@@ -3403,7 +3411,9 @@ Similar to <a href="#102-BFS">102. Binary Tree Level Order Traversal</a>
 </pre></div>
 
 <h4 id="binary-search-onlogn">binary search O(nlogn)<a class="headerlink" href="#binary-search-onlogn" title="Permanent link"></a></h4>
-<p><code>tails[i]</code> = the min value of the last elements of all subsequences with length of i+1
+<p><span id="300-binary-search"></span>
+<code>tails[i]</code> = the min value of the last elements of all subsequences with length of i+1. </p>
+<p>Similar to <a href="#334-binary-search">334. Increasing Triplet Subsequence</a>
 <div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="kt">int</span> <span class="nf">lengthOfLIS</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">)</span> <span class="o">{</span>
         <span class="kt">int</span><span class="o">[]</span> <span class="n">tails</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">];</span>
@@ -3413,6 +3423,35 @@ Similar to <a href="#102-BFS">102. Binary Tree Level Order Traversal</a>
             <span class="k">if</span><span class="o">(</span><span class="n">idx</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">)</span> <span class="n">idx</span> <span class="o">=</span> <span class="o">-(</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="o">);</span>
             <span class="n">tails</span><span class="o">[</span><span class="n">idx</span><span class="o">]</span> <span class="o">=</span> <span class="n">num</span><span class="o">;</span>
             <span class="k">if</span><span class="o">(</span><span class="n">maxLen</span> <span class="o">==</span> <span class="n">idx</span><span class="o">)</span> <span class="n">maxLen</span><span class="o">++;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">maxLen</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div></p>
+<h3 id="334-increasing-triplet-subsequence">334. Increasing Triplet Subsequence<a class="headerlink" href="#334-increasing-triplet-subsequence" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/increasing-triplet-subsequence/">Link</a></li>
+<li>Tags: </li>
+<li>Stars: 2</li>
+</ul>
+<h4 id="binary-search_2">binary search<a class="headerlink" href="#binary-search_2" title="Permanent link"></a></h4>
+<p><span id="334-binary-search"></span>
+Similar to <a href="#300-binary-search">300. Longest Increasing Subsequence</a>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">increasingTriplet</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">tails</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="mi">3</span><span class="o">];</span>
+        <span class="kt">int</span> <span class="n">maxLen</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">num</span><span class="o">:</span> <span class="n">nums</span><span class="o">){</span>
+            <span class="kt">int</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">getIdx</span><span class="o">(</span><span class="n">tails</span><span class="o">,</span> <span class="n">maxLen</span><span class="o">,</span> <span class="n">num</span><span class="o">);</span>
+            <span class="n">tails</span><span class="o">[</span><span class="n">idx</span><span class="o">]</span> <span class="o">=</span> <span class="n">num</span><span class="o">;</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">idx</span> <span class="o">==</span> <span class="n">maxLen</span><span class="o">)</span> <span class="n">maxLen</span><span class="o">++;</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">maxLen</span> <span class="o">==</span> <span class="mi">3</span><span class="o">)</span> <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="nf">getIdx</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">tails</span><span class="o">,</span> <span class="kt">int</span> <span class="n">maxLen</span><span class="o">,</span> <span class="kt">int</span> <span class="n">num</span><span class="o">){</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">maxLen</span><span class="o">;</span> <span class="n">i</span><span class="o">++){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">num</span> <span class="o">&lt;=</span> <span class="n">tails</span><span class="o">[</span><span class="n">i</span><span class="o">])</span> <span class="k">return</span> <span class="n">i</span><span class="o">;</span>
         <span class="o">}</span>
         <span class="k">return</span> <span class="n">maxLen</span><span class="o">;</span>
     <span class="o">}</span>
@@ -3630,6 +3669,38 @@ Similar to <a href="#102-BFS">102. Binary Tree Level Order Traversal</a>
             <span class="n">backtrack</span><span class="o">(</span><span class="n">digits</span><span class="o">,</span> <span class="n">start</span><span class="o">+</span><span class="mi">1</span><span class="o">,</span> <span class="n">currsb</span><span class="o">);</span>
             <span class="n">currsb</span><span class="o">.</span><span class="na">delete</span><span class="o">(</span><span class="n">currsb</span><span class="o">.</span><span class="na">length</span><span class="o">()-</span><span class="mi">1</span><span class="o">,</span> <span class="n">currsb</span><span class="o">.</span><span class="na">length</span><span class="o">());</span>
         <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3 id="200-number-of-islands">200. Number of Islands<a class="headerlink" href="#200-number-of-islands" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/number-of-islands/">Link</a></li>
+<li>Tags: DFS, BFS, Union Find</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="dfs">DFS<a class="headerlink" href="#dfs" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">numIslands</span><span class="o">(</span><span class="kt">char</span><span class="o">[][]</span> <span class="n">grid</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">grid</span><span class="o">.</span><span class="na">length</span><span class="o">==</span><span class="mi">0</span> <span class="o">||</span> <span class="n">grid</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span><span class="o">==</span><span class="mi">0</span><span class="o">)</span> <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">grid</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">grid</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span><span class="o">;</span> <span class="n">j</span><span class="o">++){</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">grid</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">==</span> <span class="sc">&#39;1&#39;</span><span class="o">){</span>
+                    <span class="n">DFS</span><span class="o">(</span><span class="n">grid</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">);</span>
+                    <span class="n">result</span><span class="o">++;</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">DFS</span><span class="o">(</span><span class="kt">char</span><span class="o">[][]</span> <span class="n">grid</span><span class="o">,</span> <span class="kt">int</span> <span class="n">i</span><span class="o">,</span> <span class="kt">int</span> <span class="n">j</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">0</span> <span class="o">||</span> <span class="n">j</span><span class="o">&lt;</span><span class="mi">0</span> <span class="o">||</span> <span class="n">i</span><span class="o">&gt;=</span><span class="n">grid</span><span class="o">.</span><span class="na">length</span> <span class="o">||</span> <span class="n">j</span><span class="o">&gt;=</span><span class="n">grid</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span> <span class="o">||</span> <span class="n">grid</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">!=</span> <span class="sc">&#39;1&#39;</span><span class="o">)</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="n">grid</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="sc">&#39;x&#39;</span><span class="o">;</span>
+        <span class="n">DFS</span><span class="o">(</span><span class="n">grid</span><span class="o">,</span> <span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="n">j</span><span class="o">);</span>
+        <span class="n">DFS</span><span class="o">(</span><span class="n">grid</span><span class="o">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">,</span> <span class="n">j</span><span class="o">);</span>
+        <span class="n">DFS</span><span class="o">(</span><span class="n">grid</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="o">);</span>
+        <span class="n">DFS</span><span class="o">(</span><span class="n">grid</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="o">);</span>
     <span class="o">}</span>
 <span class="o">}</span>
 </pre></div>

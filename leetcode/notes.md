@@ -2137,7 +2137,10 @@ class Solution {
 ```
 
 #### binary search O(nlogn)
-`tails[i]` = the min value of the last elements of all subsequences with length of i+1
+<span id="300-binary-search"></span>
+`tails[i]` = the min value of the last elements of all subsequences with length of i+1. 
+
+Similar to [334. Increasing Triplet Subsequence](#334-binary-search)
 ```java
 class Solution {
     public int lengthOfLIS(int[] nums) {
@@ -2148,6 +2151,36 @@ class Solution {
             if(idx<0) idx = -(idx+1);
             tails[idx] = num;
             if(maxLen == idx) maxLen++;
+        }
+        return maxLen;
+    }
+}
+```
+
+### 334. Increasing Triplet Subsequence
+- [Link](https://leetcode.com/problems/increasing-triplet-subsequence/)
+- Tags: 
+- Stars: 2
+
+#### binary search 
+<span id="334-binary-search"></span>
+Similar to [300. Longest Increasing Subsequence](#300-binary-search)
+```java
+class Solution {
+    public boolean increasingTriplet(int[] nums) {
+        int[] tails = new int[3];
+        int maxLen = 0;
+        for(int num: nums){
+            int idx = getIdx(tails, maxLen, num);
+            tails[idx] = num;
+            if(idx == maxLen) maxLen++;
+            if(maxLen == 3) return true;
+        }
+        return false;
+    }
+    private int getIdx(int[] tails, int maxLen, int num){
+        for(int i=0; i<maxLen; i++){
+            if(num <= tails[i]) return i;
         }
         return maxLen;
     }
@@ -2372,6 +2405,38 @@ class Solution {
             backtrack(digits, start+1, currsb);
             currsb.delete(currsb.length()-1, currsb.length());
         }
+    }
+}
+```
+
+### 200. Number of Islands
+- [Link](https://leetcode.com/problems/number-of-islands/)
+- Tags: DFS, BFS, Union Find
+- Stars: 1
+
+#### DFS
+```java
+class Solution {
+    public int numIslands(char[][] grid) {
+        if(grid.length==0 || grid[0].length==0) return 0;
+        int result = 0;
+        for(int i=0; i<grid.length; i++)
+            for(int j=0; j<grid[0].length; j++){
+                if(grid[i][j] == '1'){
+                    DFS(grid, i, j);
+                    result++;
+                }
+            }
+        return result;
+    }
+    private void DFS(char[][] grid, int i, int j){
+        if(i<0 || j<0 || i>=grid.length || j>=grid[0].length || grid[i][j] != '1')
+            return;
+        grid[i][j] = 'x';
+        DFS(grid, i-1, j);
+        DFS(grid, i+1, j);
+        DFS(grid, i, j+1);
+        DFS(grid, i, j-1);
     }
 }
 ```
