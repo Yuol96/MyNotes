@@ -2191,6 +2191,89 @@ class Solution {
 }
 ```
 
+#### another binary search
+```java
+class Solution {
+    public boolean increasingTriplet(int[] nums) {
+        int a=Integer.MAX_VALUE, b=Integer.MAX_VALUE;
+        for(int num: nums){
+            if(num<=a) a = num;
+            else if(num<=b) b = num;
+            else return true;
+        }
+        return false;
+    }
+}
+```
+
+### 105. Construct Binary Tree from Preorder and Inorder Traversal
+- [Link](https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/)
+- Tags: Array, Tree, DFS
+- Stars: 1
+
+#### DFS
+```java
+class Solution {
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        return buildTree(preorder, 0, inorder, 0, inorder.length);
+    }
+    private TreeNode buildTree(int[] preorder, int m, 
+                               int[] inorder, int n, int len){
+        if(len == 0) return null;
+        TreeNode root = new TreeNode(preorder[m]);
+        int mid = indexOf(inorder, n, len, root.val);
+        root.left = buildTree(preorder, m+1, inorder, n, mid-n);
+        root.right = buildTree(preorder, m+(mid-n+1), inorder, mid+1, len-(mid-n+1));
+        return root;
+    }
+    private int indexOf(int[] nums, int start, int len, int target){
+        for(int i=start; i<start+len; i++)
+            if(nums[i]==target)
+                return i;
+        return -1;
+    }
+}
+```
+
+### 73. Set Matrix Zeroes
+- [Link](https://leetcode.com/problems/set-matrix-zeroes/)
+- Tags: Array
+- Stars: 3
+
+#### O(mn) time and O(1) space
+```java
+class Solution {
+    public void setZeroes(int[][] matrix) {
+        if(matrix.length==0 || matrix[0].length==0) return ;
+        // check whether the first row has zero;
+        boolean firstRowZero = false;
+        for(int j=0; j<matrix[0].length; j++)
+            if(matrix[0][j]==0){
+                firstRowZero = true;
+                break;
+            }
+        // Set all rows that have zero to zeros, and mark the zero column in the first row
+        for(int i=1; i<matrix.length; i++){
+            boolean rowZero = false;
+            for(int j=0; j<matrix[0].length; j++){
+                if(matrix[i][j]==0){
+                    rowZero = true;
+                    matrix[0][j] = 0;
+                }
+            }
+            if(rowZero) Arrays.fill(matrix[i], 0);
+        }
+        // Set all the zero columns to zeros
+        for(int j=0; j<matrix[0].length; j++)
+            if(matrix[0][j]==0)
+                for(int i=1; i<matrix.length; i++)
+                    matrix[i][j] = 0;
+        // deal with the first row
+        if(firstRowZero) Arrays.fill(matrix[0], 0);
+    }
+}
+```
+
 # Topics
 
 ## Backtracking Questions
@@ -2441,6 +2524,100 @@ class Solution {
         DFS(grid, i+1, j);
         DFS(grid, i, j+1);
         DFS(grid, i, j-1);
+    }
+}
+```
+
+### 131. Palindrome Partitioning
+- [Link](https://leetcode.com/problems/palindrome-partitioning/)
+- Tags: Backtracking
+- Stars: 2
+
+#### sub-optimal palindrome method
+```java
+class Solution {
+    List<List<String>> result = new ArrayList<>();
+    public List<List<String>> partition(String s) {
+        backtrack(s, 0, new ArrayList<>());
+        return result;
+    }
+    private void backtrack(String s, int start, List<String> list){
+        if(start == s.length()){
+            result.add(list);
+            return ;
+        }
+        for(int i=start; i<s.length(); i++){
+            if(isPalindrome(s, start, i)){
+                List<String> newList = new ArrayList<>(list);
+                newList.add(s.substring(start, i+1));
+                backtrack(s, i+1, newList);
+            }
+        }
+    }
+    private boolean isPalindrome(String s, int i, int j){
+        while(i<j){
+            if(s.charAt(i++)!=s.charAt(j--))
+                return false;
+        }
+        return true;
+    }
+}
+```
+
+#### Manacher's Algorithm 
+The Manacher method is copied from [a CSDN blog](https://blog.csdn.net/u014771464/article/details/79120964)
+```java
+class Solution {
+    List<List<String>> result = new ArrayList<>();
+    public List<List<String>> partition(String s) {
+        int[] p = ManacherArray(s);
+        backtrack(s, 0, p, new ArrayList<>());
+        return result;
+    }
+    private void backtrack(String s, int start, int[] p, List<String> list){
+        if(start == s.length()){
+            result.add(list);
+            return ;
+        }
+        int idx = 2*(start+1);
+        for(int i=idx; i<p.length; i++){
+            int len = p[i]-1;
+            int left = i - len + 1;
+            int diff = start - (left/2 - 1);
+            if(diff >= 0){
+                List<String> newList = new ArrayList<>(list);
+                newList.add(s.substring(start, start+len-diff*2));
+                backtrack(s, start+len-diff*2, p, newList);
+            }
+        }
+    } 
+    public int[] ManacherArray(String s) {
+        // Insert '#'
+        String t = "$#";
+        for (int i = 0; i < s.length(); ++i) {
+            t += s.charAt(i);
+            t += "#";
+        }
+        t += "@";
+        // Process t
+        int[] p = new int[t.length()];;
+        int mx = 0, id = 0, resLen = 0, resCenter = 0;
+        for (int i = 1; i < t.length()-1; ++i) {
+            p[i] = mx > i ? Math.min(p[2 * id - i], mx - i) : 1;
+            while (((i - p[i])>=0) && 
+                   ((i + p[i])<t.length()-1) && 
+                   (t.charAt(i + p[i]) == t.charAt(i - p[i])))
+                ++p[i];
+            if (mx < i + p[i]) {
+                mx = i + p[i];
+                id = i;
+            }
+            if (resLen < p[i]) {
+                resLen = p[i];
+                resCenter = i;
+            }
+        }
+        return p;
     }
 }
 ```

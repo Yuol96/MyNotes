@@ -352,3 +352,4 @@ class Solution {
 -  char在Java中是16位的，因为Java用的是Unicode。
 - `Collections.swap(List<?> list, int i, int j)`
 - `Arrays.binarySearch(int[] arr, int from, int to, int target)`
+- Arrays has no function of indexOf
