@@ -21,3 +21,35 @@ sudo vim httpd.conf  # 修改Apache配置文件
 ```bash
 lsof -i:<port>
 ```
+
+### Ubuntu 搭建Http代理服务器
+1. shadowsocks
+```bash
+pip3 install shadowsocks
+ssserver -p 8388 -k <password> -m rc4-md5 --user <username> -d start  
+```
+2. privoxy
+```bash
+apt-get install privoxy
+vim /etc/privoxy/config  
+```
+在config中修改属性：
+```vim
+listen-address  :8118
+enable-remote-toggle  1
+```
+在文本末尾添加：
+```vim
+forward-socks5 / 127.0.0.1:8388  .
+```
+最后重启privoxy
+```bash
+service privoxy restart  
+```
+3. 停止代理
+```bash
+ service privoxy stop
+ ```
+
+
+ 
