@@ -2274,6 +2274,192 @@ class Solution {
 }
 ```
 
+### 395. Longest Substring with At Least K Repeating Characters
+- [Link](https://leetcode.com/problems/longest-substring-with-at-least-k-repeating-characters/)
+- Tags: 
+- Stars: 3
+
+#### two pointers
+```java
+class Solution {
+    public int longestSubstring(String s, int k) {
+        return longestSubstring(s, 0, s.length()-1, k);
+    }
+    public int longestSubstring(String s, int l, int r, int k){
+        if(r-l+1 < k) return 0;
+        int[] stat = new int[26];
+        for(int i=l; i<=r; i++) stat[s.charAt(i)-'a']++;
+        int charIdx = getCharIdx(stat, k);
+        while(l<=r && charIdx != -1){
+            if(s.charAt(r)-'a' == charIdx){
+                stat[charIdx]--;
+                r--;
+            }
+            else if (s.charAt(l)-'a' == charIdx){
+                stat[charIdx]--;
+                l++;
+            }
+            else {
+                for(int i=l; i<=r; i++)
+                    if(s.charAt(i)-'a' == charIdx){
+                        return Math.max(longestSubstring(s, l, i-1, k), 
+                                        longestSubstring(s, i+1, r, k));
+                    }
+            }
+            if(stat[charIdx] == 0) charIdx = getCharIdx(stat, k);
+        }
+        if(l>r) return 0;
+        return r-l+1;
+    }
+    private int getCharIdx(int[] stat, int k){
+        for(int j=0; j<26; j++)
+            if(stat[j]>0 && stat[j]<k)
+                return j;
+        return -1;
+    }
+}
+```
+
+### 207. Course Schedule
+- [Link](https://leetcode.com/problems/course-schedule/)
+- Tags: BFS, DFS, Graph, Topological Sort
+- Stars: 1
+
+#### Topological Sort
+```java
+class Solution {
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        int[] degrees = new int[numCourses];
+        HashMap<Integer, List<Integer>> graph = new HashMap<>();
+        for(int[] edge: prerequisites)
+            graph.computeIfAbsent(edge[1], key->new ArrayList<>()).add(edge[0]);
+        for(int[] edge: prerequisites) 
+            degrees[edge[0]]++;
+        Queue<Integer> qu = new LinkedList<>();
+        for(int i=0; i<numCourses; i++)
+            if(degrees[i] == 0) qu.add(i);
+        while(!qu.isEmpty()){
+            int course = qu.poll();
+            if(graph.containsKey(course))
+                for(int subCourse: graph.get(course))
+                    if(--degrees[subCourse] == 0) qu.add(subCourse);
+        }
+        for(int degree: degrees)
+            if(degree>0) return false;
+        return true;
+    }
+}
+```
+
+#### DFS
+1. Use `visiting` array to trace along the DFS path. Just like what backtracking usually does, you set visiting[i] to true before DFS, and reset it to false after DFS. 
+2. The `visited` array is just used to remember the DFS result of each node to avoid recomputation. 
+```java
+class Solution {
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        HashMap<Integer, List<Integer>> graph = new HashMap<>();
+        for(int[] edge: prerequisites)
+            graph.computeIfAbsent(edge[1], key->new ArrayList<>()).add(edge[0]);
+        for(int i=0; i<numCourses; i++)
+            if(!DFS(graph, new boolean[numCourses], new boolean[numCourses], i)) return false;
+        return true;
+        
+    }
+    private boolean DFS(HashMap<Integer, List<Integer>> graph, boolean[] visited, boolean[] visiting, int course){
+        if(visited[course]) return true;
+        
+        if(visiting[course]) return false;
+        visiting[course] = true;
+        if(graph.containsKey(course))
+            for(Integer subCourse: graph.get(course)){
+                if(!DFS(graph, visited, visiting, subCourse)) return false;
+            }
+        visiting[course] = false;
+        
+        visited[course] = true;
+        return true;
+    }
+}
+```
+
+### 34. Find First and Last Position of Element in Sorted Array
+- [Link](https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/)
+- Tags: Array, Binary Search
+- Stars: 3
+
+#### Binary Search Lower Bound
+This question needs careful consideration of the boundaries!
+
+1. To ensure the output of lowerBound is still in the range of [0, nums.length-1], `int b = lowerBound(nums, a, nums.length-1, target+1);` cannot be `int b = lowerBound(nums, a+1, nums.length-1, target+1);` in order to adapt to the case where `a==b`
+2. We still need `arr[1] = nums[b] == target ? b : b-1;` because b might be the last element and thus nums[b] might be smaller than `target+1`
+```java
+class Solution {
+    public int[] searchRange(int[] nums, int target) {
+        int[] arr = {-1,-1};
+        if(nums.length == 0) return arr;
+        int a = lowerBound(nums, 0, nums.length-1, target);
+        if(nums[a]!=target) return arr;
+        int b = lowerBound(nums, a, nums.length-1, target+1);
+        arr[0] = a; 
+        arr[1] = nums[b] == target ? b : b-1;
+        return arr;
+    }
+    private int lowerBound(int[] nums, int i, int j, int target){
+        int l=i, r=j;
+        while(l<r){
+            int mid = l + ((r-l)>>1);
+            if(nums[mid] == target) r = mid;
+            else if(nums[mid] > target) r = mid-1;
+            else l = mid+1;
+        }
+        return l;
+    }
+}
+```
+
+### 236. Lowest Common Ancestor of a Binary Tree
+- [Link](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/)
+- Tags: Tree
+- Stars: 1
+
+#### DFS
+```java
+class Solution {
+    TreeNode node;
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        helper(root, p, q);
+        return node;
+    }
+    private int helper(TreeNode root, TreeNode p, TreeNode q){
+        if(root == null) return 0;
+        int a = helper(root.left, p, q);
+        if(a == 2) return 2;
+        int b = helper(root.right, p, q);
+        if(b == 2) return 2;
+        int result = a + b;
+        if(root == p || root == q) result++;
+        if(result == 2) node = root;
+        return result;
+    }
+}
+```
+
+#### DFS without helper counting function
+```java
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if(root == null) return null;
+        if(root == p || root == q) return root;
+        TreeNode l = lowestCommonAncestor(root.left, p, q);
+        TreeNode r = lowestCommonAncestor(root.right, p, q);
+        if(l == null) return r;
+        if(r == null) return l;
+        return root;
+    }
+}
+```
+
+
 # Topics
 
 ## Backtracking Questions

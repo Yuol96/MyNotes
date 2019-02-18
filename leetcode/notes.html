@@ -1281,6 +1281,24 @@ body .markdown-body
 <li><a href="#omn-time-and-o1-space">O(mn) time and O(1) space</a></li>
 </ul>
 </li>
+<li><a href="#395-longest-substring-with-at-least-k-repeating-characters">395. Longest Substring with At Least K Repeating Characters</a><ul>
+<li><a href="#two-pointers">two pointers</a></li>
+</ul>
+</li>
+<li><a href="#207-course-schedule">207. Course Schedule</a><ul>
+<li><a href="#topological-sort">Topological Sort</a></li>
+<li><a href="#dfs_1">DFS</a></li>
+</ul>
+</li>
+<li><a href="#34-find-first-and-last-position-of-element-in-sorted-array">34. Find First and Last Position of Element in Sorted Array</a><ul>
+<li><a href="#binary-search-lower-bound">Binary Search Lower Bound</a></li>
+</ul>
+</li>
+<li><a href="#236-lowest-common-ancestor-of-a-binary-tree">236. Lowest Common Ancestor of a Binary Tree</a><ul>
+<li><a href="#dfs_2">DFS</a></li>
+<li><a href="#dfs-without-helper-counting-function">DFS without helper counting function</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -1310,7 +1328,7 @@ body .markdown-body
 </ul>
 </li>
 <li><a href="#200-number-of-islands">200. Number of Islands</a><ul>
-<li><a href="#dfs_1">DFS</a></li>
+<li><a href="#dfs_3">DFS</a></li>
 </ul>
 </li>
 <li><a href="#131-palindrome-partitioning">131. Palindrome Partitioning</a><ul>
@@ -1336,7 +1354,7 @@ body .markdown-body
 <li><a href="#weekly-contests">Weekly Contests</a><ul>
 <li><a href="#no-96">No. 96</a><ul>
 <li><a href="#881-boats-to-save-people">881. Boats to Save People</a><ul>
-<li><a href="#two-pointers">two pointers</a></li>
+<li><a href="#two-pointers_1">two pointers</a></li>
 </ul>
 </li>
 <li><a href="#880-decoded-string-at-index">880. Decoded String at Index</a><ul>
@@ -3555,6 +3573,190 @@ Similar to <a href="#300-binary-search">300. Longest Increasing Subsequence</a>
 <span class="o">}</span>
 </pre></div>
 
+<h3 id="395-longest-substring-with-at-least-k-repeating-characters">395. Longest Substring with At Least K Repeating Characters<a class="headerlink" href="#395-longest-substring-with-at-least-k-repeating-characters" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/longest-substring-with-at-least-k-repeating-characters/">Link</a></li>
+<li>Tags: </li>
+<li>Stars: 3</li>
+</ul>
+<h4 id="two-pointers">two pointers<a class="headerlink" href="#two-pointers" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">longestSubstring</span><span class="o">(</span><span class="n">String</span> <span class="n">s</span><span class="o">,</span> <span class="kt">int</span> <span class="n">k</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">longestSubstring</span><span class="o">(</span><span class="n">s</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">s</span><span class="o">.</span><span class="na">length</span><span class="o">()-</span><span class="mi">1</span><span class="o">,</span> <span class="n">k</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">longestSubstring</span><span class="o">(</span><span class="n">String</span> <span class="n">s</span><span class="o">,</span> <span class="kt">int</span> <span class="n">l</span><span class="o">,</span> <span class="kt">int</span> <span class="n">r</span><span class="o">,</span> <span class="kt">int</span> <span class="n">k</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">r</span><span class="o">-</span><span class="n">l</span><span class="o">+</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">k</span><span class="o">)</span> <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">stat</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="mi">26</span><span class="o">];</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">l</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;=</span><span class="n">r</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="n">stat</span><span class="o">[</span><span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">)-</span><span class="sc">&#39;a&#39;</span><span class="o">]++;</span>
+        <span class="kt">int</span> <span class="n">charIdx</span> <span class="o">=</span> <span class="n">getCharIdx</span><span class="o">(</span><span class="n">stat</span><span class="o">,</span> <span class="n">k</span><span class="o">);</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">l</span><span class="o">&lt;=</span><span class="n">r</span> <span class="o">&amp;&amp;</span> <span class="n">charIdx</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="o">){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">r</span><span class="o">)-</span><span class="sc">&#39;a&#39;</span> <span class="o">==</span> <span class="n">charIdx</span><span class="o">){</span>
+                <span class="n">stat</span><span class="o">[</span><span class="n">charIdx</span><span class="o">]--;</span>
+                <span class="n">r</span><span class="o">--;</span>
+            <span class="o">}</span>
+            <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">l</span><span class="o">)-</span><span class="sc">&#39;a&#39;</span> <span class="o">==</span> <span class="n">charIdx</span><span class="o">){</span>
+                <span class="n">stat</span><span class="o">[</span><span class="n">charIdx</span><span class="o">]--;</span>
+                <span class="n">l</span><span class="o">++;</span>
+            <span class="o">}</span>
+            <span class="k">else</span> <span class="o">{</span>
+                <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">l</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;=</span><span class="n">r</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+                    <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">)-</span><span class="sc">&#39;a&#39;</span> <span class="o">==</span> <span class="n">charIdx</span><span class="o">){</span>
+                        <span class="k">return</span> <span class="n">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">longestSubstring</span><span class="o">(</span><span class="n">s</span><span class="o">,</span> <span class="n">l</span><span class="o">,</span> <span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="n">k</span><span class="o">),</span> 
+                                        <span class="n">longestSubstring</span><span class="o">(</span><span class="n">s</span><span class="o">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">,</span> <span class="n">r</span><span class="o">,</span> <span class="n">k</span><span class="o">));</span>
+                    <span class="o">}</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">stat</span><span class="o">[</span><span class="n">charIdx</span><span class="o">]</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="n">charIdx</span> <span class="o">=</span> <span class="n">getCharIdx</span><span class="o">(</span><span class="n">stat</span><span class="o">,</span> <span class="n">k</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">l</span><span class="o">&gt;</span><span class="n">r</span><span class="o">)</span> <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">return</span> <span class="n">r</span><span class="o">-</span><span class="n">l</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="nf">getCharIdx</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">stat</span><span class="o">,</span> <span class="kt">int</span> <span class="n">k</span><span class="o">){</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="mi">26</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">stat</span><span class="o">[</span><span class="n">j</span><span class="o">]&gt;</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">stat</span><span class="o">[</span><span class="n">j</span><span class="o">]&lt;</span><span class="n">k</span><span class="o">)</span>
+                <span class="k">return</span> <span class="n">j</span><span class="o">;</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3 id="207-course-schedule">207. Course Schedule<a class="headerlink" href="#207-course-schedule" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/course-schedule/">Link</a></li>
+<li>Tags: BFS, DFS, Graph, Topological Sort</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="topological-sort">Topological Sort<a class="headerlink" href="#topological-sort" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">canFinish</span><span class="o">(</span><span class="kt">int</span> <span class="n">numCourses</span><span class="o">,</span> <span class="kt">int</span><span class="o">[][]</span> <span class="n">prerequisites</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">degrees</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">numCourses</span><span class="o">];</span>
+        <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="n">graph</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">edge</span><span class="o">:</span> <span class="n">prerequisites</span><span class="o">)</span>
+            <span class="n">graph</span><span class="o">.</span><span class="na">computeIfAbsent</span><span class="o">(</span><span class="n">edge</span><span class="o">[</span><span class="mi">1</span><span class="o">],</span> <span class="n">key</span><span class="o">-&gt;</span><span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;()).</span><span class="na">add</span><span class="o">(</span><span class="n">edge</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">edge</span><span class="o">:</span> <span class="n">prerequisites</span><span class="o">)</span> 
+            <span class="n">degrees</span><span class="o">[</span><span class="n">edge</span><span class="o">[</span><span class="mi">0</span><span class="o">]]++;</span>
+        <span class="n">Queue</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">qu</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">numCourses</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">degrees</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="n">qu</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+        <span class="k">while</span><span class="o">(!</span><span class="n">qu</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+            <span class="kt">int</span> <span class="n">course</span> <span class="o">=</span> <span class="n">qu</span><span class="o">.</span><span class="na">poll</span><span class="o">();</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">graph</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">course</span><span class="o">))</span>
+                <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">subCourse</span><span class="o">:</span> <span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">course</span><span class="o">))</span>
+                    <span class="k">if</span><span class="o">(--</span><span class="n">degrees</span><span class="o">[</span><span class="n">subCourse</span><span class="o">]</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="n">qu</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">subCourse</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">degree</span><span class="o">:</span> <span class="n">degrees</span><span class="o">)</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">degree</span><span class="o">&gt;</span><span class="mi">0</span><span class="o">)</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h4 id="dfs_1">DFS<a class="headerlink" href="#dfs_1" title="Permanent link"></a></h4>
+<ol>
+<li>Use <code>visiting</code> array to trace along the DFS path. Just like what backtracking usually does, you set visiting[i] to true before DFS, and reset it to false after DFS. </li>
+<li>The <code>visited</code> array is just used to remember the DFS result of each node to avoid recomputation. 
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">canFinish</span><span class="o">(</span><span class="kt">int</span> <span class="n">numCourses</span><span class="o">,</span> <span class="kt">int</span><span class="o">[][]</span> <span class="n">prerequisites</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="n">graph</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">edge</span><span class="o">:</span> <span class="n">prerequisites</span><span class="o">)</span>
+            <span class="n">graph</span><span class="o">.</span><span class="na">computeIfAbsent</span><span class="o">(</span><span class="n">edge</span><span class="o">[</span><span class="mi">1</span><span class="o">],</span> <span class="n">key</span><span class="o">-&gt;</span><span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;()).</span><span class="na">add</span><span class="o">(</span><span class="n">edge</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">numCourses</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+            <span class="k">if</span><span class="o">(!</span><span class="n">DFS</span><span class="o">(</span><span class="n">graph</span><span class="o">,</span> <span class="k">new</span> <span class="kt">boolean</span><span class="o">[</span><span class="n">numCourses</span><span class="o">],</span> <span class="k">new</span> <span class="kt">boolean</span><span class="o">[</span><span class="n">numCourses</span><span class="o">],</span> <span class="n">i</span><span class="o">))</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">DFS</span><span class="o">(</span><span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="n">graph</span><span class="o">,</span> <span class="kt">boolean</span><span class="o">[]</span> <span class="n">visited</span><span class="o">,</span> <span class="kt">boolean</span><span class="o">[]</span> <span class="n">visiting</span><span class="o">,</span> <span class="kt">int</span> <span class="n">course</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">visited</span><span class="o">[</span><span class="n">course</span><span class="o">])</span> <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+
+        <span class="k">if</span><span class="o">(</span><span class="n">visiting</span><span class="o">[</span><span class="n">course</span><span class="o">])</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="n">visiting</span><span class="o">[</span><span class="n">course</span><span class="o">]</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">graph</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">course</span><span class="o">))</span>
+            <span class="k">for</span><span class="o">(</span><span class="n">Integer</span> <span class="n">subCourse</span><span class="o">:</span> <span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">course</span><span class="o">)){</span>
+                <span class="k">if</span><span class="o">(!</span><span class="n">DFS</span><span class="o">(</span><span class="n">graph</span><span class="o">,</span> <span class="n">visited</span><span class="o">,</span> <span class="n">visiting</span><span class="o">,</span> <span class="n">subCourse</span><span class="o">))</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="n">visiting</span><span class="o">[</span><span class="n">course</span><span class="o">]</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+
+        <span class="n">visited</span><span class="o">[</span><span class="n">course</span><span class="o">]</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div></li>
+</ol>
+<h3 id="34-find-first-and-last-position-of-element-in-sorted-array">34. Find First and Last Position of Element in Sorted Array<a class="headerlink" href="#34-find-first-and-last-position-of-element-in-sorted-array" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/">Link</a></li>
+<li>Tags: Array, Binary Search</li>
+<li>Stars: 3</li>
+</ul>
+<h4 id="binary-search-lower-bound">Binary Search Lower Bound<a class="headerlink" href="#binary-search-lower-bound" title="Permanent link"></a></h4>
+<p>This question needs careful consideration of the boundaries!</p>
+<ol>
+<li>To ensure the output of lowerBound is still in the range of [0, nums.length-1], <code>int b = lowerBound(nums, a, nums.length-1, target+1);</code> cannot be <code>int b = lowerBound(nums, a+1, nums.length-1, target+1);</code> in order to adapt to the case where <code>a==b</code></li>
+<li>We still need <code>arr[1] = nums[b] == target ? b : b-1;</code> because b might be the last element and thus nums[b] might be smaller than <code>target+1</code>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span><span class="o">[]</span> <span class="nf">searchRange</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">,</span> <span class="kt">int</span> <span class="n">target</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span> <span class="o">=</span> <span class="o">{-</span><span class="mi">1</span><span class="o">,-</span><span class="mi">1</span><span class="o">};</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="k">return</span> <span class="n">arr</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="n">lowerBound</span><span class="o">(</span><span class="n">nums</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="n">target</span><span class="o">);</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="n">a</span><span class="o">]!=</span><span class="n">target</span><span class="o">)</span> <span class="k">return</span> <span class="n">arr</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="n">lowerBound</span><span class="o">(</span><span class="n">nums</span><span class="o">,</span> <span class="n">a</span><span class="o">,</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="n">target</span><span class="o">+</span><span class="mi">1</span><span class="o">);</span>
+        <span class="n">arr</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="n">a</span><span class="o">;</span> 
+        <span class="n">arr</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">nums</span><span class="o">[</span><span class="n">b</span><span class="o">]</span> <span class="o">==</span> <span class="n">target</span> <span class="o">?</span> <span class="n">b</span> <span class="o">:</span> <span class="n">b</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="k">return</span> <span class="n">arr</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="nf">lowerBound</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">,</span> <span class="kt">int</span> <span class="n">i</span><span class="o">,</span> <span class="kt">int</span> <span class="n">j</span><span class="o">,</span> <span class="kt">int</span> <span class="n">target</span><span class="o">){</span>
+        <span class="kt">int</span> <span class="n">l</span><span class="o">=</span><span class="n">i</span><span class="o">,</span> <span class="n">r</span><span class="o">=</span><span class="n">j</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">l</span><span class="o">&lt;</span><span class="n">r</span><span class="o">){</span>
+            <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="n">l</span> <span class="o">+</span> <span class="o">((</span><span class="n">r</span><span class="o">-</span><span class="n">l</span><span class="o">)&gt;&gt;</span><span class="mi">1</span><span class="o">);</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="n">mid</span><span class="o">]</span> <span class="o">==</span> <span class="n">target</span><span class="o">)</span> <span class="n">r</span> <span class="o">=</span> <span class="n">mid</span><span class="o">;</span>
+            <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="n">mid</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">target</span><span class="o">)</span> <span class="n">r</span> <span class="o">=</span> <span class="n">mid</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+            <span class="k">else</span> <span class="n">l</span> <span class="o">=</span> <span class="n">mid</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">l</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div></li>
+</ol>
+<h3 id="236-lowest-common-ancestor-of-a-binary-tree">236. Lowest Common Ancestor of a Binary Tree<a class="headerlink" href="#236-lowest-common-ancestor-of-a-binary-tree" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/">Link</a></li>
+<li>Tags: Tree</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="dfs_2">DFS<a class="headerlink" href="#dfs_2" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="n">TreeNode</span> <span class="n">node</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="n">TreeNode</span> <span class="nf">lowestCommonAncestor</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root</span><span class="o">,</span> <span class="n">TreeNode</span> <span class="n">p</span><span class="o">,</span> <span class="n">TreeNode</span> <span class="n">q</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">helper</span><span class="o">(</span><span class="n">root</span><span class="o">,</span> <span class="n">p</span><span class="o">,</span> <span class="n">q</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">node</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="nf">helper</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root</span><span class="o">,</span> <span class="n">TreeNode</span> <span class="n">p</span><span class="o">,</span> <span class="n">TreeNode</span> <span class="n">q</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">root</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="n">helper</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">left</span><span class="o">,</span> <span class="n">p</span><span class="o">,</span> <span class="n">q</span><span class="o">);</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">a</span> <span class="o">==</span> <span class="mi">2</span><span class="o">)</span> <span class="k">return</span> <span class="mi">2</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="n">helper</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">right</span><span class="o">,</span> <span class="n">p</span><span class="o">,</span> <span class="n">q</span><span class="o">);</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">b</span> <span class="o">==</span> <span class="mi">2</span><span class="o">)</span> <span class="k">return</span> <span class="mi">2</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">root</span> <span class="o">==</span> <span class="n">p</span> <span class="o">||</span> <span class="n">root</span> <span class="o">==</span> <span class="n">q</span><span class="o">)</span> <span class="n">result</span><span class="o">++;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">result</span> <span class="o">==</span> <span class="mi">2</span><span class="o">)</span> <span class="n">node</span> <span class="o">=</span> <span class="n">root</span><span class="o">;</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h4 id="dfs-without-helper-counting-function">DFS without helper counting function<a class="headerlink" href="#dfs-without-helper-counting-function" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">TreeNode</span> <span class="nf">lowestCommonAncestor</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root</span><span class="o">,</span> <span class="n">TreeNode</span> <span class="n">p</span><span class="o">,</span> <span class="n">TreeNode</span> <span class="n">q</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">root</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">root</span> <span class="o">==</span> <span class="n">p</span> <span class="o">||</span> <span class="n">root</span> <span class="o">==</span> <span class="n">q</span><span class="o">)</span> <span class="k">return</span> <span class="n">root</span><span class="o">;</span>
+        <span class="n">TreeNode</span> <span class="n">l</span> <span class="o">=</span> <span class="n">lowestCommonAncestor</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">left</span><span class="o">,</span> <span class="n">p</span><span class="o">,</span> <span class="n">q</span><span class="o">);</span>
+        <span class="n">TreeNode</span> <span class="n">r</span> <span class="o">=</span> <span class="n">lowestCommonAncestor</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">right</span><span class="o">,</span> <span class="n">p</span><span class="o">,</span> <span class="n">q</span><span class="o">);</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">l</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="n">r</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">r</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="n">l</span><span class="o">;</span>
+        <span class="k">return</span> <span class="n">root</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
 <h1 id="topics">Topics<a class="headerlink" href="#topics" title="Permanent link"></a></h1>
 <h2 id="backtracking-questions">Backtracking Questions<a class="headerlink" href="#backtracking-questions" title="Permanent link"></a></h2>
 <p><a href="https://leetcode.com/problems/permutations/discuss/18239/A-general-approach-to-backtracking-questions-in-Java-(Subsets-Permutations-Combination-Sum-Palindrome-Partioning)">Reference</a></p>
@@ -3777,7 +3979,7 @@ Similar to <a href="#300-binary-search">300. Longest Increasing Subsequence</a>
 <li>Tags: DFS, BFS, Union Find</li>
 <li>Stars: 1</li>
 </ul>
-<h4 id="dfs_1">DFS<a class="headerlink" href="#dfs_1" title="Permanent link"></a></h4>
+<h4 id="dfs_3">DFS<a class="headerlink" href="#dfs_3" title="Permanent link"></a></h4>
 <div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="kt">int</span> <span class="nf">numIslands</span><span class="o">(</span><span class="kt">char</span><span class="o">[][]</span> <span class="n">grid</span><span class="o">)</span> <span class="o">{</span>
         <span class="k">if</span><span class="o">(</span><span class="n">grid</span><span class="o">.</span><span class="na">length</span><span class="o">==</span><span class="mi">0</span> <span class="o">||</span> <span class="n">grid</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span><span class="o">==</span><span class="mi">0</span><span class="o">)</span> <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
@@ -3959,7 +4161,7 @@ Similar to <a href="#300-binary-search">300. Longest Increasing Subsequence</a>
 <li>Tags: Two Pointers, Greedy</li>
 <li>Stars: 1</li>
 </ul>
-<h4 id="two-pointers">two pointers<a class="headerlink" href="#two-pointers" title="Permanent link"></a></h4>
+<h4 id="two-pointers_1">two pointers<a class="headerlink" href="#two-pointers_1" title="Permanent link"></a></h4>
 <div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="kt">int</span> <span class="nf">numRescueBoats</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">people</span><span class="o">,</span> <span class="kt">int</span> <span class="n">limit</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">Arrays</span><span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="n">people</span><span class="o">);</span>
