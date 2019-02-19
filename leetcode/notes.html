@@ -1290,6 +1290,10 @@ body .markdown-body
 <li><a href="#dfs_1">DFS</a></li>
 </ul>
 </li>
+<li><a href="#210-course-schedule-ii">210. Course Schedule II</a><ul>
+<li><a href="#topological-sort_1">Topological Sort</a></li>
+</ul>
+</li>
 <li><a href="#34-find-first-and-last-position-of-element-in-sorted-array">34. Find First and Last Position of Element in Sorted Array</a><ul>
 <li><a href="#binary-search-lower-bound">Binary Search Lower Bound</a></li>
 </ul>
@@ -1297,6 +1301,18 @@ body .markdown-body
 <li><a href="#236-lowest-common-ancestor-of-a-binary-tree">236. Lowest Common Ancestor of a Binary Tree</a><ul>
 <li><a href="#dfs_2">DFS</a></li>
 <li><a href="#dfs-without-helper-counting-function">DFS without helper counting function</a></li>
+</ul>
+</li>
+<li><a href="#139-word-break">139. Word Break</a><ul>
+<li><a href="#dp_2">DP</a></li>
+</ul>
+</li>
+<li><a href="#19-remove-nth-node-from-end-of-list">19. Remove Nth Node From End of List</a><ul>
+<li><a href="#one-pass-solution_1">one pass solution</a></li>
+</ul>
+</li>
+<li><a href="#56-merge-intervals">56. Merge Intervals</a><ul>
+<li><a href="#sort">sort</a></li>
 </ul>
 </li>
 </ul>
@@ -3626,6 +3642,8 @@ Similar to <a href="#300-binary-search">300. Longest Increasing Subsequence</a>
 <li>Stars: 1</li>
 </ul>
 <h4 id="topological-sort">Topological Sort<a class="headerlink" href="#topological-sort" title="Permanent link"></a></h4>
+<p><span id="207-topo-sort"></span>
+Similar to <a href="#210-topo-sort">210. Course Schedule II</a>
 <div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">canFinish</span><span class="o">(</span><span class="kt">int</span> <span class="n">numCourses</span><span class="o">,</span> <span class="kt">int</span><span class="o">[][]</span> <span class="n">prerequisites</span><span class="o">)</span> <span class="o">{</span>
         <span class="kt">int</span><span class="o">[]</span> <span class="n">degrees</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">numCourses</span><span class="o">];</span>
@@ -3648,8 +3666,7 @@ Similar to <a href="#300-binary-search">300. Longest Increasing Subsequence</a>
         <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span>
-</pre></div>
-
+</pre></div></p>
 <h4 id="dfs_1">DFS<a class="headerlink" href="#dfs_1" title="Permanent link"></a></h4>
 <ol>
 <li>Use <code>visiting</code> array to trace along the DFS path. Just like what backtracking usually does, you set visiting[i] to true before DFS, and reset it to false after DFS. </li>
@@ -3681,6 +3698,41 @@ Similar to <a href="#300-binary-search">300. Longest Increasing Subsequence</a>
 <span class="o">}</span>
 </pre></div></li>
 </ol>
+<h3 id="210-course-schedule-ii">210. Course Schedule II<a class="headerlink" href="#210-course-schedule-ii" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/course-schedule-ii/">Link</a></li>
+<li>Tags: BFS, DFS, Graph, Topological Sort</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="topological-sort_1">Topological Sort<a class="headerlink" href="#topological-sort_1" title="Permanent link"></a></h4>
+<p><span id="210-topo-sort"></span>
+Similar to <a href="#210-topo-sort">207. Course Schedule</a>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span><span class="o">[]</span> <span class="nf">findOrder</span><span class="o">(</span><span class="kt">int</span> <span class="n">numCourses</span><span class="o">,</span> <span class="kt">int</span><span class="o">[][]</span> <span class="n">prerequisites</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="n">graph</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">degrees</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">numCourses</span><span class="o">];</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">edge</span><span class="o">:</span> <span class="n">prerequisites</span><span class="o">){</span>
+            <span class="n">graph</span><span class="o">.</span><span class="na">computeIfAbsent</span><span class="o">(</span><span class="n">edge</span><span class="o">[</span><span class="mi">1</span><span class="o">],</span> <span class="n">key</span><span class="o">-&gt;</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;()).</span><span class="na">add</span><span class="o">(</span><span class="n">edge</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
+            <span class="n">degrees</span><span class="o">[</span><span class="n">edge</span><span class="o">[</span><span class="mi">0</span><span class="o">]]++;</span>
+        <span class="o">}</span>
+        <span class="n">Queue</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">qu</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">numCourses</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> 
+            <span class="k">if</span><span class="o">(</span><span class="n">degrees</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="n">qu</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">numCourses</span><span class="o">];</span>
+        <span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(!</span><span class="n">qu</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+            <span class="kt">int</span> <span class="n">course</span> <span class="o">=</span> <span class="n">qu</span><span class="o">.</span><span class="na">poll</span><span class="o">();</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">graph</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">course</span><span class="o">))</span>
+                <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">subcourse</span> <span class="o">:</span> <span class="n">graph</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">course</span><span class="o">))</span> 
+                    <span class="k">if</span><span class="o">(--</span><span class="n">degrees</span><span class="o">[</span><span class="n">subcourse</span><span class="o">]</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="n">qu</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">subcourse</span><span class="o">);</span>
+            <span class="n">result</span><span class="o">[</span><span class="n">i</span><span class="o">++]</span> <span class="o">=</span> <span class="n">course</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">i</span> <span class="o">!=</span> <span class="n">numCourses</span><span class="o">)</span> <span class="k">return</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div></p>
 <h3 id="34-find-first-and-last-position-of-element-in-sorted-array">34. Find First and Last Position of Element in Sorted Array<a class="headerlink" href="#34-find-first-and-last-position-of-element-in-sorted-array" title="Permanent link"></a></h3>
 <ul>
 <li><a href="https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/">Link</a></li>
@@ -3757,6 +3809,89 @@ Similar to <a href="#300-binary-search">300. Longest Increasing Subsequence</a>
 <span class="o">}</span>
 </pre></div>
 
+<h3 id="139-word-break">139. Word Break<a class="headerlink" href="#139-word-break" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/word-break/">Link</a></li>
+<li>Tags: Dynamic Programming</li>
+<li>Stars: 3</li>
+</ul>
+<h4 id="dp_2">DP<a class="headerlink" href="#dp_2" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Character</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;</span> <span class="n">map</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">wordBreak</span><span class="o">(</span><span class="n">String</span> <span class="n">s</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">wordDict</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">for</span><span class="o">(</span><span class="n">String</span> <span class="n">str</span><span class="o">:</span> <span class="n">wordDict</span><span class="o">)</span>
+            <span class="n">map</span><span class="o">.</span><span class="na">computeIfAbsent</span><span class="o">(</span><span class="n">str</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">str</span><span class="o">.</span><span class="na">length</span><span class="o">()-</span><span class="mi">1</span><span class="o">),</span> <span class="n">key</span><span class="o">-&gt;</span><span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;()).</span><span class="na">add</span><span class="o">(</span><span class="n">str</span><span class="o">);</span>
+        <span class="kt">boolean</span><span class="o">[]</span> <span class="n">dp</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">boolean</span><span class="o">[</span><span class="n">s</span><span class="o">.</span><span class="na">length</span><span class="o">()];</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">s</span><span class="o">.</span><span class="na">length</span><span class="o">();</span> <span class="n">i</span><span class="o">++){</span>
+            <span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+            <span class="n">String</span> <span class="n">subs</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">);</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">map</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">c</span><span class="o">))</span>
+               <span class="k">for</span><span class="o">(</span><span class="n">String</span> <span class="n">word</span><span class="o">:</span> <span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">c</span><span class="o">)){</span>
+                   <span class="k">if</span><span class="o">(</span><span class="n">subs</span><span class="o">.</span><span class="na">endsWith</span><span class="o">(</span><span class="n">word</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="o">(</span><span class="n">i</span><span class="o">&lt;</span><span class="n">word</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">||</span> <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">-</span><span class="n">word</span><span class="o">.</span><span class="na">length</span><span class="o">()]))</span> <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+               <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">dp</span><span class="o">[</span><span class="n">s</span><span class="o">.</span><span class="na">length</span><span class="o">()-</span><span class="mi">1</span><span class="o">];</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3 id="19-remove-nth-node-from-end-of-list">19. Remove Nth Node From End of List<a class="headerlink" href="#19-remove-nth-node-from-end-of-list" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/remove-nth-node-from-end-of-list/">Link</a></li>
+<li>Tags: Linked List, Two Pointers</li>
+<li>Stars: 3</li>
+</ul>
+<h4 id="one-pass-solution_1">one pass solution<a class="headerlink" href="#one-pass-solution_1" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">ListNode</span> <span class="nf">removeNthFromEnd</span><span class="o">(</span><span class="n">ListNode</span> <span class="n">head</span><span class="o">,</span> <span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">head</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="n">ListNode</span> <span class="n">fast</span> <span class="o">=</span> <span class="n">head</span><span class="o">,</span> <span class="n">slow</span> <span class="o">=</span> <span class="n">head</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="n">fast</span> <span class="o">=</span> <span class="n">fast</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">fast</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="n">head</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">fast</span><span class="o">.</span><span class="na">next</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="n">fast</span> <span class="o">=</span> <span class="n">fast</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+            <span class="n">slow</span> <span class="o">=</span> <span class="n">slow</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">slow</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">slow</span><span class="o">.</span><span class="na">next</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+        <span class="k">return</span> <span class="n">head</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3 id="56-merge-intervals">56. Merge Intervals<a class="headerlink" href="#56-merge-intervals" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/merge-intervals/">Link</a></li>
+<li>Tags: Array, Sort</li>
+<li>Stars: 3</li>
+</ul>
+<h4 id="sort">sort<a class="headerlink" href="#sort" title="Permanent link"></a></h4>
+<p>The way of writting a sort function can be simplified to <code>intervals.sort((o1, o2)-&gt;o1.start-o2.start);</code>.
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Interval</span><span class="o">&gt;</span> <span class="nf">merge</span><span class="o">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Interval</span><span class="o">&gt;</span> <span class="n">intervals</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">intervals</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="k">return</span> <span class="n">intervals</span><span class="o">;</span>
+        <span class="n">Collections</span><span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="n">intervals</span><span class="o">,</span> <span class="k">new</span> <span class="n">Comparator</span><span class="o">&lt;</span><span class="n">Interval</span><span class="o">&gt;()</span> <span class="o">{</span>
+            <span class="nd">@Override</span>
+            <span class="kd">public</span> <span class="kt">int</span> <span class="nf">compare</span><span class="o">(</span><span class="n">Interval</span> <span class="n">o1</span><span class="o">,</span> <span class="n">Interval</span> <span class="n">o2</span><span class="o">){</span>
+                <span class="k">return</span> <span class="n">o1</span><span class="o">.</span><span class="na">start</span> <span class="o">-</span> <span class="n">o2</span><span class="o">.</span><span class="na">start</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">});</span>
+        <span class="kt">int</span> <span class="n">start</span> <span class="o">=</span> <span class="n">intervals</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">0</span><span class="o">).</span><span class="na">start</span><span class="o">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">intervals</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">0</span><span class="o">).</span><span class="na">end</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span>
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">Interval</span><span class="o">&gt;</span> <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+        <span class="k">for</span><span class="o">(;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">intervals</span><span class="o">.</span><span class="na">size</span><span class="o">();</span> <span class="n">i</span><span class="o">++){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">intervals</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">).</span><span class="na">start</span> <span class="o">&gt;</span> <span class="n">end</span><span class="o">){</span>
+                <span class="n">result</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">Interval</span><span class="o">(</span><span class="n">start</span><span class="o">,</span> <span class="n">end</span><span class="o">));</span>
+                <span class="n">start</span> <span class="o">=</span> <span class="n">intervals</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">).</span><span class="na">start</span><span class="o">;</span> <span class="n">end</span> <span class="o">=</span> <span class="n">intervals</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">).</span><span class="na">end</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="k">else</span> <span class="o">{</span>
+                <span class="n">end</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">end</span><span class="o">,</span> <span class="n">intervals</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">).</span><span class="na">end</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="n">result</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">Interval</span><span class="o">(</span><span class="n">start</span><span class="o">,</span> <span class="n">end</span><span class="o">));</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div></p>
 <h1 id="topics">Topics<a class="headerlink" href="#topics" title="Permanent link"></a></h1>
 <h2 id="backtracking-questions">Backtracking Questions<a class="headerlink" href="#backtracking-questions" title="Permanent link"></a></h2>
 <p><a href="https://leetcode.com/problems/permutations/discuss/18239/A-general-approach-to-backtracking-questions-in-Java-(Subsets-Permutations-Combination-Sum-Palindrome-Partioning)">Reference</a></p>
@@ -4273,18 +4408,9 @@ Similar to <a href="#300-binary-search">300. Longest Increasing Subsequence</a>
 </pre></div></p>
 <h1 id="todo-list">TODO List<a class="headerlink" href="#todo-list" title="Permanent link"></a></h1>
 <h2 id="recursive-to-non-recursive">recursive to non-recursive<a class="headerlink" href="#recursive-to-non-recursive" title="Permanent link"></a></h2>
-<ul>
-<li>
-<ol>
-<li>Symmetric Tree</li>
-</ol>
-</li>
-<li>
-<ol>
-<li>Binary Tree Inorder Traversal</li>
-</ol>
-</li>
-</ul>
+<p><a href="https://leetcode.com/problems/symmetric-tree/">101. Symmetric Tree</a><br />
+<a href="https://leetcode.com/problems/binary-tree-inorder-traversal/">94. Binary Tree Inorder Traversal</a><br />
+<a href="https://leetcode.com/problems/sort-list/">148. Sort List</a></p>
 <h2 id="math_2">Math<a class="headerlink" href="#math_2" title="Permanent link"></a></h2>
 <ul>
 <li>

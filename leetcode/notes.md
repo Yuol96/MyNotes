@@ -2326,6 +2326,8 @@ class Solution {
 - Stars: 1
 
 #### Topological Sort
+<span id="207-topo-sort"></span>
+Similar to [210. Course Schedule II](#210-topo-sort)
 ```java
 class Solution {
     public boolean canFinish(int numCourses, int[][] prerequisites) {
@@ -2379,6 +2381,42 @@ class Solution {
         visited[course] = true;
         return true;
     }
+}
+```
+
+### 210. Course Schedule II
+- [Link](https://leetcode.com/problems/course-schedule-ii/)
+- Tags: BFS, DFS, Graph, Topological Sort
+- Stars: 1
+
+#### Topological Sort
+<span id="210-topo-sort"></span>
+Similar to [207. Course Schedule](#210-topo-sort)
+```java
+class Solution {
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        HashMap<Integer, List<Integer>> graph = new HashMap<>();
+        int[] degrees = new int[numCourses];
+        for(int[] edge: prerequisites){
+            graph.computeIfAbsent(edge[1], key-> new ArrayList<>()).add(edge[0]);
+            degrees[edge[0]]++;
+        }
+        Queue<Integer> qu = new LinkedList<>();
+        for(int i=0; i<numCourses; i++) 
+            if(degrees[i] == 0) qu.add(i);
+        int[] result = new int[numCourses];
+        int i=0;
+        while(!qu.isEmpty()){
+            int course = qu.poll();
+            if(graph.containsKey(course))
+                for(int subcourse : graph.get(course)) 
+                    if(--degrees[subcourse] == 0) qu.add(subcourse);
+            result[i++] = course;
+        }
+        if(i != numCourses) return new int[0];
+        return result;
+    }
+    
 }
 ```
 
@@ -2459,6 +2497,89 @@ class Solution {
 }
 ```
 
+### 139. Word Break
+- [Link](https://leetcode.com/problems/word-break/)
+- Tags: Dynamic Programming
+- Stars: 3
+
+#### DP
+```java
+class Solution {
+    HashMap<Character, List<String>> map = new HashMap<>();
+    public boolean wordBreak(String s, List<String> wordDict) {
+        for(String str: wordDict)
+            map.computeIfAbsent(str.charAt(str.length()-1), key->new ArrayList<>()).add(str);
+        boolean[] dp = new boolean[s.length()];
+        for(int i=0; i<s.length(); i++){
+            char c = s.charAt(i);
+            String subs = s.substring(0, i+1);
+            if(map.containsKey(c))
+               for(String word: map.get(c)){
+                   if(subs.endsWith(word) && (i<word.length() || dp[i-word.length()])) dp[i] = true;
+               }
+        }
+        return dp[s.length()-1];
+    }
+}
+```
+
+### 19. Remove Nth Node From End of List
+- [Link](https://leetcode.com/problems/remove-nth-node-from-end-of-list/)
+- Tags: Linked List, Two Pointers
+- Stars: 3
+
+#### one pass solution
+```java
+class Solution {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        if(head == null) return null;
+        ListNode fast = head, slow = head;
+        for(int i=0; i<n; i++) fast = fast.next;
+        if(fast == null) return head.next;
+        while(fast.next != null){
+            fast = fast.next;
+            slow = slow.next;
+        }
+        slow.next = slow.next.next;
+        return head;
+    }
+}
+```
+
+### 56. Merge Intervals
+- [Link](https://leetcode.com/problems/merge-intervals/)
+- Tags: Array, Sort
+- Stars: 3
+
+#### sort
+The way of writting a sort function can be simplified to `intervals.sort((o1, o2)->o1.start-o2.start);`.
+```java
+class Solution {
+    public List<Interval> merge(List<Interval> intervals) {
+        if(intervals.size() == 0) return intervals;
+        Collections.sort(intervals, new Comparator<Interval>() {
+            @Override
+            public int compare(Interval o1, Interval o2){
+                return o1.start - o2.start;
+            }
+        });
+        int start = intervals.get(0).start, end = intervals.get(0).end;
+        int i=1;
+        List<Interval> result = new ArrayList<>();
+        for(; i<intervals.size(); i++){
+            if(intervals.get(i).start > end){
+                result.add(new Interval(start, end));
+                start = intervals.get(i).start; end = intervals.get(i).end;
+            }
+            else {
+                end = Math.max(end, intervals.get(i).end);
+            }
+        }
+        result.add(new Interval(start, end));
+        return result;
+    }
+}
+```
 
 # Topics
 
@@ -2990,8 +3111,9 @@ class Solution {
 
 ## recursive to non-recursive
 
-- 101. Symmetric Tree
-- 94. Binary Tree Inorder Traversal
+[101. Symmetric Tree](https://leetcode.com/problems/symmetric-tree/)  
+[94. Binary Tree Inorder Traversal](https://leetcode.com/problems/binary-tree-inorder-traversal/)  
+[148. Sort List](https://leetcode.com/problems/sort-list/)
 
 ## Math
 
