@@ -2581,6 +2581,162 @@ class Solution {
 }
 ```
 
+### 134. Gas Station
+- [Link](https://leetcode.com/problems/gas-station/)
+- Tags: Greedy
+- Stars: 3
+
+#### pseudo two pointers
+1. `while(slow < len && gas[slow]<0) slow++;` cannot be written as `while(slow < len && gas[slow]<=0) slow++;`. Consider cases like `gas[i] == cost[i]` for all possible i. 
+2. Let's assume `remain[i] = gas[i]-cost[i]`. When `sum(remain, slow, fast) < 0`, all the stations between slow and fast cannot satisfy the demand.  
+This idea comes from the fact that the array is an non-decreasing array.  
+We know that when we have `slow` fixed and start considering `fast`, any station i between slow and fast should hold `sum(remain, slow, i) >= 0`. 
+Let's assume there is an station k between slow and fast, which satisfy `sum(remain, k, fast) > 0`.
+From this, we can easily get `sum(remain, slow, k-1) < 0`, which is contradicted to the assumption. 
+Therefore, as long as `sum(remain, slow, fast) < 0`, we can skip all the stations between slow and fast, and set `slow = fast + 1`. 
+3. If `sum(gas) >= sum(cost)`, there must be a solution. Otherwise, no solution. 
+```java
+class Solution {
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        for(int i=0; i<gas.length; i++) gas[i] -= cost[i];
+        int slow = 0, len = gas.length;
+        while(slow < len && gas[slow]<0) slow++;
+        if(slow == len) return -1;
+        int fast = slow, result = 0;
+        while(true){
+            result += gas[fast];
+            fast = (fast+1)%len;
+            if(result < 0){
+                if(fast > slow) {
+                    slow = fast;
+                    while(slow < len && gas[slow]<0) slow++;
+                    if(slow == len) return -1;
+                    result = gas[slow];
+                    fast = (slow+1)%len;
+                }
+                else return -1;
+            }
+            if(fast == slow) return slow;
+        }
+    }
+}
+```
+
+### 33. Search in Rotated Sorted Array
+- [Link](https://leetcode.com/problems/search-in-rotated-sorted-array/)
+- Tags: Array, Binary Search
+- Stars: 1
+
+#### Method 1: use binary search for 3 times
+The most direct method is to find the pivot, and then separate `nums` into two subarrays according to the position of the pivot, and then apply binary search to each subarray. 
+```java
+class Solution {
+    public int search(int[] nums, int target) {
+        if(nums.length == 0) return -1;
+        int l = 0, r = nums.length-1;
+        while(l+1 < r){
+            int mid = l + ((r-l)>>1);
+            if(nums[mid] < nums[0]) r = mid;
+            else l = mid;
+        }
+        // System.out.println(l + " " + r);
+        int a = Arrays.binarySearch(nums, 0, r, target);
+        if(a<0){
+            int b = Arrays.binarySearch(nums, r, nums.length, target);
+            if(b<0) return -1;
+            return b;
+        }
+        return a;
+    }
+}
+```
+
+#### Method 2: use binary search for 2 times
+Just like the above solution, we find the pivot first. Once we have pivot, we can establish a mapping of indices before and after the rotation. 
+
+Be careful to a special case where `shift == 0` (i.e. the position of the smallest element)
+
+Time: 6 ms
+```java
+class Solution {
+    public int search(int[] nums, int target) {
+        // compute `shift`
+        if(nums.length == 0) return -1;
+        int l = 0, r = nums.length-1;
+        int shift = -1;
+        if(nums[l] < nums[r]) shift = 0;
+        else {
+            while(l+1 < r){
+                int mid = l + ((r-l)>>1);
+                if(nums[mid] < nums[0]) r = mid;
+                else l = mid;
+            }
+            shift = r;
+        }
+        // use `shift` to map index
+        l = 0;
+        r = nums.length-1;
+        while(l<=r) {
+            int mid = l + ((r-l)>>1);
+            int midAfterRotate = (mid+shift)%nums.length; //idxAfterRotate(mid, shift, nums.length);
+            if(nums[midAfterRotate] == target) return midAfterRotate;
+            else if(nums[midAfterRotate] > target) r = mid - 1;
+            else l = mid + 1;
+        }
+        return -1;
+    }
+    // private int idxAfterRotate(int i, int k, int len){
+    //     return (i+k)%len;
+    // }
+}
+```
+
+#### Method 3: use binary search for 3 times
+`nums` is almost in a sorted order, and we can take advantage of it! 
+
+we can divide this problem into two cases:  
+1. `target >= nums[0]`: target is in the left part
+2. `target < nums[0]`: target is in the right part
+
+For each case, we only need to deal with a situation when `nums[mid]` is in the wrong part.
+
+Time: 6 ms
+```java
+class Solution {
+    public int search(int[] nums, int target) {
+        if(nums.length == 0) return -1;
+        int l = 0, r = nums.length - 1;
+        // take care of the special case
+        if(nums[l] < nums[r]){
+            int idx = Arrays.binarySearch(nums, l, r+1, target);
+            return idx<0 ? -1 : idx;
+        }
+        if(target >= nums[0]){
+            // target is in the left part
+            while(l<=r){
+                int mid = l + ((r-l)>>1);
+                if(nums[mid] < nums[0]) r = mid-1;
+                else if(nums[mid] == target) return mid;
+                else if(nums[mid] > target) r = mid-1;
+                else l = mid + 1;
+            }
+            return -1;
+        }
+        else {
+            // target is in the right part
+            while(l<=r){
+                int mid = l + ((r-l)>>1);
+                if(nums[mid] >= nums[0]) l = mid+1;
+                else if(nums[mid] == target) return mid;
+                else if(nums[mid] > target) r = mid-1;
+                else l = mid+1;
+            }
+            return -1;
+        }
+    }
+}
+```
+
 # Topics
 
 ## Backtracking Questions

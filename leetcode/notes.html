@@ -1315,6 +1315,16 @@ body .markdown-body
 <li><a href="#sort">sort</a></li>
 </ul>
 </li>
+<li><a href="#134-gas-station">134. Gas Station</a><ul>
+<li><a href="#pseudo-two-pointers">pseudo two pointers</a></li>
+</ul>
+</li>
+<li><a href="#33-search-in-rotated-sorted-array">33. Search in Rotated Sorted Array</a><ul>
+<li><a href="#method-1-use-binary-search-for-3-times">Method 1: use binary search for 3 times</a></li>
+<li><a href="#method-2-use-binary-search-for-2-times">Method 2: use binary search for 2 times</a></li>
+<li><a href="#method-3-use-binary-search-for-3-times">Method 3: use binary search for 3 times</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -3889,6 +3899,153 @@ Similar to <a href="#210-topo-sort">207. Course Schedule</a>
         <span class="o">}</span>
         <span class="n">result</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">Interval</span><span class="o">(</span><span class="n">start</span><span class="o">,</span> <span class="n">end</span><span class="o">));</span>
         <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div></p>
+<h3 id="134-gas-station">134. Gas Station<a class="headerlink" href="#134-gas-station" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/gas-station/">Link</a></li>
+<li>Tags: Greedy</li>
+<li>Stars: 3</li>
+</ul>
+<h4 id="pseudo-two-pointers">pseudo two pointers<a class="headerlink" href="#pseudo-two-pointers" title="Permanent link"></a></h4>
+<ol>
+<li><code>while(slow &lt; len &amp;&amp; gas[slow]&lt;0) slow++;</code> cannot be written as <code>while(slow &lt; len &amp;&amp; gas[slow]&lt;=0) slow++;</code>. Consider cases like <code>gas[i] == cost[i]</code> for all possible i. </li>
+<li>Let&rsquo;s assume <code>remain[i] = gas[i]-cost[i]</code>. When <code>sum(remain, slow, fast) &lt; 0</code>, all the stations between slow and fast cannot satisfy the demand.<br />
+This idea comes from the fact that the array is an non-decreasing array.<br />
+We know that when we have <code>slow</code> fixed and start considering <code>fast</code>, any station i between slow and fast should hold <code>sum(remain, slow, i) &gt;= 0</code>. 
+Let&rsquo;s assume there is an station k between slow and fast, which satisfy <code>sum(remain, k, fast) &gt; 0</code>.
+From this, we can easily get <code>sum(remain, slow, k-1) &lt; 0</code>, which is contradicted to the assumption. 
+Therefore, as long as <code>sum(remain, slow, fast) &lt; 0</code>, we can skip all the stations between slow and fast, and set <code>slow = fast + 1</code>. </li>
+<li>If <code>sum(gas) &gt;= sum(cost)</code>, there must be a solution. Otherwise, no solution. 
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">canCompleteCircuit</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">gas</span><span class="o">,</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">cost</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">gas</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="n">gas</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">-=</span> <span class="n">cost</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+        <span class="kt">int</span> <span class="n">slow</span> <span class="o">=</span> <span class="mi">0</span><span class="o">,</span> <span class="n">len</span> <span class="o">=</span> <span class="n">gas</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">slow</span> <span class="o">&lt;</span> <span class="n">len</span> <span class="o">&amp;&amp;</span> <span class="n">gas</span><span class="o">[</span><span class="n">slow</span><span class="o">]&lt;</span><span class="mi">0</span><span class="o">)</span> <span class="n">slow</span><span class="o">++;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">slow</span> <span class="o">==</span> <span class="n">len</span><span class="o">)</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">fast</span> <span class="o">=</span> <span class="n">slow</span><span class="o">,</span> <span class="n">result</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="kc">true</span><span class="o">){</span>
+            <span class="n">result</span> <span class="o">+=</span> <span class="n">gas</span><span class="o">[</span><span class="n">fast</span><span class="o">];</span>
+            <span class="n">fast</span> <span class="o">=</span> <span class="o">(</span><span class="n">fast</span><span class="o">+</span><span class="mi">1</span><span class="o">)%</span><span class="n">len</span><span class="o">;</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">){</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">fast</span> <span class="o">&gt;</span> <span class="n">slow</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">slow</span> <span class="o">=</span> <span class="n">fast</span><span class="o">;</span>
+                    <span class="k">while</span><span class="o">(</span><span class="n">slow</span> <span class="o">&lt;</span> <span class="n">len</span> <span class="o">&amp;&amp;</span> <span class="n">gas</span><span class="o">[</span><span class="n">slow</span><span class="o">]&lt;</span><span class="mi">0</span><span class="o">)</span> <span class="n">slow</span><span class="o">++;</span>
+                    <span class="k">if</span><span class="o">(</span><span class="n">slow</span> <span class="o">==</span> <span class="n">len</span><span class="o">)</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="n">gas</span><span class="o">[</span><span class="n">slow</span><span class="o">];</span>
+                    <span class="n">fast</span> <span class="o">=</span> <span class="o">(</span><span class="n">slow</span><span class="o">+</span><span class="mi">1</span><span class="o">)%</span><span class="n">len</span><span class="o">;</span>
+                <span class="o">}</span>
+                <span class="k">else</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">fast</span> <span class="o">==</span> <span class="n">slow</span><span class="o">)</span> <span class="k">return</span> <span class="n">slow</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div></li>
+</ol>
+<h3 id="33-search-in-rotated-sorted-array">33. Search in Rotated Sorted Array<a class="headerlink" href="#33-search-in-rotated-sorted-array" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/search-in-rotated-sorted-array/">Link</a></li>
+<li>Tags: Array, Binary Search</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="method-1-use-binary-search-for-3-times">Method 1: use binary search for 3 times<a class="headerlink" href="#method-1-use-binary-search-for-3-times" title="Permanent link"></a></h4>
+<p>The most direct method is to find the pivot, and then separate <code>nums</code> into two subarrays according to the position of the pivot, and then apply binary search to each subarray. 
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">search</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">,</span> <span class="kt">int</span> <span class="n">target</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">l</span> <span class="o">=</span> <span class="mi">0</span><span class="o">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">l</span><span class="o">+</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">r</span><span class="o">){</span>
+            <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="n">l</span> <span class="o">+</span> <span class="o">((</span><span class="n">r</span><span class="o">-</span><span class="n">l</span><span class="o">)&gt;&gt;</span><span class="mi">1</span><span class="o">);</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="n">mid</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="o">[</span><span class="mi">0</span><span class="o">])</span> <span class="n">r</span> <span class="o">=</span> <span class="n">mid</span><span class="o">;</span>
+            <span class="k">else</span> <span class="n">l</span> <span class="o">=</span> <span class="n">mid</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="c1">// System.out.println(l + &quot; &quot; + r);</span>
+        <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="n">Arrays</span><span class="o">.</span><span class="na">binarySearch</span><span class="o">(</span><span class="n">nums</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">r</span><span class="o">,</span> <span class="n">target</span><span class="o">);</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">a</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">){</span>
+            <span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="n">Arrays</span><span class="o">.</span><span class="na">binarySearch</span><span class="o">(</span><span class="n">nums</span><span class="o">,</span> <span class="n">r</span><span class="o">,</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">,</span> <span class="n">target</span><span class="o">);</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">b</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">)</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+            <span class="k">return</span> <span class="n">b</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">a</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div></p>
+<h4 id="method-2-use-binary-search-for-2-times">Method 2: use binary search for 2 times<a class="headerlink" href="#method-2-use-binary-search-for-2-times" title="Permanent link"></a></h4>
+<p>Just like the above solution, we find the pivot first. Once we have pivot, we can establish a mapping of indices before and after the rotation. </p>
+<p>Be careful to a special case where <code>shift == 0</code> (i.e. the position of the smallest element)</p>
+<p>Time: 6 ms
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">search</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">,</span> <span class="kt">int</span> <span class="n">target</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// compute `shift`</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">l</span> <span class="o">=</span> <span class="mi">0</span><span class="o">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">shift</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="n">l</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="o">[</span><span class="n">r</span><span class="o">])</span> <span class="n">shift</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">else</span> <span class="o">{</span>
+            <span class="k">while</span><span class="o">(</span><span class="n">l</span><span class="o">+</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">r</span><span class="o">){</span>
+                <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="n">l</span> <span class="o">+</span> <span class="o">((</span><span class="n">r</span><span class="o">-</span><span class="n">l</span><span class="o">)&gt;&gt;</span><span class="mi">1</span><span class="o">);</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="n">mid</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="o">[</span><span class="mi">0</span><span class="o">])</span> <span class="n">r</span> <span class="o">=</span> <span class="n">mid</span><span class="o">;</span>
+                <span class="k">else</span> <span class="n">l</span> <span class="o">=</span> <span class="n">mid</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="n">shift</span> <span class="o">=</span> <span class="n">r</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="c1">// use `shift` to map index</span>
+        <span class="n">l</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">l</span><span class="o">&lt;=</span><span class="n">r</span><span class="o">)</span> <span class="o">{</span>
+            <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="n">l</span> <span class="o">+</span> <span class="o">((</span><span class="n">r</span><span class="o">-</span><span class="n">l</span><span class="o">)&gt;&gt;</span><span class="mi">1</span><span class="o">);</span>
+            <span class="kt">int</span> <span class="n">midAfterRotate</span> <span class="o">=</span> <span class="o">(</span><span class="n">mid</span><span class="o">+</span><span class="n">shift</span><span class="o">)%</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="c1">//idxAfterRotate(mid, shift, nums.length);</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="n">midAfterRotate</span><span class="o">]</span> <span class="o">==</span> <span class="n">target</span><span class="o">)</span> <span class="k">return</span> <span class="n">midAfterRotate</span><span class="o">;</span>
+            <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="n">midAfterRotate</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">target</span><span class="o">)</span> <span class="n">r</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+            <span class="k">else</span> <span class="n">l</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="c1">// private int idxAfterRotate(int i, int k, int len){</span>
+    <span class="c1">//     return (i+k)%len;</span>
+    <span class="c1">// }</span>
+<span class="o">}</span>
+</pre></div></p>
+<h4 id="method-3-use-binary-search-for-3-times">Method 3: use binary search for 3 times<a class="headerlink" href="#method-3-use-binary-search-for-3-times" title="Permanent link"></a></h4>
+<p><code>nums</code> is almost in a sorted order, and we can take advantage of it! </p>
+<p>we can divide this problem into two cases:<br />
+1. <code>target &gt;= nums[0]</code>: target is in the left part
+2. <code>target &lt; nums[0]</code>: target is in the right part</p>
+<p>For each case, we only need to deal with a situation when <code>nums[mid]</code> is in the wrong part.</p>
+<p>Time: 6 ms
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">search</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">,</span> <span class="kt">int</span> <span class="n">target</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">l</span> <span class="o">=</span> <span class="mi">0</span><span class="o">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="c1">// take care of the special case</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="n">l</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="o">[</span><span class="n">r</span><span class="o">]){</span>
+            <span class="kt">int</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">Arrays</span><span class="o">.</span><span class="na">binarySearch</span><span class="o">(</span><span class="n">nums</span><span class="o">,</span> <span class="n">l</span><span class="o">,</span> <span class="n">r</span><span class="o">+</span><span class="mi">1</span><span class="o">,</span> <span class="n">target</span><span class="o">);</span>
+            <span class="k">return</span> <span class="n">idx</span><span class="o">&lt;</span><span class="mi">0</span> <span class="o">?</span> <span class="o">-</span><span class="mi">1</span> <span class="o">:</span> <span class="n">idx</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">target</span> <span class="o">&gt;=</span> <span class="n">nums</span><span class="o">[</span><span class="mi">0</span><span class="o">]){</span>
+            <span class="c1">// target is in the left part</span>
+            <span class="k">while</span><span class="o">(</span><span class="n">l</span><span class="o">&lt;=</span><span class="n">r</span><span class="o">){</span>
+                <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="n">l</span> <span class="o">+</span> <span class="o">((</span><span class="n">r</span><span class="o">-</span><span class="n">l</span><span class="o">)&gt;&gt;</span><span class="mi">1</span><span class="o">);</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="n">mid</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="o">[</span><span class="mi">0</span><span class="o">])</span> <span class="n">r</span> <span class="o">=</span> <span class="n">mid</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+                <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="n">mid</span><span class="o">]</span> <span class="o">==</span> <span class="n">target</span><span class="o">)</span> <span class="k">return</span> <span class="n">mid</span><span class="o">;</span>
+                <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="n">mid</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">target</span><span class="o">)</span> <span class="n">r</span> <span class="o">=</span> <span class="n">mid</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+                <span class="k">else</span> <span class="n">l</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">else</span> <span class="o">{</span>
+            <span class="c1">// target is in the right part</span>
+            <span class="k">while</span><span class="o">(</span><span class="n">l</span><span class="o">&lt;=</span><span class="n">r</span><span class="o">){</span>
+                <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="n">l</span> <span class="o">+</span> <span class="o">((</span><span class="n">r</span><span class="o">-</span><span class="n">l</span><span class="o">)&gt;&gt;</span><span class="mi">1</span><span class="o">);</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="n">mid</span><span class="o">]</span> <span class="o">&gt;=</span> <span class="n">nums</span><span class="o">[</span><span class="mi">0</span><span class="o">])</span> <span class="n">l</span> <span class="o">=</span> <span class="n">mid</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span>
+                <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="n">mid</span><span class="o">]</span> <span class="o">==</span> <span class="n">target</span><span class="o">)</span> <span class="k">return</span> <span class="n">mid</span><span class="o">;</span>
+                <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="n">mid</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">target</span><span class="o">)</span> <span class="n">r</span> <span class="o">=</span> <span class="n">mid</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+                <span class="k">else</span> <span class="n">l</span> <span class="o">=</span> <span class="n">mid</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
     <span class="o">}</span>
 <span class="o">}</span>
 </pre></div></p>
