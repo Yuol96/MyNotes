@@ -2737,6 +2737,127 @@ class Solution {
 }
 ```
 
+### 150. Evaluate Reverse Polish Notation
+- [Link](https://leetcode.com/problems/evaluate-reverse-polish-notation/)
+- Tags: Stack
+- Stars: 1
+
+#### stack
+1. `token.length()>1` is used to deal with negative numbers.
+2. pay attention to the order of parameters in `compute` function
+```java
+class Solution {
+    public int evalRPN(String[] tokens) {
+        Stack<Integer> st = new Stack<>();
+        for(String token: tokens){
+            // System.out.println(st.toString());
+            if(Character.isDigit(token.charAt(0)) || token.length()>1){ 
+                int num = Integer.parseInt(token);
+                st.push(num);
+            }
+            else {
+                st.push(compute(st.pop(), st.pop(), token.charAt(0)));
+            }
+        }
+        // System.out.println(st.toString());
+        return st.pop();
+    }
+    private int compute(int b, int a, char c){
+        if(c == '+') return a+b;
+        else if(c=='-') return a-b;
+        else if(c=='*') return a*b;
+        else return a/b;
+    }
+}
+```
+
+### 55. Jump Game
+- [Link](https://leetcode.com/problems/jump-game/)
+- Tags: Array, Greedy
+- Stars: 1
+
+#### DP
+```java
+class Solution {
+    public boolean canJump(int[] nums) {
+        int dp = nums[0];
+        for(int i=1; i<nums.length; i++){
+            if(dp < i) return false;
+            dp = Math.max(dp, i+nums[i]);
+        }
+        return dp>=nums.length-1;
+    }
+}
+```
+
+### 2. Add Two Numbers
+- [Link](https://leetcode.com/problems/add-two-numbers/)
+- Tags: Linked List, Math
+- Stars: 1
+
+#### simple solution beats 91.83% in time and 96.99% in space
+```java
+class Solution {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        int cin = 0;
+        ListNode head = new ListNode(-1);
+        ListNode curr = head;
+        while(l1 != null || l2 != null){
+            int temp = cin;
+            if(l1 != null) {
+                temp += l1.val;
+                l1 = l1.next;
+            }
+            if(l2 != null){
+                temp += l2.val;
+                l2 = l2.next;
+            }
+            curr.next = new ListNode(temp%10);
+            curr = curr.next;
+            cin = temp/10;
+        }
+        if(cin > 0)
+            curr.next = new ListNode(cin);
+        return head.next;
+    }
+}
+```
+
+### 54. Spiral Matrix
+- [Link](https://leetcode.com/problems/spiral-matrix/)
+- Tags: Array
+- Stars: 1
+
+#### recursive
+The key of this problem lies in the boundaries.
+
+`if(m != 2*k+1)` and `if(n != 2*k+1)` are used to deal with rectangular matrices to prevent duplicates. 
+```java
+class Solution {
+    List<Integer> result = new ArrayList<>();
+    int m,n;
+    public List<Integer> spiralOrder(int[][] matrix) {
+        if(matrix.length == 0 || matrix[0].length == 0) return result;
+        this.m = matrix.length;
+        this.n = matrix[0].length;
+        spiralOrder(matrix, 0);
+        return result;
+    }
+    private void spiralOrder(int[][] matrix, int k){
+        if(k>(m-1)/2 || k>(n-1)/2) return ;
+        result.add(matrix[k][k]);
+        for(int j=k+1; j<n-k; j++) result.add(matrix[k][j]);
+        for(int i=k+1; i<m-k; i++) result.add(matrix[i][n-k-1]);
+        if(m != 2*k+1)
+            for(int j=n-k-2; j>=k; j--) result.add(matrix[m-k-1][j]);
+        if(n != 2*k+1)
+        for(int i=m-k-2; i>=k+1; i--) result.add(matrix[i][k]);
+        spiralOrder(matrix, k+1);
+    }
+}
+```
+
+
 # Topics
 
 ## Backtracking Questions
@@ -3264,6 +3385,39 @@ class Solution {
             backtrack(candidates, i+1, target-candidates[i], currList);
             currList.remove(currList.size()-1);
         }
+    }
+}
+```
+
+### 79. Word Search
+- [Link](https://leetcode.com/problems/word-search/)
+- Tags: Array, Backtracking
+- Stars: 1
+
+#### simple backtracking solution beats 99.56% in time and 75.11% in space
+```java
+class Solution {
+    char[][] board;
+    String word;
+    boolean[][] used;
+    public boolean exist(char[][] board, String word) {
+        if(word.length() == 0) return true;
+        if(board.length == 0 || board[0].length == 0) return false;
+        this.board = board;
+        this.word = word;
+        this.used = new boolean[board.length][board[0].length];
+        for(int i=0; i<board.length; i++)
+            for(int j=0; j<board[0].length; j++)
+                if(recurr(i, j, 0)) return true;
+        return false;
+    }
+    private boolean recurr(int i, int j, int start){
+        if(start == word.length()) return true;
+        if(i<0 || j<0 || i>=board.length || j>=board[0].length || used[i][j] || board[i][j] != word.charAt(start)) return false;
+        used[i][j] = true;
+        if(recurr(i+1, j, start+1) || recurr(i-1, j, start+1) || recurr(i, j+1, start+1) || recurr(i, j-1, start+1)) return true;
+        used[i][j] = false;
+        return false;
     }
 }
 ```

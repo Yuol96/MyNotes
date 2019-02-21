@@ -1325,6 +1325,22 @@ body .markdown-body
 <li><a href="#method-3-use-binary-search-for-3-times">Method 3: use binary search for 3 times</a></li>
 </ul>
 </li>
+<li><a href="#150-evaluate-reverse-polish-notation">150. Evaluate Reverse Polish Notation</a><ul>
+<li><a href="#stack">stack</a></li>
+</ul>
+</li>
+<li><a href="#55-jump-game">55. Jump Game</a><ul>
+<li><a href="#dp_3">DP</a></li>
+</ul>
+</li>
+<li><a href="#2-add-two-numbers">2. Add Two Numbers</a><ul>
+<li><a href="#simple-solution-beats-9183-in-time-and-9699-in-space">simple solution beats 91.83% in time and 96.99% in space</a></li>
+</ul>
+</li>
+<li><a href="#54-spiral-matrix">54. Spiral Matrix</a><ul>
+<li><a href="#recursive_4">recursive</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -1377,6 +1393,10 @@ body .markdown-body
 <li><a href="#genenral-backtracking-solution-in-a-better-way">genenral backtracking solution in a better way</a></li>
 </ul>
 </li>
+<li><a href="#79-word-search">79. Word Search</a><ul>
+<li><a href="#simple-backtracking-solution-beats-9956-in-time-and-7511-in-space">simple backtracking solution beats 99.56% in time and 75.11% in space</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#n-sums-questions">N Sums Questions</a><ul>
@@ -1400,7 +1420,7 @@ body .markdown-body
 </li>
 <li><a href="#880-decoded-string-at-index">880. Decoded String at Index</a><ul>
 <li><a href="#iterative_2">Iterative</a></li>
-<li><a href="#recursive_4">recursive</a></li>
+<li><a href="#recursive_5">recursive</a></li>
 </ul>
 </li>
 </ul>
@@ -4064,6 +4084,125 @@ Therefore, as long as <code>sum(remain, slow, fast) &lt; 0</code>, we can skip a
     <span class="o">}</span>
 <span class="o">}</span>
 </pre></div></p>
+<h3 id="150-evaluate-reverse-polish-notation">150. Evaluate Reverse Polish Notation<a class="headerlink" href="#150-evaluate-reverse-polish-notation" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/evaluate-reverse-polish-notation/">Link</a></li>
+<li>Tags: Stack</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="stack">stack<a class="headerlink" href="#stack" title="Permanent link"></a></h4>
+<ol>
+<li><code>token.length()&gt;1</code> is used to deal with negative numbers.</li>
+<li>pay attention to the order of parameters in <code>compute</code> function
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">evalRPN</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">tokens</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Stack</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">st</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Stack</span><span class="o">&lt;&gt;();</span>
+        <span class="k">for</span><span class="o">(</span><span class="n">String</span> <span class="n">token</span><span class="o">:</span> <span class="n">tokens</span><span class="o">){</span>
+            <span class="c1">// System.out.println(st.toString());</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">Character</span><span class="o">.</span><span class="na">isDigit</span><span class="o">(</span><span class="n">token</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="mi">0</span><span class="o">))</span> <span class="o">||</span> <span class="n">token</span><span class="o">.</span><span class="na">length</span><span class="o">()&gt;</span><span class="mi">1</span><span class="o">){</span> 
+                <span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">token</span><span class="o">);</span>
+                <span class="n">st</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">num</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="k">else</span> <span class="o">{</span>
+                <span class="n">st</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">compute</span><span class="o">(</span><span class="n">st</span><span class="o">.</span><span class="na">pop</span><span class="o">(),</span> <span class="n">st</span><span class="o">.</span><span class="na">pop</span><span class="o">(),</span> <span class="n">token</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="mi">0</span><span class="o">)));</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="c1">// System.out.println(st.toString());</span>
+        <span class="k">return</span> <span class="n">st</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="nf">compute</span><span class="o">(</span><span class="kt">int</span> <span class="n">b</span><span class="o">,</span> <span class="kt">int</span> <span class="n">a</span><span class="o">,</span> <span class="kt">char</span> <span class="n">c</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">c</span> <span class="o">==</span> <span class="sc">&#39;+&#39;</span><span class="o">)</span> <span class="k">return</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="o">;</span>
+        <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">c</span><span class="o">==</span><span class="sc">&#39;-&#39;</span><span class="o">)</span> <span class="k">return</span> <span class="n">a</span><span class="o">-</span><span class="n">b</span><span class="o">;</span>
+        <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">c</span><span class="o">==</span><span class="sc">&#39;*&#39;</span><span class="o">)</span> <span class="k">return</span> <span class="n">a</span><span class="o">*</span><span class="n">b</span><span class="o">;</span>
+        <span class="k">else</span> <span class="k">return</span> <span class="n">a</span><span class="o">/</span><span class="n">b</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div></li>
+</ol>
+<h3 id="55-jump-game">55. Jump Game<a class="headerlink" href="#55-jump-game" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/jump-game/">Link</a></li>
+<li>Tags: Array, Greedy</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="dp_3">DP<a class="headerlink" href="#dp_3" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">canJump</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">dp</span> <span class="o">=</span> <span class="n">nums</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">dp</span> <span class="o">&lt;</span> <span class="n">i</span><span class="o">)</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+            <span class="n">dp</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">dp</span><span class="o">,</span> <span class="n">i</span><span class="o">+</span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">dp</span><span class="o">&gt;=</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3 id="2-add-two-numbers">2. Add Two Numbers<a class="headerlink" href="#2-add-two-numbers" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/add-two-numbers/">Link</a></li>
+<li>Tags: Linked List, Math</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="simple-solution-beats-9183-in-time-and-9699-in-space">simple solution beats 91.83% in time and 96.99% in space<a class="headerlink" href="#simple-solution-beats-9183-in-time-and-9699-in-space" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">ListNode</span> <span class="nf">addTwoNumbers</span><span class="o">(</span><span class="n">ListNode</span> <span class="n">l1</span><span class="o">,</span> <span class="n">ListNode</span> <span class="n">l2</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">cin</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="n">ListNode</span> <span class="n">head</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="o">(-</span><span class="mi">1</span><span class="o">);</span>
+        <span class="n">ListNode</span> <span class="n">curr</span> <span class="o">=</span> <span class="n">head</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">l1</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">l2</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="kt">int</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">cin</span><span class="o">;</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">l1</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">temp</span> <span class="o">+=</span> <span class="n">l1</span><span class="o">.</span><span class="na">val</span><span class="o">;</span>
+                <span class="n">l1</span> <span class="o">=</span> <span class="n">l1</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">l2</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+                <span class="n">temp</span> <span class="o">+=</span> <span class="n">l2</span><span class="o">.</span><span class="na">val</span><span class="o">;</span>
+                <span class="n">l2</span> <span class="o">=</span> <span class="n">l2</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="n">curr</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="o">(</span><span class="n">temp</span><span class="o">%</span><span class="mi">10</span><span class="o">);</span>
+            <span class="n">curr</span> <span class="o">=</span> <span class="n">curr</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+            <span class="n">cin</span> <span class="o">=</span> <span class="n">temp</span><span class="o">/</span><span class="mi">10</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">cin</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span>
+            <span class="n">curr</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="o">(</span><span class="n">cin</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">head</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3 id="54-spiral-matrix">54. Spiral Matrix<a class="headerlink" href="#54-spiral-matrix" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/spiral-matrix/">Link</a></li>
+<li>Tags: Array</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="recursive_4">recursive<a class="headerlink" href="#recursive_4" title="Permanent link"></a></h4>
+<p>The key of this problem lies in the boundaries.</p>
+<p><code>if(m != 2*k+1)</code> and <code>if(n != 2*k+1)</code> are used to deal with rectangular matrices to prevent duplicates. 
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+    <span class="kt">int</span> <span class="n">m</span><span class="o">,</span><span class="n">n</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="nf">spiralOrder</span><span class="o">(</span><span class="kt">int</span><span class="o">[][]</span> <span class="n">matrix</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">matrix</span><span class="o">.</span><span class="na">length</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">matrix</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">m</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">n</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span><span class="o">;</span>
+        <span class="n">spiralOrder</span><span class="o">(</span><span class="n">matrix</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">spiralOrder</span><span class="o">(</span><span class="kt">int</span><span class="o">[][]</span> <span class="n">matrix</span><span class="o">,</span> <span class="kt">int</span> <span class="n">k</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">k</span><span class="o">&gt;(</span><span class="n">m</span><span class="o">-</span><span class="mi">1</span><span class="o">)/</span><span class="mi">2</span> <span class="o">||</span> <span class="n">k</span><span class="o">&gt;(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">)/</span><span class="mi">2</span><span class="o">)</span> <span class="k">return</span> <span class="o">;</span>
+        <span class="n">result</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">matrix</span><span class="o">[</span><span class="n">k</span><span class="o">][</span><span class="n">k</span><span class="o">]);</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">n</span><span class="o">-</span><span class="n">k</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span> <span class="n">result</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">matrix</span><span class="o">[</span><span class="n">k</span><span class="o">][</span><span class="n">j</span><span class="o">]);</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">m</span><span class="o">-</span><span class="n">k</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="n">result</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">matrix</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">n</span><span class="o">-</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="o">]);</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">m</span> <span class="o">!=</span> <span class="mi">2</span><span class="o">*</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="o">)</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="n">n</span><span class="o">-</span><span class="n">k</span><span class="o">-</span><span class="mi">2</span><span class="o">;</span> <span class="n">j</span><span class="o">&gt;=</span><span class="n">k</span><span class="o">;</span> <span class="n">j</span><span class="o">--)</span> <span class="n">result</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">matrix</span><span class="o">[</span><span class="n">m</span><span class="o">-</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="o">][</span><span class="n">j</span><span class="o">]);</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">n</span> <span class="o">!=</span> <span class="mi">2</span><span class="o">*</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="o">)</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">m</span><span class="o">-</span><span class="n">k</span><span class="o">-</span><span class="mi">2</span><span class="o">;</span> <span class="n">i</span><span class="o">&gt;=</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span> <span class="n">i</span><span class="o">--)</span> <span class="n">result</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">matrix</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">k</span><span class="o">]);</span>
+        <span class="n">spiralOrder</span><span class="o">(</span><span class="n">matrix</span><span class="o">,</span> <span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div></p>
 <h1 id="topics">Topics<a class="headerlink" href="#topics" title="Permanent link"></a></h1>
 <h2 id="backtracking-questions">Backtracking Questions<a class="headerlink" href="#backtracking-questions" title="Permanent link"></a></h2>
 <p><a href="https://leetcode.com/problems/permutations/discuss/18239/A-general-approach-to-backtracking-questions-in-Java-(Subsets-Permutations-Combination-Sum-Palindrome-Partioning)">Reference</a></p>
@@ -4582,6 +4721,39 @@ e.g. If both <code>[1,3,3]</code> and <code>[3,1,3]</code> are in the result and
 <span class="o">}</span>
 </pre></div>
 
+<h3 id="79-word-search">79. Word Search<a class="headerlink" href="#79-word-search" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/word-search/">Link</a></li>
+<li>Tags: Array, Backtracking</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="simple-backtracking-solution-beats-9956-in-time-and-7511-in-space">simple backtracking solution beats 99.56% in time and 75.11% in space<a class="headerlink" href="#simple-backtracking-solution-beats-9956-in-time-and-7511-in-space" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kt">char</span><span class="o">[][]</span> <span class="n">board</span><span class="o">;</span>
+    <span class="n">String</span> <span class="n">word</span><span class="o">;</span>
+    <span class="kt">boolean</span><span class="o">[][]</span> <span class="n">used</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">exist</span><span class="o">(</span><span class="kt">char</span><span class="o">[][]</span> <span class="n">board</span><span class="o">,</span> <span class="n">String</span> <span class="n">word</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">word</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">board</span><span class="o">.</span><span class="na">length</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">board</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">board</span> <span class="o">=</span> <span class="n">board</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">word</span> <span class="o">=</span> <span class="n">word</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">used</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">boolean</span><span class="o">[</span><span class="n">board</span><span class="o">.</span><span class="na">length</span><span class="o">][</span><span class="n">board</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span><span class="o">];</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">board</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">board</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">recurr</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">,</span> <span class="mi">0</span><span class="o">))</span> <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">recurr</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">,</span> <span class="kt">int</span> <span class="n">j</span><span class="o">,</span> <span class="kt">int</span> <span class="n">start</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">start</span> <span class="o">==</span> <span class="n">word</span><span class="o">.</span><span class="na">length</span><span class="o">())</span> <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">0</span> <span class="o">||</span> <span class="n">j</span><span class="o">&lt;</span><span class="mi">0</span> <span class="o">||</span> <span class="n">i</span><span class="o">&gt;=</span><span class="n">board</span><span class="o">.</span><span class="na">length</span> <span class="o">||</span> <span class="n">j</span><span class="o">&gt;=</span><span class="n">board</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span> <span class="o">||</span> <span class="n">used</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">||</span> <span class="n">board</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">!=</span> <span class="n">word</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">start</span><span class="o">))</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="n">used</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">recurr</span><span class="o">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">,</span> <span class="n">j</span><span class="o">,</span> <span class="n">start</span><span class="o">+</span><span class="mi">1</span><span class="o">)</span> <span class="o">||</span> <span class="n">recurr</span><span class="o">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="n">j</span><span class="o">,</span> <span class="n">start</span><span class="o">+</span><span class="mi">1</span><span class="o">)</span> <span class="o">||</span> <span class="n">recurr</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="o">,</span> <span class="n">start</span><span class="o">+</span><span class="mi">1</span><span class="o">)</span> <span class="o">||</span> <span class="n">recurr</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="n">start</span><span class="o">+</span><span class="mi">1</span><span class="o">))</span> <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="n">used</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
 <h2 id="n-sums-questions">N Sums Questions<a class="headerlink" href="#n-sums-questions" title="Permanent link"></a></h2>
 <h3 id="1-two-sum">1. Two Sum<a class="headerlink" href="#1-two-sum" title="Permanent link"></a></h3>
 <ul>
@@ -4735,7 +4907,7 @@ e.g. If both <code>[1,3,3]</code> and <code>[3,1,3]</code> are in the result and
 <span class="o">}</span>
 </pre></div>
 
-<h4 id="recursive_4">recursive<a class="headerlink" href="#recursive_4" title="Permanent link"></a></h4>
+<h4 id="recursive_5">recursive<a class="headerlink" href="#recursive_5" title="Permanent link"></a></h4>
 <p>Attention: strLen might OVERFLOW!!!!!!! Thus, we must use long. 
 <div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="n">String</span> <span class="nf">decodeAtIndex</span><span class="o">(</span><span class="n">String</span> <span class="n">S</span><span class="o">,</span> <span class="kt">int</span> <span class="n">K</span><span class="o">)</span> <span class="o">{</span>
