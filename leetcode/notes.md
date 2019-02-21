@@ -2856,7 +2856,10 @@ class Solution {
 - Tags: Backtracking
 - Stars: 1
 
-#### My Backtracking Solution
+#### My Backtracking Solution (not general but faster)
+<span id="46-DP" />
+This is a DP-like solution. 
+For each iteration, you only consider the additional permutations that the k-th element brings about. 
 ```java
 class Solution {
     List<List<Integer>> result;
@@ -2883,6 +2886,97 @@ class Solution {
             list.add(list.size(), nums[k]);
         }
         backtrack(nums, k+1);
+    }
+}
+```
+
+#### Marking along the backtracking paths (general solution)
+```java
+class Solution {
+    List<List<Integer>> result = new ArrayList<>();
+    public List<List<Integer>> permute(int[] nums) {
+        backtrack(nums, new HashSet<>(), new ArrayList<>());
+        return result;
+    }
+    private void backtrack(int[] nums, HashSet<Integer> mark, List<Integer> currList){
+        if(currList.size() == nums.length){
+            result.add(new ArrayList<>(currList));
+            return ;
+        }
+        for(int i=0; i<nums.length; i++)
+            if(!mark.contains(i)){
+                mark.add(i);
+                currList.add(nums[i]);
+                backtrack(nums, mark, currList);
+                currList.remove(currList.size()-1);
+                mark.remove(i);
+            }
+    }
+    
+}
+```
+
+### 47. Permutations II
+- [Link](https://leetcode.com/problems/permutations-ii/)
+- Tags: Backtracking
+- Stars: 2
+
+#### Marking along the backtracking paths (general solution)
+Notice that the DP-like solution in [46. Permutations](#46-DP) does not work here because of the presence of duplicates. 
+e.g. If both `[1,3,3]` and `[3,1,3]` are in the result and you are going to insert a `1` in them, they can both get the same array `[1,3,1,3]`, which is not allowed. 
+```java
+class Solution {
+    List<List<Integer>> result = new ArrayList<>();
+    HashSet<Integer> unique = new HashSet<>();
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int num: nums) {
+            unique.add(num);
+            map.put(num, map.getOrDefault(num, 0) + 1);
+        }
+        backtrack(nums, map, new ArrayList<>());
+        return result;
+    }
+    private void backtrack(int[] nums, HashMap<Integer, Integer> map, List<Integer> currList){
+        if(currList.size() == nums.length) {
+            result.add(new ArrayList<>(currList));
+            return ;
+        }
+        for(int num : unique){
+            if(map.get(num)>0){
+                map.put(num, map.get(num)-1);
+                currList.add(num);
+                backtrack(nums, map, currList);
+                currList.remove(currList.size()-1);
+                map.put(num, map.get(num)+1);
+            }
+        }
+    }
+}
+```
+
+#### Marking again! (faster general solution)
+```java
+class Solution {
+    List<List<Integer>> result = new ArrayList<>();
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Arrays.sort(nums);
+        backtrack(nums, new boolean[nums.length], new ArrayList<>());
+        return result;
+    }
+    private void backtrack(int[] nums, boolean[] used, List<Integer> currList){
+        if(currList.size() == nums.length){
+            result.add(new ArrayList<>(currList));
+            return ;
+        }
+        for(int i=0; i<nums.length; i++){
+            if(used[i] || i>0 && nums[i-1] == nums[i] && !used[i-1]) continue;
+            used[i] = true;
+            currList.add(nums[i]);
+            backtrack(nums, used, currList);
+            currList.remove(currList.size()-1);
+            used[i] = false;
+        }
     }
 }
 ```
@@ -3081,6 +3175,95 @@ class Solution {
             }
         }
         return p;
+    }
+}
+```
+
+### 39. Combination Sum
+- [Link](https://leetcode.com/problems/combination-sum/)
+- Tags: Array, Backtracking
+- Stars: 2
+
+#### general backtracking solution
+```java
+class Solution {
+    List<List<Integer>> result = new ArrayList<>();
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        backtrack(candidates, 0, target, new ArrayList<>());
+        return result;
+    }
+    private void backtrack(int[] candidates, int start, int target, List<Integer> currList){
+        if(target == 0){
+            result.add(new ArrayList<>(currList));
+            return ;
+        }
+        if(start == candidates.length || target < candidates[start]) return ;
+        int num = candidates[start];
+        currList.add(num);
+        backtrack(candidates, start, target-num, currList);
+        currList.remove(currList.size()-1);
+        backtrack(candidates, start+1, target, currList);
+    }
+}
+```
+
+### 40. Combination Sum II
+- [Link](https://leetcode.com/problems/combination-sum-ii/)
+- Tags: Array, Backtracking
+- Stars: 2
+
+#### general backtracking solution
+```java
+class Solution {
+    List<List<Integer>> result = new ArrayList<>();
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        backtrack(candidates, 0, target, new ArrayList<>());
+        return result;
+    }
+    private void backtrack(int[] candidates, int start, int target, List<Integer> currList){
+        if(target == 0){
+            result.add(new ArrayList<>(currList));
+            return ;
+        }
+        if(start == candidates.length || target < candidates[start]) return ;
+        int idx = start+1, num = candidates[start];
+        while(idx < candidates.length && candidates[idx] == num) idx++; // get the index of the next distinct candidate
+        // case 1: do not use `num`
+        backtrack(candidates, idx, target, currList);
+        // case 2: use `num`
+        for(int i=start; i<idx; i++){
+            currList.add(candidates[i]);
+            target -= num;
+            backtrack(candidates, idx, target, currList);
+        }
+        for(int i=0; i<idx-start; i++) currList.remove(currList.size()-1);
+    }
+}
+```
+
+#### genenral backtracking solution in a better way
+```java
+class Solution {
+    List<List<Integer>> result = new ArrayList<>();
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        backtrack(candidates, 0, target, new ArrayList<>());
+        return result;
+    }
+    private void backtrack(int[] candidates, int start, int target, List<Integer> currList){
+        if(target == 0){
+            result.add(new ArrayList<>(currList));
+            return ;
+        }
+        if(start == candidates.length || target < candidates[start]) return ;
+        for(int i=start; i<candidates.length; i++){
+            if(i>start && candidates[i] == candidates[i-1]) continue;
+            currList.add(candidates[i]);
+            backtrack(candidates, i+1, target-candidates[i], currList);
+            currList.remove(currList.size()-1);
+        }
     }
 }
 ```

@@ -1342,11 +1342,17 @@ body .markdown-body
 </ul>
 </li>
 <li><a href="#46-permutations">46. Permutations</a><ul>
-<li><a href="#my-backtracking-solution">My Backtracking Solution</a></li>
+<li><a href="#my-backtracking-solution-not-general-but-faster">My Backtracking Solution (not general but faster)</a></li>
+<li><a href="#marking-along-the-backtracking-paths-general-solution">Marking along the backtracking paths (general solution)</a></li>
+</ul>
+</li>
+<li><a href="#47-permutations-ii">47. Permutations II</a><ul>
+<li><a href="#marking-along-the-backtracking-paths-general-solution_1">Marking along the backtracking paths (general solution)</a></li>
+<li><a href="#marking-again-faster-general-solution">Marking again! (faster general solution)</a></li>
 </ul>
 </li>
 <li><a href="#22-generate-parentheses">22. Generate Parentheses</a><ul>
-<li><a href="#my-backtracking-solution_1">My Backtracking Solution</a></li>
+<li><a href="#my-backtracking-solution">My Backtracking Solution</a></li>
 </ul>
 </li>
 <li><a href="#17-letter-combinations-of-a-phone-number">17. Letter Combinations of a Phone Number</a><ul>
@@ -1360,6 +1366,15 @@ body .markdown-body
 <li><a href="#131-palindrome-partitioning">131. Palindrome Partitioning</a><ul>
 <li><a href="#sub-optimal-palindrome-method">sub-optimal palindrome method</a></li>
 <li><a href="#manachers-algorithm">Manacher&rsquo;s Algorithm</a></li>
+</ul>
+</li>
+<li><a href="#39-combination-sum">39. Combination Sum</a><ul>
+<li><a href="#general-backtracking-solution">general backtracking solution</a></li>
+</ul>
+</li>
+<li><a href="#40-combination-sum-ii">40. Combination Sum II</a><ul>
+<li><a href="#general-backtracking-solution_1">general backtracking solution</a></li>
+<li><a href="#genenral-backtracking-solution-in-a-better-way">genenral backtracking solution in a better way</a></li>
 </ul>
 </li>
 </ul>
@@ -4164,7 +4179,10 @@ Therefore, as long as <code>sum(remain, slow, fast) &lt; 0</code>, we can skip a
 <li>Tags: Backtracking</li>
 <li>Stars: 1</li>
 </ul>
-<h4 id="my-backtracking-solution">My Backtracking Solution<a class="headerlink" href="#my-backtracking-solution" title="Permanent link"></a></h4>
+<h4 id="my-backtracking-solution-not-general-but-faster">My Backtracking Solution (not general but faster)<a class="headerlink" href="#my-backtracking-solution-not-general-but-faster" title="Permanent link"></a></h4>
+<p><span id="46-DP" />
+This is a DP-like solution. 
+For each iteration, you only consider the additional permutations that the k-th element brings about. 
 <div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
     <span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="n">result</span><span class="o">;</span>
     <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="nf">permute</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">)</span> <span class="o">{</span>
@@ -4192,6 +4210,93 @@ Therefore, as long as <code>sum(remain, slow, fast) &lt; 0</code>, we can skip a
         <span class="n">backtrack</span><span class="o">(</span><span class="n">nums</span><span class="o">,</span> <span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="o">);</span>
     <span class="o">}</span>
 <span class="o">}</span>
+</pre></div></p>
+<h4 id="marking-along-the-backtracking-paths-general-solution">Marking along the backtracking paths (general solution)<a class="headerlink" href="#marking-along-the-backtracking-paths-general-solution" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="nf">permute</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">backtrack</span><span class="o">(</span><span class="n">nums</span><span class="o">,</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;&gt;(),</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;());</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">backtrack</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">,</span> <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">mark</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">currList</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">currList</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">==</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">){</span>
+            <span class="n">result</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;(</span><span class="n">currList</span><span class="o">));</span>
+            <span class="k">return</span> <span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+            <span class="k">if</span><span class="o">(!</span><span class="n">mark</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="n">i</span><span class="o">)){</span>
+                <span class="n">mark</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+                <span class="n">currList</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+                <span class="n">backtrack</span><span class="o">(</span><span class="n">nums</span><span class="o">,</span> <span class="n">mark</span><span class="o">,</span> <span class="n">currList</span><span class="o">);</span>
+                <span class="n">currList</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">currList</span><span class="o">.</span><span class="na">size</span><span class="o">()-</span><span class="mi">1</span><span class="o">);</span>
+                <span class="n">mark</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+            <span class="o">}</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+
+<h3 id="47-permutations-ii">47. Permutations II<a class="headerlink" href="#47-permutations-ii" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/permutations-ii/">Link</a></li>
+<li>Tags: Backtracking</li>
+<li>Stars: 2</li>
+</ul>
+<h4 id="marking-along-the-backtracking-paths-general-solution_1">Marking along the backtracking paths (general solution)<a class="headerlink" href="#marking-along-the-backtracking-paths-general-solution_1" title="Permanent link"></a></h4>
+<p>Notice that the DP-like solution in <a href="#46-DP">46. Permutations</a> does not work here because of the presence of duplicates. 
+e.g. If both <code>[1,3,3]</code> and <code>[3,1,3]</code> are in the result and you are going to insert a <code>1</code> in them, they can both get the same array <code>[1,3,1,3]</code>, which is not allowed. 
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+    <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">unique</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;&gt;();</span>
+    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="nf">permuteUnique</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">Integer</span><span class="o">&gt;</span> <span class="n">map</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">num</span><span class="o">:</span> <span class="n">nums</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">unique</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">num</span><span class="o">);</span>
+            <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">num</span><span class="o">,</span> <span class="n">map</span><span class="o">.</span><span class="na">getOrDefault</span><span class="o">(</span><span class="n">num</span><span class="o">,</span> <span class="mi">0</span><span class="o">)</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="n">backtrack</span><span class="o">(</span><span class="n">nums</span><span class="o">,</span> <span class="n">map</span><span class="o">,</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;());</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">backtrack</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">,</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">Integer</span><span class="o">&gt;</span> <span class="n">map</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">currList</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">currList</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">==</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">result</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;(</span><span class="n">currList</span><span class="o">));</span>
+            <span class="k">return</span> <span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">num</span> <span class="o">:</span> <span class="n">unique</span><span class="o">){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">num</span><span class="o">)&gt;</span><span class="mi">0</span><span class="o">){</span>
+                <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">num</span><span class="o">,</span> <span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">num</span><span class="o">)-</span><span class="mi">1</span><span class="o">);</span>
+                <span class="n">currList</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">num</span><span class="o">);</span>
+                <span class="n">backtrack</span><span class="o">(</span><span class="n">nums</span><span class="o">,</span> <span class="n">map</span><span class="o">,</span> <span class="n">currList</span><span class="o">);</span>
+                <span class="n">currList</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">currList</span><span class="o">.</span><span class="na">size</span><span class="o">()-</span><span class="mi">1</span><span class="o">);</span>
+                <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">num</span><span class="o">,</span> <span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">num</span><span class="o">)+</span><span class="mi">1</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div></p>
+<h4 id="marking-again-faster-general-solution">Marking again! (faster general solution)<a class="headerlink" href="#marking-again-faster-general-solution" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="nf">permuteUnique</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Arrays</span><span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="n">nums</span><span class="o">);</span>
+        <span class="n">backtrack</span><span class="o">(</span><span class="n">nums</span><span class="o">,</span> <span class="k">new</span> <span class="kt">boolean</span><span class="o">[</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">],</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;());</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">backtrack</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">,</span> <span class="kt">boolean</span><span class="o">[]</span> <span class="n">used</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">currList</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">currList</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">==</span> <span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">){</span>
+            <span class="n">result</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;(</span><span class="n">currList</span><span class="o">));</span>
+            <span class="k">return</span> <span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">used</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">||</span> <span class="n">i</span><span class="o">&gt;</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span> <span class="o">==</span> <span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">used</span><span class="o">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">])</span> <span class="k">continue</span><span class="o">;</span>
+            <span class="n">used</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+            <span class="n">currList</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+            <span class="n">backtrack</span><span class="o">(</span><span class="n">nums</span><span class="o">,</span> <span class="n">used</span><span class="o">,</span> <span class="n">currList</span><span class="o">);</span>
+            <span class="n">currList</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">currList</span><span class="o">.</span><span class="na">size</span><span class="o">()-</span><span class="mi">1</span><span class="o">);</span>
+            <span class="n">used</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
 </pre></div>
 
 <h3 id="22-generate-parentheses">22. Generate Parentheses<a class="headerlink" href="#22-generate-parentheses" title="Permanent link"></a></h3>
@@ -4201,7 +4306,7 @@ Therefore, as long as <code>sum(remain, slow, fast) &lt; 0</code>, we can skip a
 <li>Stars: 1</li>
 </ul>
 <p><a href="https://www.youtube.com/watch?v=sz1qaKt0KGQ">YouTube Video</a></p>
-<h4 id="my-backtracking-solution_1">My Backtracking Solution<a class="headerlink" href="#my-backtracking-solution_1" title="Permanent link"></a></h4>
+<h4 id="my-backtracking-solution">My Backtracking Solution<a class="headerlink" href="#my-backtracking-solution" title="Permanent link"></a></h4>
 <div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
     <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">result</span><span class="o">;</span>
     <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">generateParenthesis</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
@@ -4389,6 +4494,94 @@ Therefore, as long as <code>sum(remain, slow, fast) &lt; 0</code>, we can skip a
     <span class="o">}</span>
 <span class="o">}</span>
 </pre></div></p>
+<h3 id="39-combination-sum">39. Combination Sum<a class="headerlink" href="#39-combination-sum" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/combination-sum/">Link</a></li>
+<li>Tags: Array, Backtracking</li>
+<li>Stars: 2</li>
+</ul>
+<h4 id="general-backtracking-solution">general backtracking solution<a class="headerlink" href="#general-backtracking-solution" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="nf">combinationSum</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">candidates</span><span class="o">,</span> <span class="kt">int</span> <span class="n">target</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Arrays</span><span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="n">candidates</span><span class="o">);</span>
+        <span class="n">backtrack</span><span class="o">(</span><span class="n">candidates</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">target</span><span class="o">,</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;());</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">backtrack</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">candidates</span><span class="o">,</span> <span class="kt">int</span> <span class="n">start</span><span class="o">,</span> <span class="kt">int</span> <span class="n">target</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">currList</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">target</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="n">result</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;(</span><span class="n">currList</span><span class="o">));</span>
+            <span class="k">return</span> <span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">start</span> <span class="o">==</span> <span class="n">candidates</span><span class="o">.</span><span class="na">length</span> <span class="o">||</span> <span class="n">target</span> <span class="o">&lt;</span> <span class="n">candidates</span><span class="o">[</span><span class="n">start</span><span class="o">])</span> <span class="k">return</span> <span class="o">;</span>
+        <span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="n">candidates</span><span class="o">[</span><span class="n">start</span><span class="o">];</span>
+        <span class="n">currList</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">num</span><span class="o">);</span>
+        <span class="n">backtrack</span><span class="o">(</span><span class="n">candidates</span><span class="o">,</span> <span class="n">start</span><span class="o">,</span> <span class="n">target</span><span class="o">-</span><span class="n">num</span><span class="o">,</span> <span class="n">currList</span><span class="o">);</span>
+        <span class="n">currList</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">currList</span><span class="o">.</span><span class="na">size</span><span class="o">()-</span><span class="mi">1</span><span class="o">);</span>
+        <span class="n">backtrack</span><span class="o">(</span><span class="n">candidates</span><span class="o">,</span> <span class="n">start</span><span class="o">+</span><span class="mi">1</span><span class="o">,</span> <span class="n">target</span><span class="o">,</span> <span class="n">currList</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3 id="40-combination-sum-ii">40. Combination Sum II<a class="headerlink" href="#40-combination-sum-ii" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/combination-sum-ii/">Link</a></li>
+<li>Tags: Array, Backtracking</li>
+<li>Stars: 2</li>
+</ul>
+<h4 id="general-backtracking-solution_1">general backtracking solution<a class="headerlink" href="#general-backtracking-solution_1" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="nf">combinationSum2</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">candidates</span><span class="o">,</span> <span class="kt">int</span> <span class="n">target</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Arrays</span><span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="n">candidates</span><span class="o">);</span>
+        <span class="n">backtrack</span><span class="o">(</span><span class="n">candidates</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">target</span><span class="o">,</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;());</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">backtrack</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">candidates</span><span class="o">,</span> <span class="kt">int</span> <span class="n">start</span><span class="o">,</span> <span class="kt">int</span> <span class="n">target</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">currList</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">target</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="n">result</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;(</span><span class="n">currList</span><span class="o">));</span>
+            <span class="k">return</span> <span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">start</span> <span class="o">==</span> <span class="n">candidates</span><span class="o">.</span><span class="na">length</span> <span class="o">||</span> <span class="n">target</span> <span class="o">&lt;</span> <span class="n">candidates</span><span class="o">[</span><span class="n">start</span><span class="o">])</span> <span class="k">return</span> <span class="o">;</span>
+        <span class="kt">int</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">start</span><span class="o">+</span><span class="mi">1</span><span class="o">,</span> <span class="n">num</span> <span class="o">=</span> <span class="n">candidates</span><span class="o">[</span><span class="n">start</span><span class="o">];</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="n">candidates</span><span class="o">.</span><span class="na">length</span> <span class="o">&amp;&amp;</span> <span class="n">candidates</span><span class="o">[</span><span class="n">idx</span><span class="o">]</span> <span class="o">==</span> <span class="n">num</span><span class="o">)</span> <span class="n">idx</span><span class="o">++;</span> <span class="c1">// get the index of the next distinct candidate</span>
+        <span class="c1">// case 1: do not use `num`</span>
+        <span class="n">backtrack</span><span class="o">(</span><span class="n">candidates</span><span class="o">,</span> <span class="n">idx</span><span class="o">,</span> <span class="n">target</span><span class="o">,</span> <span class="n">currList</span><span class="o">);</span>
+        <span class="c1">// case 2: use `num`</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">start</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">idx</span><span class="o">;</span> <span class="n">i</span><span class="o">++){</span>
+            <span class="n">currList</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">candidates</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+            <span class="n">target</span> <span class="o">-=</span> <span class="n">num</span><span class="o">;</span>
+            <span class="n">backtrack</span><span class="o">(</span><span class="n">candidates</span><span class="o">,</span> <span class="n">idx</span><span class="o">,</span> <span class="n">target</span><span class="o">,</span> <span class="n">currList</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">idx</span><span class="o">-</span><span class="n">start</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="n">currList</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">currList</span><span class="o">.</span><span class="na">size</span><span class="o">()-</span><span class="mi">1</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h4 id="genenral-backtracking-solution-in-a-better-way">genenral backtracking solution in a better way<a class="headerlink" href="#genenral-backtracking-solution-in-a-better-way" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="nf">combinationSum2</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">candidates</span><span class="o">,</span> <span class="kt">int</span> <span class="n">target</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Arrays</span><span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="n">candidates</span><span class="o">);</span>
+        <span class="n">backtrack</span><span class="o">(</span><span class="n">candidates</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">target</span><span class="o">,</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;());</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">backtrack</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">candidates</span><span class="o">,</span> <span class="kt">int</span> <span class="n">start</span><span class="o">,</span> <span class="kt">int</span> <span class="n">target</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">currList</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">target</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="n">result</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;(</span><span class="n">currList</span><span class="o">));</span>
+            <span class="k">return</span> <span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">start</span> <span class="o">==</span> <span class="n">candidates</span><span class="o">.</span><span class="na">length</span> <span class="o">||</span> <span class="n">target</span> <span class="o">&lt;</span> <span class="n">candidates</span><span class="o">[</span><span class="n">start</span><span class="o">])</span> <span class="k">return</span> <span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">start</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">candidates</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">i</span><span class="o">&gt;</span><span class="n">start</span> <span class="o">&amp;&amp;</span> <span class="n">candidates</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">==</span> <span class="n">candidates</span><span class="o">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">])</span> <span class="k">continue</span><span class="o">;</span>
+            <span class="n">currList</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">candidates</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+            <span class="n">backtrack</span><span class="o">(</span><span class="n">candidates</span><span class="o">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">,</span> <span class="n">target</span><span class="o">-</span><span class="n">candidates</span><span class="o">[</span><span class="n">i</span><span class="o">],</span> <span class="n">currList</span><span class="o">);</span>
+            <span class="n">currList</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">currList</span><span class="o">.</span><span class="na">size</span><span class="o">()-</span><span class="mi">1</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
 <h2 id="n-sums-questions">N Sums Questions<a class="headerlink" href="#n-sums-questions" title="Permanent link"></a></h2>
 <h3 id="1-two-sum">1. Two Sum<a class="headerlink" href="#1-two-sum" title="Permanent link"></a></h3>
 <ul>
