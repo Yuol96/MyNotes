@@ -54,6 +54,27 @@ The preferred way to specify the class path is by using the -cp command line swi
 
 The default value of the class path is ".", meaning that only the current directory is searched. Specifying either the CLASSPATH variable or the -cp command line switch overrides this value.
 
+### Final 关键字
+可以声明成员变量、方法、类以及本地变量。一旦你将引用声明作final，你将不能改变这个引用了，编译器会检查代码，如果你试图将变量再次初始化的话，编译器会报编译错误。
+
+#### final in member variables
+final变量经常和static关键字一起使用，作为常量. 
+此时 final 是 read-only 的
+```java
+public final static LOAN = "loan";
+```
+#### final methods
+final也可以声明方法。方法前面加上final关键字，代表这个方法不可以被子类的方法重写。如果你认为一个方法的功能已经足够完整了，子类中不需要改变的话，你可以声明此方法为final。**final方法比非final方法要快**，因为在编译的时候已经静态绑定了，不需要在运行时再动态绑定。
+```java
+public final String getName() {...}
+```
+
+#### final classes
+final类通常功能是完整的，它们不能被继承。  
+Java中有许多类是final的，譬如String, Interger以及其他包装类
+```java
+final class PersonalLoan {...}
+```
 
 
 # Concurrent Programming in Java
@@ -129,14 +150,92 @@ t1.join(); // wait for t1 to finish
 ```
 
 ### Locks
-Data race: 2 threads wants to write the same object.  
-Solution: `synchronized` statements.
--  require and release operations are implicit!
-These operations are automatically performed by the Java runtime environment when entering and exiting the scope of a `synchronized` statements.
+#### structured locks
+Major benefit of structured locks  
+their acquire and release operations are implicit, automatically performed by the java runtime environment.
+
+`synchronized` statements.
 
 Limited Resource: e.g. in a buffer in and out example, only k entries at maximum allowed.
-Solution: Wait and Notify
+Solution: Wait and Notify  
+We also learned about `wait()` and `notify()` operations that can be used to block and resume threads that need to wait for specific conditions.
 
+#### unstructured locks
+needs to explicitly instantiate the lock object. `ReentrantLock()`. 
 
+structured locks: all the synchronization has to be nested.  
+unstructured locks: use `lock()` and `unlock()` explicitly, overlapping synchronization is allowed.
 
+`tryLock()` tries to get a lock.  
+By making use of tryLock, we can avoid deadlock.
+```java
+success = tryLock(L1)
+if(success){...}
+else {...}
+```
 
+**Read-write locks**  
+use `ReentrantReadWriteLock()` to instantiate.  
+multiple threads are permitted to acquire a lock `L` in "read mode", `L.readLock().lock()`  
+but only one thread is permitted to acquire the lock in "write mode", `L.writeLock().lock()`.
+
+REMEMBER:  
+ensuring that calls to `unlock()` are not forgotten, even in the presence of exceptions.
+
+### Liveness
+Except for infinite loop, there are some other situations where the program stops making forward progress.
+
+The term “liveness” refers to a progress guarantee. The three progress guarantees that correspond to the absence of the conditions listed above are deadlock freedom, livelock freedom, and starvation freedom.
+
+#### deadlock
+```
+T1:
+sync(A){
+	sync(B){
+		...
+	}
+}
+
+T2:
+sync(B){
+	sync(A){
+		...
+	}
+}
+```
+
+#### livelock
+```
+T1:
+Do {
+	sync(x){
+		x.incre()
+		r = x.get()
+	}
+}while(r<2);
+
+T2:
+Do {
+	sync(x){
+		x.decre()
+		r = x.get()
+	}
+}while(r>-2);
+```
+T1 and T2 can go back and forth in an infinite loop.
+
+#### starvation
+sockets s1, ..., s100
+```
+Ti:
+Do {
+	Ni = si.readline();
+	print Ni
+}while(...);
+```
+No deadlock nor livelock, but some threads might never being executed. 
+
+## Week 2
+### Critical Sections
+With critical sections, two blocks of code that are marked as isolated. 
+By using `isolated` constructs, the parallel program will see the effect of one isolated section completely before another isolated section can start.
