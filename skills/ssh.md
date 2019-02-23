@@ -53,3 +53,26 @@ ssh-keygen -t rsa -b 2048 -f /etc/ssh/ssh_host_rsa_key
 ```
 命令执行后没有任何输出。可以通过`ps aux | egrep sshd` 来查看进程
 
+### 保持ssh的长连接
+**有以下三种方法**
+
+1. 在server端修改 `/etc/ssh/sshd_config`
+
+```vim
+ClientAliveInterval 60 ＃server每隔60秒发送一次请求给client，然后client响应，从而保持连接
+ClientAliveCountMax 3 ＃server发出请求后，客户端没有响应得次数达到3，就自动断开连接，正常情况下，client不会不响应
+```
+
+2. 在client端修改 `/etc/ssh/ssh_config`
+
+```vim
+ServerAliveInterval 60 ＃client每隔60秒发送一次请求给server，然后server响应，从而保持连接
+ServerAliveCountMax 3  ＃client发出请求后，服务器端没有响应得次数达到3，就自动断开连接，正常情况下，server不会不响应
+```
+
+3. 在命令行参数中加入新的option
+
+```bash
+ssh -o ServerAliveInterval=60 xxxxxxx
+```
+这样子只会在需要的连接中保持持久连接， 毕竟不是所有连接都要保持持久的。
