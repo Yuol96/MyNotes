@@ -2048,6 +2048,9 @@ class Solution {
 ```
 
 #### DP 25ms
+<span id="279-DP" />
+
+Similar to [322. Coin Change](#322-DP)
 ```java
 class Solution {
     public int numSquares(int n) {
@@ -2086,6 +2089,58 @@ class Solution {
             }
         }
         return 0;
+    }
+}
+```
+
+### 322. Coin Change
+- [Link](https://leetcode.com/problems/coin-change/)
+- Tags: Dynamic Programming
+- Stars: 2
+
+#### DP
+<span id="322-DP" />
+
+Similar to [279. Perfect Squares](#279-DP)
+```java
+class Solution {
+    public int coinChange(int[] coins, int amount) {
+        if(amount == 0) return 0;
+        if(coins.length == 0) return -1;
+        int[] dp = new int[amount+1];
+        Arrays.fill(dp, -1);
+        Arrays.sort(coins);
+        dp[0] = 0;
+        for(int i=0; i<=amount; i++){
+            for(int coin : coins){
+                if(coin > i) break;
+                if(dp[i-coin] == -1) continue;
+                dp[i] = dp[i] == -1 ? dp[i-coin]+1 : Math.min(dp[i], dp[i-coin]+1);
+            }
+        }
+        return dp[amount];
+    }
+}
+```
+
+#### still DP, but init with a self-defined maxVal instead of -1
+```java
+class Solution {
+    public int coinChange(int[] coins, int amount) {
+        if(amount == 0) return 0;
+        if(coins.length == 0) return -1;
+        int[] dp = new int[amount+1];
+        int maxVal = amount+1;
+        Arrays.fill(dp, maxVal);
+        Arrays.sort(coins);
+        dp[0] = 0;
+        for(int i=0; i<=amount; i++){
+            for(int coin : coins){
+                if(coin > i) break;
+                dp[i] = Math.min(dp[i], dp[i-coin]+1);
+            }
+        }
+        return dp[amount] == maxVal ? -1 : dp[amount];
     }
 }
 ```
