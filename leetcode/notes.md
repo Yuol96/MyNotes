@@ -2912,6 +2912,103 @@ class Solution {
 }
 ```
 
+### 152. Maximum Product Subarray
+- [Link](https://leetcode.com/problems/maximum-product-subarray/)
+- Tags: Array, Dynamic Programming
+- Stars: 3
+
+#### DP, space-optimized
+`dp[i]` means the largest product of the subarray ended up with nums[i]  
+Here we use `maxVal` and `minVal` to record the local state of an iteration. 
+```java
+class Solution {
+    public int maxProduct(int[] nums) {
+        // int[] dp = new int[nums.length];
+        int dp;
+        int maxVal, minVal;
+        // maxVal = minVal = dp[0] = nums[0];
+        maxVal = minVal = dp = nums[0];
+        for(int i=1; i<nums.length; i++){
+            int num = nums[i];
+            if(num > 0){
+                maxVal = Math.max(num, maxVal * num);
+                minVal = Math.min(num, minVal * num);
+            }
+            else if(num < 0){
+                int nextMinVal = Math.min(num, maxVal * num);
+                maxVal = Math.max(num, minVal * num);
+                minVal = nextMinVal;
+            }
+            else {
+                maxVal = minVal = 0;
+            }
+            // dp[i] = maxVal;
+            if(dp < maxVal) dp = maxVal;
+        }
+        // int result = Integer.MIN_VALUE;
+        // for(int res: dp)
+        //     if(result < res) result = res;
+        // return result;
+        return dp;
+    }
+}
+```
+
+### 50. Pow(x, n)
+- [Link](https://leetcode.com/problems/powx-n/)
+- Tags: Math, Binary Search
+- Stars: 2
+
+#### iterative
+```java
+class Solution {
+    public double myPow(double x, int n) {
+        if(n == 0) return 1;
+        if(x == 0) return 0;
+        if(n == Integer.MIN_VALUE) {
+            if(x > 1 || x<-1) return 0;
+            return 1;
+        }
+        if(n<0) {
+            n = -n;
+            x = 1/x;
+        }
+        HashMap<Integer, Double> map = new HashMap<>();
+        map.put(1, x);
+        int currN = 1;
+        while((currN<<1) > 0 && (currN<<1) < n){
+            double temp = map.get(currN);
+            currN <<= 1;
+            map.put(currN, temp * temp);
+        }
+        double result = 1;
+        while(n>0){
+            while(n < currN) currN >>= 1;
+            result *= map.get(currN);
+            n -= currN;
+        }
+        return result;
+    }
+}
+```
+
+#### recursive
+```java
+class Solution {
+    public double myPow(double x, int n) {
+        if(n == 0) return 1;
+        if(n == Integer.MIN_VALUE){
+            return myPow(x*x, n>>1);
+        } 
+        if(n<0) {
+            n = -n;
+            x = 1/x;
+        }
+        return (n%2) == 0 ? myPow(x*x, n>>1) : x * myPow(x*x, n>>1);
+    }
+}
+```
+
 
 # Topics
 
@@ -3656,6 +3753,11 @@ class Solution {
 ```
 
 # TODO List
+
+## skipped problems
+
+- 208 Implement Trie
+- 227 Basic Calculator II
 
 ## recursive to non-recursive
 
