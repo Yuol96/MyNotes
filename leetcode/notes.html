@@ -1355,6 +1355,10 @@ body .markdown-body
 <li><a href="#recursive_5">recursive</a></li>
 </ul>
 </li>
+<li><a href="#3-longest-substring-without-repeating-characters">3. Longest Substring Without Repeating Characters</a><ul>
+<li><a href="#two-pointers-thinking-in-a-dp-way">two pointers, thinking in a DP way</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -4363,6 +4367,34 @@ Here we use <code>maxVal</code> and <code>minVal</code> to record the local stat
 <span class="o">}</span>
 </pre></div>
 
+<h3 id="3-longest-substring-without-repeating-characters">3. Longest Substring Without Repeating Characters<a class="headerlink" href="#3-longest-substring-without-repeating-characters" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/longest-substring-without-repeating-characters/">Link</a></li>
+<li>Tags: Hash Table, Two Pointers, String</li>
+<li>Stars: 2</li>
+</ul>
+<h4 id="two-pointers-thinking-in-a-dp-way">two pointers, thinking in a DP way<a class="headerlink" href="#two-pointers-thinking-in-a-dp-way" title="Permanent link"></a></h4>
+<p>Notice that <code>s</code> may contain any ASCII character. 
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">lengthOfLongestSubstring</span><span class="o">(</span><span class="n">String</span> <span class="n">s</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">s</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">s</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="kt">boolean</span><span class="o">[]</span> <span class="n">alphabet</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">boolean</span><span class="o">[</span><span class="mi">256</span><span class="o">];</span>
+        <span class="kt">int</span> <span class="n">head</span> <span class="o">=</span> <span class="mi">0</span><span class="o">,</span> <span class="n">tail</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="n">alphabet</span><span class="o">[</span><span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="mi">0</span><span class="o">)]</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">tail</span> <span class="o">&lt;</span> <span class="n">s</span><span class="o">.</span><span class="na">length</span><span class="o">()){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">alphabet</span><span class="o">[</span><span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">tail</span><span class="o">)]){</span>
+                <span class="k">do</span> <span class="o">{</span>
+                    <span class="n">alphabet</span><span class="o">[</span><span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">head</span><span class="o">++)]</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+                <span class="o">}</span> <span class="k">while</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">head</span><span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">!=</span> <span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">tail</span><span class="o">));</span>
+            <span class="o">}</span>
+            <span class="n">alphabet</span><span class="o">[</span><span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">tail</span><span class="o">++)]</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">result</span> <span class="o">&lt;</span> <span class="n">tail</span><span class="o">-</span><span class="n">head</span><span class="o">)</span> <span class="n">result</span> <span class="o">=</span> <span class="n">tail</span><span class="o">-</span><span class="n">head</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div></p>
 <h1 id="topics">Topics<a class="headerlink" href="#topics" title="Permanent link"></a></h1>
 <h2 id="backtracking-questions">Backtracking Questions<a class="headerlink" href="#backtracking-questions" title="Permanent link"></a></h2>
 <p><a href="https://leetcode.com/problems/permutations/discuss/18239/A-general-approach-to-backtracking-questions-in-Java-(Subsets-Permutations-Combination-Sum-Palindrome-Partioning)">Reference</a></p>

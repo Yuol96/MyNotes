@@ -3009,6 +3009,35 @@ class Solution {
 }
 ```
 
+### 3. Longest Substring Without Repeating Characters
+- [Link](https://leetcode.com/problems/longest-substring-without-repeating-characters/)
+- Tags: Hash Table, Two Pointers, String
+- Stars: 2
+
+#### two pointers, thinking in a DP way
+Notice that `s` may contain any ASCII character. 
+```java
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        if(s == null || s.length() == 0) return 0;
+        boolean[] alphabet = new boolean[256];
+        int head = 0, tail = 1;
+        alphabet[s.charAt(0)] = true;
+        int result = 1;
+        while(tail < s.length()){
+            if(alphabet[s.charAt(tail)]){
+                do {
+                    alphabet[s.charAt(head++)] = false;
+                } while(s.charAt(head-1) != s.charAt(tail));
+            }
+            alphabet[s.charAt(tail++)] = true;
+            if(result < tail-head) result = tail-head;
+        }
+        return result;
+    }
+}
+```
+
 
 # Topics
 
