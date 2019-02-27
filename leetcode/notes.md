@@ -3038,6 +3038,156 @@ class Solution {
 }
 ```
 
+### 138. Copy List with Random Pointer
+- [Link](https://leetcode.com/problems/copy-list-with-random-pointer/)
+- Tags: Hash Table, Linked List
+- Stars: 1
+
+#### 2 pass copy with Hash Mapping, O(n) space and O(n) time
+```java
+class Solution {
+    public Node copyRandomList(Node head) {
+        if(head == null) return null;
+        Node newHead = new Node(head.val, head.next, head.random);
+        HashMap<Node, Node> map = new HashMap<>();
+        map.put(head, newHead);
+        Node curr = newHead;
+        while(curr.next != null){
+            Node temp = curr.next;
+            curr.next = new Node(temp.val, temp.next, temp.random);
+            map.put(temp, curr.next);
+            curr = curr.next;
+        }
+        curr = newHead;
+        while(curr != null){
+            if(curr.random != null)
+                curr.random = map.get(curr.random);
+            curr = curr.next;
+        }
+        return newHead;
+    }
+}
+```
+
+#### 3 pass O(1) space and O(n) time
+Since the original Linkedlist has to remain unchanged, we need to restore next pointer of the original nodes.  
+Notice that you cannot setup the random pointers while extracting the new Head at the same time. 
+```java
+class Solution {
+    public Node copyRandomList(Node head) {
+        if(head == null) return null;
+        // interleaving copy
+        Node curr = head;
+        while(curr != null){
+            curr.next = new Node(curr.val, curr.next, curr.random);
+            curr = curr.next.next;
+        }
+        Node newHead = head.next;
+        // setup the random pointers
+        curr = head.next;
+        while(true){
+            if(curr.random != null)
+                curr.random = curr.random.next;
+            if(curr.next == null) break;
+            curr = curr.next.next;
+        }
+        // extract the newHead
+        curr = head;
+        Node copy = newHead;
+        while(true) {
+            curr.next = copy.next;
+            curr = curr.next;
+            if(copy.next == null) break;
+            copy.next = curr.next;
+            copy = copy.next;
+        }
+        return newHead;
+    }
+}
+```
+
+### 179. Largest Number
+- [Link](https://leetcode.com/problems/largest-number/)
+- Tags: Sort
+- Stars: 2
+
+#### Arrays.sort Comparator
+1. be careful about these cases: comparing 3456 & 345, 3451 & 345
+2. remember to remove the leading zeroes
+3. `Arrays.sort(xxx, new Comparator<xxx>() {})` can only be applied to object arrays
+```java
+class Solution {
+    public String largestNumber(int[] nums) {
+        // convert nums to a String Array
+        String[] strs = new String[nums.length];
+        for(int i=0; i<nums.length; i++)
+            strs[i] = Integer.toString(nums[i]);
+        // Self-defined sorting
+        Arrays.sort(strs, new Comparator<String>() {
+            @Override
+            public int compare(String a, String b) {
+                int i=0; 
+                while(i<a.length() && i<b.length()){
+                    if(a.charAt(i) != b.charAt(i))
+                        return b.charAt(i) - a.charAt(i);
+                    i++;
+                }
+                if(i == a.length() && i == b.length()) return 0;
+                else if(i == b.length())
+                    return compare(a.substring(i, a.length()) + b, a);
+                else 
+                    return compare(b, b.substring(i, b.length()) + a);
+            }
+        });
+        // join the strings
+        String result = String.join("", Arrays.asList(strs));
+        int k = 0;
+        // remove the leading zeros
+        while(k<result.length() && result.charAt(k) == '0') k++;
+        if(k == result.length()) return "0";
+        return result.substring(k, result.length());
+    }
+}
+```
+
+#### smarter but much slower idea using concatenation
+```java
+class Solution {
+    public String largestNumber(int[] nums) {
+        String[] strs = new String[nums.length];
+        for(int i=0; i<nums.length; i++)
+            strs[i] = Integer.toString(nums[i]);
+        Arrays.sort(strs, (String a, String b)->(b+a).compareTo(a+b));
+        String result = String.join("", Arrays.asList(strs));
+        int k = 0;
+        while(k<result.length() && result.charAt(k) == '0') k++;
+        if(k == result.length()) return "0";
+        return result.substring(k, result.length());
+    }
+}
+```
+
+### 98. Validate Binary Search Tree
+- [Link](https://leetcode.com/problems/validate-binary-search-tree/)
+- Tags: Tree, BFS
+- Stars: 1
+
+#### recursive
+Attention that you need to take care of cases like `root.val == Integer.MIN_VALUE` and `root.val == Integer.MAX_VALUE`, because under these circumstances, the boundaries might overflow.
+```java
+class Solution {
+    public boolean isValidBST(TreeNode root) {
+        return isValidBST(root, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    }
+    public boolean isValidBST(TreeNode root, int l, int r){
+        if(root == null) return true;
+        if(root.val > r || root.val < l) return false;
+        if(root.val == Integer.MIN_VALUE && root.left != null) return false;
+        if(root.val == Integer.MAX_VALUE && root.right != null) return false;
+        return isValidBST(root.left, l, root.val-1) && isValidBST(root.right, root.val+1, r);
+    }
+}
+```
 
 # Topics
 
@@ -3787,12 +3937,16 @@ class Solution {
 
 - 208 Implement Trie
 - 227 Basic Calculator II
+- 324 Wiggle Sort II
+- 5 Longest Palindromic Substring
 
 ## recursive to non-recursive
 
 [101. Symmetric Tree](https://leetcode.com/problems/symmetric-tree/)  
 [94. Binary Tree Inorder Traversal](https://leetcode.com/problems/binary-tree-inorder-traversal/)  
 [148. Sort List](https://leetcode.com/problems/sort-list/)
+
+- [tree questions](https://leetcode.com/problems/validate-binary-search-tree/discuss/32112/Learn-one-iterative-inorder-traversal-apply-it-to-multiple-tree-questions-(Java-Solution))
 
 ## Math
 
