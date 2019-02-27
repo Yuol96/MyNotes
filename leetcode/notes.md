@@ -3189,6 +3189,70 @@ class Solution {
 }
 ```
 
+## Top 100 Liked Questions
+
+### 461. Hamming Distance
+- [Link](https://leetcode.com/problems/hamming-distance/)
+- Tags: Bit Manipulation
+- Stars: 3
+
+#### Java Built-in Function
+```java
+class Solution {
+    public int hammingDistance(int x, int y) {
+        return Integer.bitCount(x ^ y);
+    }
+}
+```
+
+#### bit counting by groups
+1. `x = (x&0x55555555) + ((x>>>1)&0x55555555)` can also be written as `x = x - ((x >>> 1) & 0x55555555)`. 
+2. The following solution can be further simplified to `i = (i + (i >>> 4)) & 0x0f0f0f0f; i = i + (i >>> 8); i = i + (i >>> 16); return i & 0x3f;`
+```java
+class Solution {
+    public int hammingDistance(int x, int y) {
+        x ^= y;
+        x = (x&0x55555555) + ((x>>>1)&0x55555555);
+        x = (x&0x33333333) + ((x>>>2)&0x33333333);
+        x = (x&0x0f0f0f0f) + ((x>>>4)&0x0f0f0f0f);
+        x = (x&0x00ff00ff) + ((x>>>8)&0x00ff00ff);
+        x = (x&0x0000ffff) + ((x>>>16)&0x0000ffff);
+        return x;
+    }
+}
+```
+
+### 448. Find All Numbers Disappeared in an Array
+- [Link](https://leetcode.com/problems/find-all-numbers-disappeared-in-an-array/)
+- Tags: Array
+- Stars: 2
+
+#### O(n) time and O(1) space
+Given an element, we can calculate the expected index. 
+```java
+class Solution {
+    public List<Integer> findDisappearedNumbers(int[] nums) {
+        List<Integer> result = new ArrayList<>();
+        for(int i=0; i<nums.length; i++){
+            while(i != nums[i]-1){
+                if(nums[nums[i]-1] == nums[i]) break;
+                swap(nums, i, nums[i]-1);
+            }
+        }
+        for(int i=0; i<nums.length; i++)
+            if(i != nums[i]-1) 
+                result.add(i+1);
+        return result;
+    }
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
+```
+
+
 # Topics
 
 ## Backtracking Questions
@@ -3944,7 +4008,10 @@ class Solution {
 
 [101. Symmetric Tree](https://leetcode.com/problems/symmetric-tree/)  
 [94. Binary Tree Inorder Traversal](https://leetcode.com/problems/binary-tree-inorder-traversal/)  
-[148. Sort List](https://leetcode.com/problems/sort-list/)
+[148. Sort List](https://leetcode.com/problems/sort-list/)  
+[104. Maximum Depth of Binary Tree](https://leetcode.com/problems/maximum-depth-of-binary-tree/)  
+[226. Invert Binary Tree](https://leetcode.com/problems/invert-binary-tree/)  
+
 
 - [tree questions](https://leetcode.com/problems/validate-binary-search-tree/discuss/32112/Learn-one-iterative-inorder-traversal-apply-it-to-multiple-tree-questions-(Java-Solution))
 
