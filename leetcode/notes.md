@@ -3252,6 +3252,203 @@ class Solution {
 }
 ```
 
+### 127. Word Ladder
+- [Link](https://leetcode.com/problems/word-ladder/)
+- Tags: BFS
+- Stars: 1
+
+#### My BFS
+1. You need to mark all the words that has been visited. 
+2. You can initiate a boolean array for marking, but removing elements from wordList directly seems faster. 
+```java
+class Solution {
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        Queue<String> qu = new LinkedList<>();
+        qu.add(beginWord);
+        // boolean[] mark = new boolean[wordList.size()];
+        int count = 1, level = 0;
+        while(!qu.isEmpty()){
+            String curr = qu.poll();
+            count--;
+            if(curr.equals(endWord)) return level+1;
+            for(int i=0; i<wordList.size(); i++){
+                String word = wordList.get(i);
+                // if(!mark[i] && isSimilar(curr, word)) {qu.add(word); mark[i] = true;}
+                if(isSimilar(curr, word)) {
+                    qu.add(word); 
+                    wordList.remove(i--);
+                }
+            }
+            if(count == 0){
+                count = qu.size();
+                level++;
+            }
+        }
+        return 0;
+    }
+    private boolean isSimilar(String a, String b){
+        // if(a.length() != b.length()) return false;
+        int count = 0;
+        for(int i=0; i<a.length(); i++){
+            if(a.charAt(i) != b.charAt(i)) count++;
+            if(count == 2) return false;
+        }
+        return true;
+    }
+}
+```
+
+#### A faster BFS
+```java
+class Solution {
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        HashSet<String> set = new HashSet<>(wordList);
+        Queue<String> qu = new LinkedList<>();
+        qu.add(beginWord);
+        int count = 1, level = 0;
+        while(!qu.isEmpty()){
+            String curr = qu.poll();
+            count--;
+            if(curr.equals(endWord)) return level+1;
+            char[] chrs = curr.toCharArray();
+            for(int i=0; i<chrs.length; i++){
+                char temp = chrs[i];
+                for(char c='a'; c<='z'; c++){
+                    if(c == temp) continue;
+                    chrs[i] = c;
+                    String word = new String(chrs);
+                    if(set.contains(word)) {
+                        qu.add(word);
+                        set.remove(word);
+                    }
+                }
+                chrs[i] = temp;
+            }
+            if(count == 0){
+                count = qu.size();
+                level++;
+            }
+        }
+        return 0;
+    }
+}
+```
+
+### 130. Surrounded Regions
+- [Link](https://leetcode.com/problems/surrounded-regions/)
+- Tags: DFS, BFS, Union Find
+- Stars: 1
+
+#### My BFS
+```java
+class Solution {
+    int[][] map;
+    public void solve(char[][] board) {
+        if(board.length == 0 || board[0].length == 0) return ;
+        map = new int[board.length][board[0].length];
+        for(int i=0; i<board.length; i++)
+            for(int j=0; j<board[0].length; j++){
+                if(isSurrounded(board, i, j)) flip(board, i, j, 'M', 'X');
+                else flip(board, i, j, 'M', 'O');
+            }
+    }
+    private boolean isSurrounded(char[][] board, int i, int j){
+        if(board[i][j] == 'X' || board[i][j] == 'M') return true;
+        if(i==0 || i==board.length-1 || j==0 || j==board[0].length-1) return false;
+        if(map[i][j] == 1) return true;
+        else if(map[i][j] == -1) return false;
+        board[i][j] = 'M';
+        boolean temp = isSurrounded(board, i-1, j) && isSurrounded(board, i+1, j) && isSurrounded(board, i, j-1) && isSurrounded(board, i, j+1);
+        map[i][j] = temp ? 1 : -1;
+        return temp;
+    }
+    private void flip(char[][] board, int i, int j, char src, char dst){
+        if(board[i][j] == src) {
+            board[i][j] = dst;
+            flip(board, i+1, j, src, dst);
+            flip(board, i-1, j, src, dst);
+            flip(board, i, j+1, src, dst);
+            flip(board, i, j-1, src, dst);
+        }
+    }
+}
+```
+
+#### My faster BFS, in an outside-in way
+Flip all the un-surrounded 'O's into 'M' in an outside-in way. Then, iterate the board and flip the remaining 'O's into 'X'. Finally, flip all the 'M's into 'O'. 
+```java
+class Solution {
+    int m, n;
+    public void solve(char[][] board) {
+        if(board.length == 0 || board[0].length == 0) return ;
+        m = board.length;
+        n = board[0].length;
+        // Flip all the un-surrounded 'O's into 'M' in an outside-in way.
+        for(int i=0; i<m; i++){
+            if(board[i][0] == 'O') flip(board, i, 0, 'O', 'M');
+            if(board[i][n-1] == 'O') flip(board, i, n-1, 'O', 'M');
+        }
+        for(int j=1; j<n-1; j++){
+            if(board[0][j] == 'O') flip(board, 0, j, 'O', 'M');
+            if(board[m-1][j] == 'O') flip(board, m-1, j, 'O', 'M');
+        }
+        // flip the remaining 'O's into 'X'.
+        for(int i=0; i<m; i++)
+            for(int j=0; j<n; j++)
+                if(board[i][j] == 'O') flip(board, i, j, 'O', 'X');
+        // flip all the 'M's into 'O'. 
+        for(int i=0; i<m; i++)
+            for(int j=0; j<n; j++)
+                if(board[i][j] == 'M') flip(board, i, j, 'M', 'O');
+    }
+    private void flip(char[][] board, int i, int j, char src, char dst){
+        if(i>=0 && j>=0 && i<m && j<n && board[i][j] == src){
+            board[i][j] = dst;
+            flip(board, i+1, j, src, dst);
+            flip(board, i-1, j, src, dst);
+            flip(board, i, j+1, src, dst);
+            flip(board, i, j-1, src, dst);
+        }
+    }
+}
+```
+
+### 91. Decode Ways
+- [Link](https://leetcode.com/problems/decode-ways/)
+- Tags: String, Dynamic Programming
+- Stars: 1
+
+#### DP, space optimized
+`s.charAt(i) == 0` is a special case. 
+```java
+class Solution {
+    public int numDecodings(String s) {
+        if(s.length() == 0 || s.charAt(0) == '0') return 0;
+        // int[] dp = new int[s.length()];
+        // dp[0] = 1;
+        int dp1 = 1, dp2 = 1;
+        for(int i=1; i<s.length(); i++){
+            int dp=0;
+            if(s.charAt(i) == '0'){
+                if(s.charAt(i-1) == '1' || s.charAt(i-1) == '2') dp = dp2;
+                else return 0;
+            }
+            else {
+                dp = dp1;
+                if(s.charAt(i-1) == '1' || 
+                   (s.charAt(i-1) == '2' && s.charAt(i) < '7'))
+                    dp += dp2;
+            }
+            dp2 = dp1;
+            dp1 = dp;
+        }
+        return dp1;
+    }
+}
+```
+
+
+
 
 # Topics
 
@@ -3870,6 +4067,65 @@ class Solution {
             for(int b: B)
                 map.put(a+b, map.getOrDefault(a+b, 0) + 1);
         return map;
+    }
+}
+```
+
+### 15. 3Sum
+- [Link](https://leetcode.com/problems/3sum/)
+- Tags: Array, Two Pointers
+- Stars: 2
+
+#### HashSet, clear but slow
+```java
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        
+        HashSet<Integer> set = new HashSet<>();
+        for(int num: nums) set.add(num);
+        
+        Arrays.sort(nums);
+        int i=0; 
+        while(i<nums.length-2){
+            int j=i+1;
+            while(j<nums.length-1){
+                if(set.contains(-(nums[i]+nums[j])) && -(nums[i]+nums[j]) >= nums[j+1]) 
+                    result.add(Arrays.asList((Integer)nums[i], (Integer)nums[j], (Integer)(-(nums[i]+nums[j]))));
+                do {
+                    j++;
+                } while(j<nums.length-1 && nums[j] == nums[j-1]);
+            }
+            do {
+                i++;
+            } while(i<nums.length-2 && nums[i] == nums[i-1]);
+        }
+        return result;
+    }
+}
+```
+
+#### jumping iteration + Two Sum two pointers
+```java
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        
+        Arrays.sort(nums);
+        for(int i=0; i<nums.length-2; i++){
+            if(i>0 && nums[i] == nums[i-1]) continue;
+            int j=i+1, k=nums.length-1;
+            while(j<k){
+                if(nums[i]+nums[j]+nums[k] == 0) {
+                    result.add(Arrays.asList((Integer)nums[i], (Integer)nums[j++], (Integer)nums[k--]));
+                    while(j<k && nums[j] == nums[j-1]) j++;
+                    while(j<k && nums[k] == nums[k+1]) k--;
+                }
+                else if(nums[i]+nums[j]+nums[k]>0) k--;
+                else j++;
+            }
+        }
+        return result;
     }
 }
 ```

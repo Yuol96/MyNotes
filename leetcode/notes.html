@@ -1385,6 +1385,20 @@ body .markdown-body
 <li><a href="#on-time-and-o1-space">O(n) time and O(1) space</a></li>
 </ul>
 </li>
+<li><a href="#127-word-ladder">127. Word Ladder</a><ul>
+<li><a href="#my-bfs">My BFS</a></li>
+<li><a href="#a-faster-bfs">A faster BFS</a></li>
+</ul>
+</li>
+<li><a href="#130-surrounded-regions">130. Surrounded Regions</a><ul>
+<li><a href="#my-bfs_1">My BFS</a></li>
+<li><a href="#my-faster-bfs-in-an-outside-in-way">My faster BFS, in an outside-in way</a></li>
+</ul>
+</li>
+<li><a href="#91-decode-ways">91. Decode Ways</a><ul>
+<li><a href="#dp-space-optimized_1">DP, space optimized</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -1450,6 +1464,11 @@ body .markdown-body
 </li>
 <li><a href="#454-4sum-ii">454. 4Sum II</a><ul>
 <li><a href="#hashmap-two-sum">HashMap + two sum</a></li>
+</ul>
+</li>
+<li><a href="#15-3sum">15. 3Sum</a><ul>
+<li><a href="#hashset-clear-but-slow">HashSet, clear but slow</a></li>
+<li><a href="#jumping-iteration-two-sum-two-pointers">jumping iteration + Two Sum two pointers</a></li>
 </ul>
 </li>
 </ul>
@@ -4630,6 +4649,198 @@ Notice that you cannot setup the random pointers while extracting the new Head a
     <span class="o">}</span>
 <span class="o">}</span>
 </pre></div></p>
+<h3 id="127-word-ladder">127. Word Ladder<a class="headerlink" href="#127-word-ladder" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/word-ladder/">Link</a></li>
+<li>Tags: BFS</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="my-bfs">My BFS<a class="headerlink" href="#my-bfs" title="Permanent link"></a></h4>
+<ol>
+<li>You need to mark all the words that has been visited. </li>
+<li>You can initiate a boolean array for marking, but removing elements from wordList directly seems faster. 
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">ladderLength</span><span class="o">(</span><span class="n">String</span> <span class="n">beginWord</span><span class="o">,</span> <span class="n">String</span> <span class="n">endWord</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">wordList</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Queue</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">qu</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+        <span class="n">qu</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">beginWord</span><span class="o">);</span>
+        <span class="c1">// boolean[] mark = new boolean[wordList.size()];</span>
+        <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">1</span><span class="o">,</span> <span class="n">level</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(!</span><span class="n">qu</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+            <span class="n">String</span> <span class="n">curr</span> <span class="o">=</span> <span class="n">qu</span><span class="o">.</span><span class="na">poll</span><span class="o">();</span>
+            <span class="n">count</span><span class="o">--;</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">curr</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">endWord</span><span class="o">))</span> <span class="k">return</span> <span class="n">level</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">wordList</span><span class="o">.</span><span class="na">size</span><span class="o">();</span> <span class="n">i</span><span class="o">++){</span>
+                <span class="n">String</span> <span class="n">word</span> <span class="o">=</span> <span class="n">wordList</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+                <span class="c1">// if(!mark[i] &amp;&amp; isSimilar(curr, word)) {qu.add(word); mark[i] = true;}</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">isSimilar</span><span class="o">(</span><span class="n">curr</span><span class="o">,</span> <span class="n">word</span><span class="o">))</span> <span class="o">{</span>
+                    <span class="n">qu</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">word</span><span class="o">);</span> 
+                    <span class="n">wordList</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">i</span><span class="o">--);</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">count</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+                <span class="n">count</span> <span class="o">=</span> <span class="n">qu</span><span class="o">.</span><span class="na">size</span><span class="o">();</span>
+                <span class="n">level</span><span class="o">++;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">isSimilar</span><span class="o">(</span><span class="n">String</span> <span class="n">a</span><span class="o">,</span> <span class="n">String</span> <span class="n">b</span><span class="o">){</span>
+        <span class="c1">// if(a.length() != b.length()) return false;</span>
+        <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">a</span><span class="o">.</span><span class="na">length</span><span class="o">();</span> <span class="n">i</span><span class="o">++){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">a</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">)</span> <span class="o">!=</span> <span class="n">b</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">))</span> <span class="n">count</span><span class="o">++;</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">count</span> <span class="o">==</span> <span class="mi">2</span><span class="o">)</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div></li>
+</ol>
+<h4 id="a-faster-bfs">A faster BFS<a class="headerlink" href="#a-faster-bfs" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">ladderLength</span><span class="o">(</span><span class="n">String</span> <span class="n">beginWord</span><span class="o">,</span> <span class="n">String</span> <span class="n">endWord</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">wordList</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">set</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;&gt;(</span><span class="n">wordList</span><span class="o">);</span>
+        <span class="n">Queue</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">qu</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+        <span class="n">qu</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">beginWord</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">1</span><span class="o">,</span> <span class="n">level</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(!</span><span class="n">qu</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+            <span class="n">String</span> <span class="n">curr</span> <span class="o">=</span> <span class="n">qu</span><span class="o">.</span><span class="na">poll</span><span class="o">();</span>
+            <span class="n">count</span><span class="o">--;</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">curr</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">endWord</span><span class="o">))</span> <span class="k">return</span> <span class="n">level</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span>
+            <span class="kt">char</span><span class="o">[]</span> <span class="n">chrs</span> <span class="o">=</span> <span class="n">curr</span><span class="o">.</span><span class="na">toCharArray</span><span class="o">();</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">chrs</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++){</span>
+                <span class="kt">char</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">chrs</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+                <span class="k">for</span><span class="o">(</span><span class="kt">char</span> <span class="n">c</span><span class="o">=</span><span class="sc">&#39;a&#39;</span><span class="o">;</span> <span class="n">c</span><span class="o">&lt;=</span><span class="sc">&#39;z&#39;</span><span class="o">;</span> <span class="n">c</span><span class="o">++){</span>
+                    <span class="k">if</span><span class="o">(</span><span class="n">c</span> <span class="o">==</span> <span class="n">temp</span><span class="o">)</span> <span class="k">continue</span><span class="o">;</span>
+                    <span class="n">chrs</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">c</span><span class="o">;</span>
+                    <span class="n">String</span> <span class="n">word</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">(</span><span class="n">chrs</span><span class="o">);</span>
+                    <span class="k">if</span><span class="o">(</span><span class="n">set</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="n">word</span><span class="o">))</span> <span class="o">{</span>
+                        <span class="n">qu</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">word</span><span class="o">);</span>
+                        <span class="n">set</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">word</span><span class="o">);</span>
+                    <span class="o">}</span>
+                <span class="o">}</span>
+                <span class="n">chrs</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">temp</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">count</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+                <span class="n">count</span> <span class="o">=</span> <span class="n">qu</span><span class="o">.</span><span class="na">size</span><span class="o">();</span>
+                <span class="n">level</span><span class="o">++;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3 id="130-surrounded-regions">130. Surrounded Regions<a class="headerlink" href="#130-surrounded-regions" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/surrounded-regions/">Link</a></li>
+<li>Tags: DFS, BFS, Union Find</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="my-bfs_1">My BFS<a class="headerlink" href="#my-bfs_1" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kt">int</span><span class="o">[][]</span> <span class="n">map</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">solve</span><span class="o">(</span><span class="kt">char</span><span class="o">[][]</span> <span class="n">board</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">board</span><span class="o">.</span><span class="na">length</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">board</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="k">return</span> <span class="o">;</span>
+        <span class="n">map</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">board</span><span class="o">.</span><span class="na">length</span><span class="o">][</span><span class="n">board</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span><span class="o">];</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">board</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">board</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span><span class="o">;</span> <span class="n">j</span><span class="o">++){</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">isSurrounded</span><span class="o">(</span><span class="n">board</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">))</span> <span class="n">flip</span><span class="o">(</span><span class="n">board</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">,</span> <span class="sc">&#39;M&#39;</span><span class="o">,</span> <span class="sc">&#39;X&#39;</span><span class="o">);</span>
+                <span class="k">else</span> <span class="n">flip</span><span class="o">(</span><span class="n">board</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">,</span> <span class="sc">&#39;M&#39;</span><span class="o">,</span> <span class="sc">&#39;O&#39;</span><span class="o">);</span>
+            <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">isSurrounded</span><span class="o">(</span><span class="kt">char</span><span class="o">[][]</span> <span class="n">board</span><span class="o">,</span> <span class="kt">int</span> <span class="n">i</span><span class="o">,</span> <span class="kt">int</span> <span class="n">j</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">board</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">==</span> <span class="sc">&#39;X&#39;</span> <span class="o">||</span> <span class="n">board</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">==</span> <span class="sc">&#39;M&#39;</span><span class="o">)</span> <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">i</span><span class="o">==</span><span class="mi">0</span> <span class="o">||</span> <span class="n">i</span><span class="o">==</span><span class="n">board</span><span class="o">.</span><span class="na">length</span><span class="o">-</span><span class="mi">1</span> <span class="o">||</span> <span class="n">j</span><span class="o">==</span><span class="mi">0</span> <span class="o">||</span> <span class="n">j</span><span class="o">==</span><span class="n">board</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span><span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">map</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">map</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="n">board</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="sc">&#39;M&#39;</span><span class="o">;</span>
+        <span class="kt">boolean</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">isSurrounded</span><span class="o">(</span><span class="n">board</span><span class="o">,</span> <span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="n">j</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="n">isSurrounded</span><span class="o">(</span><span class="n">board</span><span class="o">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">,</span> <span class="n">j</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="n">isSurrounded</span><span class="o">(</span><span class="n">board</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="n">isSurrounded</span><span class="o">(</span><span class="n">board</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="o">);</span>
+        <span class="n">map</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="n">temp</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="k">return</span> <span class="n">temp</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">flip</span><span class="o">(</span><span class="kt">char</span><span class="o">[][]</span> <span class="n">board</span><span class="o">,</span> <span class="kt">int</span> <span class="n">i</span><span class="o">,</span> <span class="kt">int</span> <span class="n">j</span><span class="o">,</span> <span class="kt">char</span> <span class="n">src</span><span class="o">,</span> <span class="kt">char</span> <span class="n">dst</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">board</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">==</span> <span class="n">src</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">board</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="n">dst</span><span class="o">;</span>
+            <span class="n">flip</span><span class="o">(</span><span class="n">board</span><span class="o">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">,</span> <span class="n">j</span><span class="o">,</span> <span class="n">src</span><span class="o">,</span> <span class="n">dst</span><span class="o">);</span>
+            <span class="n">flip</span><span class="o">(</span><span class="n">board</span><span class="o">,</span> <span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="n">j</span><span class="o">,</span> <span class="n">src</span><span class="o">,</span> <span class="n">dst</span><span class="o">);</span>
+            <span class="n">flip</span><span class="o">(</span><span class="n">board</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="o">,</span> <span class="n">src</span><span class="o">,</span> <span class="n">dst</span><span class="o">);</span>
+            <span class="n">flip</span><span class="o">(</span><span class="n">board</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="n">src</span><span class="o">,</span> <span class="n">dst</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h4 id="my-faster-bfs-in-an-outside-in-way">My faster BFS, in an outside-in way<a class="headerlink" href="#my-faster-bfs-in-an-outside-in-way" title="Permanent link"></a></h4>
+<p>Flip all the un-surrounded &lsquo;O&rsquo;s into &lsquo;M&rsquo; in an outside-in way. Then, iterate the board and flip the remaining &lsquo;O&rsquo;s into &lsquo;X&rsquo;. Finally, flip all the &lsquo;M&rsquo;s into &lsquo;O&rsquo;. 
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kt">int</span> <span class="n">m</span><span class="o">,</span> <span class="n">n</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">solve</span><span class="o">(</span><span class="kt">char</span><span class="o">[][]</span> <span class="n">board</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">board</span><span class="o">.</span><span class="na">length</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">board</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="k">return</span> <span class="o">;</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">board</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">board</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span><span class="o">;</span>
+        <span class="c1">// Flip all the un-surrounded &#39;O&#39;s into &#39;M&#39; in an outside-in way.</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">m</span><span class="o">;</span> <span class="n">i</span><span class="o">++){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">board</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="mi">0</span><span class="o">]</span> <span class="o">==</span> <span class="sc">&#39;O&#39;</span><span class="o">)</span> <span class="n">flip</span><span class="o">(</span><span class="n">board</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="sc">&#39;O&#39;</span><span class="o">,</span> <span class="sc">&#39;M&#39;</span><span class="o">);</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">board</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span> <span class="o">==</span> <span class="sc">&#39;O&#39;</span><span class="o">)</span> <span class="n">flip</span><span class="o">(</span><span class="n">board</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="sc">&#39;O&#39;</span><span class="o">,</span> <span class="sc">&#39;M&#39;</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span> <span class="n">j</span><span class="o">++){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">board</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">==</span> <span class="sc">&#39;O&#39;</span><span class="o">)</span> <span class="n">flip</span><span class="o">(</span><span class="n">board</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">j</span><span class="o">,</span> <span class="sc">&#39;O&#39;</span><span class="o">,</span> <span class="sc">&#39;M&#39;</span><span class="o">);</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">board</span><span class="o">[</span><span class="n">m</span><span class="o">-</span><span class="mi">1</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">==</span> <span class="sc">&#39;O&#39;</span><span class="o">)</span> <span class="n">flip</span><span class="o">(</span><span class="n">board</span><span class="o">,</span> <span class="n">m</span><span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="n">j</span><span class="o">,</span> <span class="sc">&#39;O&#39;</span><span class="o">,</span> <span class="sc">&#39;M&#39;</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="c1">// flip the remaining &#39;O&#39;s into &#39;X&#39;.</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">m</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">board</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">==</span> <span class="sc">&#39;O&#39;</span><span class="o">)</span> <span class="n">flip</span><span class="o">(</span><span class="n">board</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">,</span> <span class="sc">&#39;O&#39;</span><span class="o">,</span> <span class="sc">&#39;X&#39;</span><span class="o">);</span>
+        <span class="c1">// flip all the &#39;M&#39;s into &#39;O&#39;. </span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">m</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">board</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">==</span> <span class="sc">&#39;M&#39;</span><span class="o">)</span> <span class="n">flip</span><span class="o">(</span><span class="n">board</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">,</span> <span class="sc">&#39;M&#39;</span><span class="o">,</span> <span class="sc">&#39;O&#39;</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">flip</span><span class="o">(</span><span class="kt">char</span><span class="o">[][]</span> <span class="n">board</span><span class="o">,</span> <span class="kt">int</span> <span class="n">i</span><span class="o">,</span> <span class="kt">int</span> <span class="n">j</span><span class="o">,</span> <span class="kt">char</span> <span class="n">src</span><span class="o">,</span> <span class="kt">char</span> <span class="n">dst</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">i</span><span class="o">&gt;=</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">j</span><span class="o">&gt;=</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">m</span> <span class="o">&amp;&amp;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">n</span> <span class="o">&amp;&amp;</span> <span class="n">board</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">==</span> <span class="n">src</span><span class="o">){</span>
+            <span class="n">board</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="n">dst</span><span class="o">;</span>
+            <span class="n">flip</span><span class="o">(</span><span class="n">board</span><span class="o">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">,</span> <span class="n">j</span><span class="o">,</span> <span class="n">src</span><span class="o">,</span> <span class="n">dst</span><span class="o">);</span>
+            <span class="n">flip</span><span class="o">(</span><span class="n">board</span><span class="o">,</span> <span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="n">j</span><span class="o">,</span> <span class="n">src</span><span class="o">,</span> <span class="n">dst</span><span class="o">);</span>
+            <span class="n">flip</span><span class="o">(</span><span class="n">board</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="o">,</span> <span class="n">src</span><span class="o">,</span> <span class="n">dst</span><span class="o">);</span>
+            <span class="n">flip</span><span class="o">(</span><span class="n">board</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="n">src</span><span class="o">,</span> <span class="n">dst</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div></p>
+<h3 id="91-decode-ways">91. Decode Ways<a class="headerlink" href="#91-decode-ways" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/decode-ways/">Link</a></li>
+<li>Tags: String, Dynamic Programming</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="dp-space-optimized_1">DP, space optimized<a class="headerlink" href="#dp-space-optimized_1" title="Permanent link"></a></h4>
+<p><code>s.charAt(i) == 0</code> is a special case. 
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">numDecodings</span><span class="o">(</span><span class="n">String</span> <span class="n">s</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span> <span class="o">==</span> <span class="sc">&#39;0&#39;</span><span class="o">)</span> <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="c1">// int[] dp = new int[s.length()];</span>
+        <span class="c1">// dp[0] = 1;</span>
+        <span class="kt">int</span> <span class="n">dp1</span> <span class="o">=</span> <span class="mi">1</span><span class="o">,</span> <span class="n">dp2</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">s</span><span class="o">.</span><span class="na">length</span><span class="o">();</span> <span class="n">i</span><span class="o">++){</span>
+            <span class="kt">int</span> <span class="n">dp</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">)</span> <span class="o">==</span> <span class="sc">&#39;0&#39;</span><span class="o">){</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">==</span> <span class="sc">&#39;1&#39;</span> <span class="o">||</span> <span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">==</span> <span class="sc">&#39;2&#39;</span><span class="o">)</span> <span class="n">dp</span> <span class="o">=</span> <span class="n">dp2</span><span class="o">;</span>
+                <span class="k">else</span> <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="k">else</span> <span class="o">{</span>
+                <span class="n">dp</span> <span class="o">=</span> <span class="n">dp1</span><span class="o">;</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">==</span> <span class="sc">&#39;1&#39;</span> <span class="o">||</span> 
+                   <span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">==</span> <span class="sc">&#39;2&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">)</span> <span class="o">&lt;</span> <span class="sc">&#39;7&#39;</span><span class="o">))</span>
+                    <span class="n">dp</span> <span class="o">+=</span> <span class="n">dp2</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="n">dp2</span> <span class="o">=</span> <span class="n">dp1</span><span class="o">;</span>
+            <span class="n">dp1</span> <span class="o">=</span> <span class="n">dp</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">dp1</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div></p>
 <h1 id="topics">Topics<a class="headerlink" href="#topics" title="Permanent link"></a></h1>
 <h2 id="backtracking-questions">Backtracking Questions<a class="headerlink" href="#backtracking-questions" title="Permanent link"></a></h2>
 <p><a href="https://leetcode.com/problems/permutations/discuss/18239/A-general-approach-to-backtracking-questions-in-Java-(Subsets-Permutations-Combination-Sum-Palindrome-Partioning)">Reference</a></p>
@@ -5233,6 +5444,64 @@ e.g. If both <code>[1,3,3]</code> and <code>[3,1,3]</code> are in the result and
             <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">b</span><span class="o">:</span> <span class="n">B</span><span class="o">)</span>
                 <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="o">,</span> <span class="n">map</span><span class="o">.</span><span class="na">getOrDefault</span><span class="o">(</span><span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="o">,</span> <span class="mi">0</span><span class="o">)</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
         <span class="k">return</span> <span class="n">map</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3 id="15-3sum">15. 3Sum<a class="headerlink" href="#15-3sum" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/3sum/">Link</a></li>
+<li>Tags: Array, Two Pointers</li>
+<li>Stars: 2</li>
+</ul>
+<h4 id="hashset-clear-but-slow">HashSet, clear but slow<a class="headerlink" href="#hashset-clear-but-slow" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="nf">threeSum</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+
+        <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">set</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;&gt;();</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">num</span><span class="o">:</span> <span class="n">nums</span><span class="o">)</span> <span class="n">set</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">num</span><span class="o">);</span>
+
+        <span class="n">Arrays</span><span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="n">nums</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> 
+        <span class="k">while</span><span class="o">(</span><span class="n">i</span><span class="o">&lt;</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">-</span><span class="mi">2</span><span class="o">){</span>
+            <span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span>
+            <span class="k">while</span><span class="o">(</span><span class="n">j</span><span class="o">&lt;</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">-</span><span class="mi">1</span><span class="o">){</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">set</span><span class="o">.</span><span class="na">contains</span><span class="o">(-(</span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]+</span><span class="n">nums</span><span class="o">[</span><span class="n">j</span><span class="o">]))</span> <span class="o">&amp;&amp;</span> <span class="o">-(</span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]+</span><span class="n">nums</span><span class="o">[</span><span class="n">j</span><span class="o">])</span> <span class="o">&gt;=</span> <span class="n">nums</span><span class="o">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="o">])</span> 
+                    <span class="n">result</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">((</span><span class="n">Integer</span><span class="o">)</span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">],</span> <span class="o">(</span><span class="n">Integer</span><span class="o">)</span><span class="n">nums</span><span class="o">[</span><span class="n">j</span><span class="o">],</span> <span class="o">(</span><span class="n">Integer</span><span class="o">)(-(</span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]+</span><span class="n">nums</span><span class="o">[</span><span class="n">j</span><span class="o">]))));</span>
+                <span class="k">do</span> <span class="o">{</span>
+                    <span class="n">j</span><span class="o">++;</span>
+                <span class="o">}</span> <span class="k">while</span><span class="o">(</span><span class="n">j</span><span class="o">&lt;</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">-</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">nums</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">==</span> <span class="n">nums</span><span class="o">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="o">]);</span>
+            <span class="o">}</span>
+            <span class="k">do</span> <span class="o">{</span>
+                <span class="n">i</span><span class="o">++;</span>
+            <span class="o">}</span> <span class="k">while</span><span class="o">(</span><span class="n">i</span><span class="o">&lt;</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">-</span><span class="mi">2</span> <span class="o">&amp;&amp;</span> <span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">==</span> <span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">]);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h4 id="jumping-iteration-two-sum-two-pointers">jumping iteration + Two Sum two pointers<a class="headerlink" href="#jumping-iteration-two-sum-two-pointers" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="nf">threeSum</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+
+        <span class="n">Arrays</span><span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="n">nums</span><span class="o">);</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">-</span><span class="mi">2</span><span class="o">;</span> <span class="n">i</span><span class="o">++){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">i</span><span class="o">&gt;</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">==</span> <span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">])</span> <span class="k">continue</span><span class="o">;</span>
+            <span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">,</span> <span class="n">k</span><span class="o">=</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+            <span class="k">while</span><span class="o">(</span><span class="n">j</span><span class="o">&lt;</span><span class="n">k</span><span class="o">){</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]+</span><span class="n">nums</span><span class="o">[</span><span class="n">j</span><span class="o">]+</span><span class="n">nums</span><span class="o">[</span><span class="n">k</span><span class="o">]</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">result</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">((</span><span class="n">Integer</span><span class="o">)</span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">],</span> <span class="o">(</span><span class="n">Integer</span><span class="o">)</span><span class="n">nums</span><span class="o">[</span><span class="n">j</span><span class="o">++],</span> <span class="o">(</span><span class="n">Integer</span><span class="o">)</span><span class="n">nums</span><span class="o">[</span><span class="n">k</span><span class="o">--]));</span>
+                    <span class="k">while</span><span class="o">(</span><span class="n">j</span><span class="o">&lt;</span><span class="n">k</span> <span class="o">&amp;&amp;</span> <span class="n">nums</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">==</span> <span class="n">nums</span><span class="o">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="o">])</span> <span class="n">j</span><span class="o">++;</span>
+                    <span class="k">while</span><span class="o">(</span><span class="n">j</span><span class="o">&lt;</span><span class="n">k</span> <span class="o">&amp;&amp;</span> <span class="n">nums</span><span class="o">[</span><span class="n">k</span><span class="o">]</span> <span class="o">==</span> <span class="n">nums</span><span class="o">[</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="o">])</span> <span class="n">k</span><span class="o">--;</span>
+                <span class="o">}</span>
+                <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]+</span><span class="n">nums</span><span class="o">[</span><span class="n">j</span><span class="o">]+</span><span class="n">nums</span><span class="o">[</span><span class="n">k</span><span class="o">]&gt;</span><span class="mi">0</span><span class="o">)</span> <span class="n">k</span><span class="o">--;</span>
+                <span class="k">else</span> <span class="n">j</span><span class="o">++;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span>
 </pre></div>
