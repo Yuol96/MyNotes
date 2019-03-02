@@ -79,14 +79,6 @@ class Solution {
 
 #### Iterative
 ```java
-/**
- * Definition for singly-linked list.
- * public class ListNode {
- *     int val;
- *     ListNode next;
- *     ListNode(int x) { val = x; }
- * }
- */
 class Solution {
     public ListNode reverseList(ListNode head) {
         ListNode curr = null;
@@ -103,14 +95,6 @@ class Solution {
 
 #### Recursive
 ```java
-/**
- * Definition for singly-linked list.
- * public class ListNode {
- *     int val;
- *     ListNode next;
- *     ListNode(int x) { val = x; }
- * }
- */
 class Solution {
     public ListNode reverseList(ListNode head) {
         if (head == null || head.next == null) {
@@ -3189,69 +3173,6 @@ class Solution {
 }
 ```
 
-## Top 100 Liked Questions
-
-### 461. Hamming Distance
-- [Link](https://leetcode.com/problems/hamming-distance/)
-- Tags: Bit Manipulation
-- Stars: 3
-
-#### Java Built-in Function
-```java
-class Solution {
-    public int hammingDistance(int x, int y) {
-        return Integer.bitCount(x ^ y);
-    }
-}
-```
-
-#### bit counting by groups
-1. `x = (x&0x55555555) + ((x>>>1)&0x55555555)` can also be written as `x = x - ((x >>> 1) & 0x55555555)`. 
-2. The following solution can be further simplified to `i = (i + (i >>> 4)) & 0x0f0f0f0f; i = i + (i >>> 8); i = i + (i >>> 16); return i & 0x3f;`
-```java
-class Solution {
-    public int hammingDistance(int x, int y) {
-        x ^= y;
-        x = (x&0x55555555) + ((x>>>1)&0x55555555);
-        x = (x&0x33333333) + ((x>>>2)&0x33333333);
-        x = (x&0x0f0f0f0f) + ((x>>>4)&0x0f0f0f0f);
-        x = (x&0x00ff00ff) + ((x>>>8)&0x00ff00ff);
-        x = (x&0x0000ffff) + ((x>>>16)&0x0000ffff);
-        return x;
-    }
-}
-```
-
-### 448. Find All Numbers Disappeared in an Array
-- [Link](https://leetcode.com/problems/find-all-numbers-disappeared-in-an-array/)
-- Tags: Array
-- Stars: 2
-
-#### O(n) time and O(1) space
-Given an element, we can calculate the expected index. 
-```java
-class Solution {
-    public List<Integer> findDisappearedNumbers(int[] nums) {
-        List<Integer> result = new ArrayList<>();
-        for(int i=0; i<nums.length; i++){
-            while(i != nums[i]-1){
-                if(nums[nums[i]-1] == nums[i]) break;
-                swap(nums, i, nums[i]-1);
-            }
-        }
-        for(int i=0; i<nums.length; i++)
-            if(i != nums[i]-1) 
-                result.add(i+1);
-        return result;
-    }
-    private void swap(int[] nums, int i, int j) {
-        int temp = nums[i];
-        nums[i] = nums[j];
-        nums[j] = temp;
-    }
-}
-```
-
 ### 127. Word Ladder
 - [Link](https://leetcode.com/problems/word-ladder/)
 - Tags: BFS
@@ -3447,7 +3368,193 @@ class Solution {
 }
 ```
 
+### 29. Divide Two Integers
+- [Link](https://leetcode.com/problems/divide-two-integers/)
+- Tags: Math, Binary Search
+- Stars: 2
 
+#### subtract and double
+```java
+class Solution {
+    public int divide(int dividend, int divisor) {
+        if(dividend == 0) return 0;
+        int sign = (dividend<0 && divisor<0) || (dividend>0 && divisor>0) ? 1 : -1;
+        //convert to positive and avoid overflow
+        if(divisor == Integer.MIN_VALUE) return dividend == Integer.MIN_VALUE ? 1 : 0;
+        if(divisor < 0) divisor = -divisor;
+        int result = 0;
+        if(dividend == Integer.MIN_VALUE) {
+            if(divisor == 1 && sign == 1) return Integer.MAX_VALUE;
+            dividend += divisor;
+            result++;
+        }
+        if(dividend < 0) dividend = -dividend;
+        //use map to record
+        HashMap<Integer, Integer> map = new HashMap<>();
+        map.put(1, divisor);
+        int curr = 1;
+        while(dividend >= map.get(curr)){
+            // experiment shows that adding the following two lines will makes it faster, though not necessary. 
+            dividend -= map.get(curr);
+            result += curr;
+            // avoid overflow
+            if((map.get(curr)<<1) < 0) break;
+            map.put(curr<<1, map.get(curr)<<1);
+            curr <<= 1;
+        }
+        while(dividend >= map.get(1)){
+            while(dividend < map.get(curr)) curr>>=1;
+            dividend -= map.get(curr);
+            result += curr;
+        }
+        return sign * result;
+    }
+}
+```
+
+### 8. String to Integer (atoi)
+- [Link](https://leetcode.com/problems/string-to-integer-atoi/)
+- Tags: Math, String
+- Stars: 1
+
+#### boundary check
+```java
+class Solution {
+    public int myAtoi(String str) {
+        if(str.length() == 0) return 0;
+        int i=0;
+        // remove leading white space
+        while(i<str.length() && str.charAt(i) == ' ') i++;
+        // detect plus/minus sign
+        int sign = 1;
+        if(i<str.length() && str.charAt(i) == '-') {sign = -1; i++;}
+        else if(i<str.length() && str.charAt(i) == '+') {sign = 1; i++;}
+        // remove leading zeros
+        while(i<str.length() && str.charAt(i) == '0') i++;
+        // parse Integer
+        long result = 0;
+        int start = i;
+        for(; i<str.length() && i-start < 11; i++){
+            if(!Character.isDigit(str.charAt(i))) break;
+            result *= 10;
+            result += str.charAt(i) - '0';
+        }
+        result *= sign;
+        if(result < Integer.MIN_VALUE) return Integer.MIN_VALUE;
+        else if (result > Integer.MAX_VALUE) return Integer.MAX_VALUE;
+        return (int)result;
+    }
+}
+```
+
+## Top 100 Liked Questions
+
+### 461. Hamming Distance
+- [Link](https://leetcode.com/problems/hamming-distance/)
+- Tags: Bit Manipulation
+- Stars: 3
+
+#### Java Built-in Function
+```java
+class Solution {
+    public int hammingDistance(int x, int y) {
+        return Integer.bitCount(x ^ y);
+    }
+}
+```
+
+#### bit counting by groups
+1. `x = (x&0x55555555) + ((x>>>1)&0x55555555)` can also be written as `x = x - ((x >>> 1) & 0x55555555)`. 
+2. The following solution can be further simplified to `i = (i + (i >>> 4)) & 0x0f0f0f0f; i = i + (i >>> 8); i = i + (i >>> 16); return i & 0x3f;`
+```java
+class Solution {
+    public int hammingDistance(int x, int y) {
+        x ^= y;
+        x = (x&0x55555555) + ((x>>>1)&0x55555555);
+        x = (x&0x33333333) + ((x>>>2)&0x33333333);
+        x = (x&0x0f0f0f0f) + ((x>>>4)&0x0f0f0f0f);
+        x = (x&0x00ff00ff) + ((x>>>8)&0x00ff00ff);
+        x = (x&0x0000ffff) + ((x>>>16)&0x0000ffff);
+        return x;
+    }
+}
+```
+
+### 448. Find All Numbers Disappeared in an Array
+- [Link](https://leetcode.com/problems/find-all-numbers-disappeared-in-an-array/)
+- Tags: Array
+- Stars: 2
+
+#### O(n) time and O(1) space
+Given an element, we can calculate the expected index. 
+```java
+class Solution {
+    public List<Integer> findDisappearedNumbers(int[] nums) {
+        List<Integer> result = new ArrayList<>();
+        for(int i=0; i<nums.length; i++){
+            while(i != nums[i]-1){
+                if(nums[nums[i]-1] == nums[i]) break;
+                swap(nums, i, nums[i]-1);
+            }
+        }
+        for(int i=0; i<nums.length; i++)
+            if(i != nums[i]-1) 
+                result.add(i+1);
+        return result;
+    }
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
+```
+
+### 538. Convert BST to Greater Tree
+- [Link](https://leetcode.com/problems/convert-bst-to-greater-tree/)
+- Tags: Tree
+- Stars: 1
+
+#### recursive
+```java
+class Solution {
+    int accu = 0;
+    public TreeNode convertBST(TreeNode root) {
+        if(root == null) return null;
+        convertBST(root.right);
+        accu += root.val;
+        root.val = accu;
+        convertBST(root.left);
+        return root;
+    }
+}
+```
+
+### 543. Diameter of Binary Tree
+- [Link](https://leetcode.com/problems/diameter-of-binary-tree/)
+- Tags: Tree
+- Stars: 1
+
+#### recursive
+1. Found that the two ends of the longest path must be leaf nodes, unless one of the leaf nodes is root. 
+2. Given two leaf nodes, the path between them contains their highest-level common parent. 
+```java
+class Solution {
+    int maxLen = 0;
+    public int diameterOfBinaryTree(TreeNode root) {
+        if(root == null) return 0;
+        DFTraversal(root);
+        return maxLen-1;
+    }
+    private int DFTraversal(TreeNode root) {
+        if(root == null) return 0;
+        int leftLen = DFTraversal(root.left), rightLen = DFTraversal(root.right);
+        int len = 1 + leftLen + rightLen;
+        if(maxLen < len) maxLen = len;
+        return 1 + Math.max(leftLen, rightLen);
+    }
+}
+```
 
 
 # Topics
