@@ -151,20 +151,18 @@ class Solution {
 ```java
 class Solution {
     public int majorityElement(int[] nums) {
-        int majority = nums[0], count = 1;
-        for(int i=1; i<nums.length; i++){
-            if(count == 0){
-                majority = nums[i];
-                count = 1;
-            }
+        int result = nums[0], count = 0;
+        for(int num : nums){
+            if(num == result) count++;
             else {
-                if(majority == nums[i])
-                    count++;
-                else
-                    count--;
+                count--;
+                if(count <= 0) {
+                    count = 1;
+                    result = num;
+                }
             }
         }
-        return majority;
+        return result;
     }
 }
 ```
@@ -195,6 +193,35 @@ class Solution {
                 n++;
         }
         return n;
+    }
+}
+```
+
+#### binary search
+Attention that you `r-l` might overflow, so you have to use long integer.
+```java
+class Solution {
+    public int majorityElement(int[] nums) {
+        // iterate to get max and min element
+        long l=nums[0], r=nums[0];
+        for(int num : nums){
+            if(l > num) l = num;
+            if(r < num) r = num;
+        }
+        // binary search by value
+        while(l<r){
+            int mid = (int)(l+((r-l)>>1));
+            int count = getLTECount(nums, mid);
+            if(count > (nums.length>>1)) r = mid;
+            else l = mid+1;
+        }
+        return (int)l;
+    }
+    private int getLTECount(int[] nums, int target){
+        int count = 0;
+        for(int num : nums)
+            if(num <= target) count++;
+        return count;
     }
 }
 ```
@@ -3510,6 +3537,25 @@ class Solution {
 }
 ```
 
+#### in-place marking, another O(n) time and O(1) space
+```java
+class Solution {
+    public List<Integer> findDisappearedNumbers(int[] nums) {
+        List<Integer> result = new ArrayList<>();
+        if(nums.length == 0) return result;
+        // mark the existing numbers: use the existing numbers as index and set it to its opposite number
+        for(int i=0; i<nums.length; i++){
+            int num = Math.abs(nums[i])-1;
+            if(nums[num] > 0) nums[num] = -nums[num];
+        }
+        // iterate through nums array and find all still-positive numbers
+        for(int i=0; i<nums.length; i++)
+            if(nums[i] > 0) result.add(i+1);
+        return result;
+    }
+}
+```
+
 ### 538. Convert BST to Greater Tree
 - [Link](https://leetcode.com/problems/convert-bst-to-greater-tree/)
 - Tags: Tree
@@ -3556,8 +3602,82 @@ class Solution {
 }
 ```
 
+### 437. Path Sum III
+- [Link](https://leetcode.com/problems/path-sum-iii/)
+- Tags: Tree
+- Stars: 3
+
+#### backtracking
+```java
+class Solution {
+    int result = 0;
+    public int pathSum(TreeNode root, int sum) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        map.put(0, 1);
+        backtrack(root, map, 0, sum);
+        return result;
+    }
+    private void backtrack(TreeNode root, HashMap<Integer, Integer> map, int curr, int sum){
+        if(root == null) return ;
+        curr += root.val;
+        result += map.getOrDefault(curr-sum, 0);
+        map.put(curr, map.getOrDefault(curr, 0)+1);
+        backtrack(root.left, map, curr, sum);
+        backtrack(root.right, map, curr, sum);
+        map.put(curr, map.get(curr)-1);
+    }
+}
+```
+
+### 572. Subtree of Another Tree
+- [Link](https://leetcode.com/problems/subtree-of-another-tree/)
+- Tags: Tree
+- Stars: 2
+
+#### recursive
+ATTENTION: `isSubtree` and `isEqual` are different DFS process. Do not try to integrate into a single function.
+```java
+class Solution {
+    public boolean isSubtree(TreeNode s, TreeNode t) {
+        if(s == null) return false;
+        if(isEqual(s, t)) return true;
+        return isSubtree(s.left, t) || isSubtree(s.right, t);
+    }
+    private boolean isEqual(TreeNode a, TreeNode b){
+        if(a == null || b==null){
+            if(a==null && b==null) return true;
+            return false;
+        }
+        if(a.val != b.val) return false;
+        return isEqual(a.left, b.left) && isEqual(a.right, b.right);
+    }
+}
+```
 
 # Topics
+
+## Linked List
+
+### 876. Middle of the Linked List
+- [Link](https://leetcode.com/problems/middle-of-the-linked-list/)
+- Tags: Linked List
+- Stars: 1
+
+#### slow-fast
+```java
+class Solution {
+    public ListNode middleNode(ListNode head) {
+        if(head == null) return null;
+        ListNode slow = head, fast = head;
+        while(fast != null && fast.next != null){
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+        return slow;
+    }
+}
+```
+
 
 ## Backtracking Questions
 [Reference](https://leetcode.com/problems/permutations/discuss/18239/A-general-approach-to-backtracking-questions-in-Java-(Subsets-Permutations-Combination-Sum-Palindrome-Partioning))

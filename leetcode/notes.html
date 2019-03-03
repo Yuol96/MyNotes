@@ -1083,6 +1083,7 @@ body .markdown-body
 <li><a href="#169-majority-element">169. Majority Element</a><ul>
 <li><a href="#heavy-guardian-moore-voting">Heavy Guardian (Moore Voting)</a></li>
 <li><a href="#divide-and-conquer">Divide and Conquer</a></li>
+<li><a href="#binary-search">binary search</a></li>
 <li><a href="#bit-manipulation">Bit Manipulation</a></li>
 </ul>
 </li>
@@ -1178,11 +1179,11 @@ body .markdown-body
 </li>
 <li><a href="#378-kth-smallest-element-in-a-sorted-matrix">378. Kth Smallest Element in a Sorted Matrix</a><ul>
 <li><a href="#max-heap">Max Heap</a></li>
-<li><a href="#binary-search">Binary Search</a></li>
+<li><a href="#binary-search_1">Binary Search</a></li>
 </ul>
 </li>
 <li><a href="#287-find-the-duplicate-number">287. Find the Duplicate Number</a><ul>
-<li><a href="#binary-search_1">Binary Search</a></li>
+<li><a href="#binary-search_2">Binary Search</a></li>
 <li><a href="#slow-fast-two-pointers_1">slow-fast two pointers</a></li>
 </ul>
 </li>
@@ -1274,7 +1275,7 @@ body .markdown-body
 </ul>
 </li>
 <li><a href="#334-increasing-triplet-subsequence">334. Increasing Triplet Subsequence</a><ul>
-<li><a href="#binary-search_2">binary search</a></li>
+<li><a href="#binary-search_3">binary search</a></li>
 <li><a href="#another-binary-search">another binary search</a></li>
 </ul>
 </li>
@@ -1405,6 +1406,7 @@ body .markdown-body
 </li>
 <li><a href="#448-find-all-numbers-disappeared-in-an-array">448. Find All Numbers Disappeared in an Array</a><ul>
 <li><a href="#on-time-and-o1-space">O(n) time and O(1) space</a></li>
+<li><a href="#in-place-marking-another-on-time-and-o1-space">in-place marking, another O(n) time and O(1) space</a></li>
 </ul>
 </li>
 <li><a href="#538-convert-bst-to-greater-tree">538. Convert BST to Greater Tree</a><ul>
@@ -1415,11 +1417,26 @@ body .markdown-body
 <li><a href="#recursive_8">recursive</a></li>
 </ul>
 </li>
+<li><a href="#437-path-sum-iii">437. Path Sum III</a><ul>
+<li><a href="#backtracking">backtracking</a></li>
+</ul>
+</li>
+<li><a href="#572-subtree-of-another-tree">572. Subtree of Another Tree</a><ul>
+<li><a href="#recursive_9">recursive</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li><a href="#topics">Topics</a><ul>
+<li><a href="#linked-list">Linked List</a><ul>
+<li><a href="#876-middle-of-the-linked-list">876. Middle of the Linked List</a><ul>
+<li><a href="#slow-fast">slow-fast</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a href="#backtracking-questions">Backtracking Questions</a><ul>
 <li><a href="#78-subsets">78. Subsets</a><ul>
 <li><a href="#general-approach">General Approach</a></li>
@@ -1499,7 +1516,7 @@ body .markdown-body
 </li>
 <li><a href="#880-decoded-string-at-index">880. Decoded String at Index</a><ul>
 <li><a href="#iterative_3">Iterative</a></li>
-<li><a href="#recursive_9">recursive</a></li>
+<li><a href="#recursive_10">recursive</a></li>
 </ul>
 </li>
 </ul>
@@ -1655,20 +1672,18 @@ Space: O(1)
 <h4 id="heavy-guardian-moore-voting">Heavy Guardian (Moore Voting)<a class="headerlink" href="#heavy-guardian-moore-voting" title="Permanent link"></a></h4>
 <div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="kt">int</span> <span class="nf">majorityElement</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">)</span> <span class="o">{</span>
-        <span class="kt">int</span> <span class="n">majority</span> <span class="o">=</span> <span class="n">nums</span><span class="o">[</span><span class="mi">0</span><span class="o">],</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
-        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++){</span>
-            <span class="k">if</span><span class="o">(</span><span class="n">count</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
-                <span class="n">majority</span> <span class="o">=</span> <span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
-                <span class="n">count</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
-            <span class="o">}</span>
+        <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">nums</span><span class="o">[</span><span class="mi">0</span><span class="o">],</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">num</span> <span class="o">:</span> <span class="n">nums</span><span class="o">){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">num</span> <span class="o">==</span> <span class="n">result</span><span class="o">)</span> <span class="n">count</span><span class="o">++;</span>
             <span class="k">else</span> <span class="o">{</span>
-                <span class="k">if</span><span class="o">(</span><span class="n">majority</span> <span class="o">==</span> <span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">])</span>
-                    <span class="n">count</span><span class="o">++;</span>
-                <span class="k">else</span>
-                    <span class="n">count</span><span class="o">--;</span>
+                <span class="n">count</span><span class="o">--;</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">count</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">count</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="n">num</span><span class="o">;</span>
+                <span class="o">}</span>
             <span class="o">}</span>
         <span class="o">}</span>
-        <span class="k">return</span> <span class="n">majority</span><span class="o">;</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span>
 </pre></div>
@@ -1702,6 +1717,33 @@ Space: O(1)
 <span class="o">}</span>
 </pre></div>
 
+<h4 id="binary-search">binary search<a class="headerlink" href="#binary-search" title="Permanent link"></a></h4>
+<p>Attention that you <code>r-l</code> might overflow, so you have to use long integer.
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">majorityElement</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// iterate to get max and min element</span>
+        <span class="kt">long</span> <span class="n">l</span><span class="o">=</span><span class="n">nums</span><span class="o">[</span><span class="mi">0</span><span class="o">],</span> <span class="n">r</span><span class="o">=</span><span class="n">nums</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">num</span> <span class="o">:</span> <span class="n">nums</span><span class="o">){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">l</span> <span class="o">&gt;</span> <span class="n">num</span><span class="o">)</span> <span class="n">l</span> <span class="o">=</span> <span class="n">num</span><span class="o">;</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">r</span> <span class="o">&lt;</span> <span class="n">num</span><span class="o">)</span> <span class="n">r</span> <span class="o">=</span> <span class="n">num</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="c1">// binary search by value</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">l</span><span class="o">&lt;</span><span class="n">r</span><span class="o">){</span>
+            <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="o">(</span><span class="kt">int</span><span class="o">)(</span><span class="n">l</span><span class="o">+((</span><span class="n">r</span><span class="o">-</span><span class="n">l</span><span class="o">)&gt;&gt;</span><span class="mi">1</span><span class="o">));</span>
+            <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="n">getLTECount</span><span class="o">(</span><span class="n">nums</span><span class="o">,</span> <span class="n">mid</span><span class="o">);</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">count</span> <span class="o">&gt;</span> <span class="o">(</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="o">))</span> <span class="n">r</span> <span class="o">=</span> <span class="n">mid</span><span class="o">;</span>
+            <span class="k">else</span> <span class="n">l</span> <span class="o">=</span> <span class="n">mid</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span><span class="n">l</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="nf">getLTECount</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">,</span> <span class="kt">int</span> <span class="n">target</span><span class="o">){</span>
+        <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">num</span> <span class="o">:</span> <span class="n">nums</span><span class="o">)</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">num</span> <span class="o">&lt;=</span> <span class="n">target</span><span class="o">)</span> <span class="n">count</span><span class="o">++;</span>
+        <span class="k">return</span> <span class="n">count</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div></p>
 <h4 id="bit-manipulation">Bit Manipulation<a class="headerlink" href="#bit-manipulation" title="Permanent link"></a></h4>
 <p>majority的每一bit都应该是majority！
 <div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
@@ -2609,7 +2651,7 @@ Notice that we only care about differences of the prices array.</p>
 <span class="o">}</span>
 </pre></div>
 
-<h4 id="binary-search">Binary Search<a class="headerlink" href="#binary-search" title="Permanent link"></a></h4>
+<h4 id="binary-search_1">Binary Search<a class="headerlink" href="#binary-search_1" title="Permanent link"></a></h4>
 <p><span id="378-binary-search"></span>
 1. Attention: when <code>count == k</code>, <code>mid</code> might not exists in <code>matrix</code>, so we need to get the largest element that is less than or equal to <code>mid</code> in <code>matrix</code>. Therefore, we have <code>getMaxlte</code>.
 2. There&rsquo;s a situation that might break the while loop, i.e., there are more than one elements that have the same value as the kth smallest. When this happens, r will goes below l, and it breaks the while loop. Therefore, we need to return <code>l</code> instead of an arbitrary number outside the while loop. 
@@ -2663,7 +2705,7 @@ Notice that we only care about differences of the prices array.</p>
 <li>Tags: Array, Two Pointers, Binary Search</li>
 <li>Stars: 3</li>
 </ul>
-<h4 id="binary-search_1">Binary Search<a class="headerlink" href="#binary-search_1" title="Permanent link"></a></h4>
+<h4 id="binary-search_2">Binary Search<a class="headerlink" href="#binary-search_2" title="Permanent link"></a></h4>
 <p><span id="287-binary-search"></span>
 Similar to <a href="#378-binary-search">378. Kth Smallest Element in a Sorted Matrix</a>
 <div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
@@ -3643,7 +3685,7 @@ Similar to <a href="#102-BFS">102. Binary Tree Level Order Traversal</a>
 <li>Tags: </li>
 <li>Stars: 2</li>
 </ul>
-<h4 id="binary-search_2">binary search<a class="headerlink" href="#binary-search_2" title="Permanent link"></a></h4>
+<h4 id="binary-search_3">binary search<a class="headerlink" href="#binary-search_3" title="Permanent link"></a></h4>
 <p><span id="334-binary-search"></span>
 Similar to <a href="#300-binary-search">300. Longest Increasing Subsequence</a>
 <div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
@@ -4920,6 +4962,24 @@ Notice that you cannot setup the random pointers while extracting the new Head a
     <span class="o">}</span>
 <span class="o">}</span>
 </pre></div></p>
+<h4 id="in-place-marking-another-on-time-and-o1-space">in-place marking, another O(n) time and O(1) space<a class="headerlink" href="#in-place-marking-another-on-time-and-o1-space" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="nf">findDisappearedNumbers</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+        <span class="c1">// mark the existing numbers: use the existing numbers as index and set it to its opposite number</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++){</span>
+            <span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">abs</span><span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">])-</span><span class="mi">1</span><span class="o">;</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="n">num</span><span class="o">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="n">nums</span><span class="o">[</span><span class="n">num</span><span class="o">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">nums</span><span class="o">[</span><span class="n">num</span><span class="o">];</span>
+        <span class="o">}</span>
+        <span class="c1">// iterate through nums array and find all still-positive numbers</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nums</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="n">result</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
 <h3 id="538-convert-bst-to-greater-tree">538. Convert BST to Greater Tree<a class="headerlink" href="#538-convert-bst-to-greater-tree" title="Permanent link"></a></h3>
 <ul>
 <li><a href="https://leetcode.com/problems/convert-bst-to-greater-tree/">Link</a></li>
@@ -4967,7 +5027,79 @@ Notice that you cannot setup the random pointers while extracting the new Head a
 <span class="o">}</span>
 </pre></div></li>
 </ol>
+<h3 id="437-path-sum-iii">437. Path Sum III<a class="headerlink" href="#437-path-sum-iii" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/path-sum-iii/">Link</a></li>
+<li>Tags: Tree</li>
+<li>Stars: 3</li>
+</ul>
+<h4 id="backtracking">backtracking<a class="headerlink" href="#backtracking" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">pathSum</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root</span><span class="o">,</span> <span class="kt">int</span> <span class="n">sum</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">Integer</span><span class="o">&gt;</span> <span class="n">map</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+        <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="n">backtrack</span><span class="o">(</span><span class="n">root</span><span class="o">,</span> <span class="n">map</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">sum</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">backtrack</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root</span><span class="o">,</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">Integer</span><span class="o">&gt;</span> <span class="n">map</span><span class="o">,</span> <span class="kt">int</span> <span class="n">curr</span><span class="o">,</span> <span class="kt">int</span> <span class="n">sum</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">root</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="o">;</span>
+        <span class="n">curr</span> <span class="o">+=</span> <span class="n">root</span><span class="o">.</span><span class="na">val</span><span class="o">;</span>
+        <span class="n">result</span> <span class="o">+=</span> <span class="n">map</span><span class="o">.</span><span class="na">getOrDefault</span><span class="o">(</span><span class="n">curr</span><span class="o">-</span><span class="n">sum</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
+        <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">curr</span><span class="o">,</span> <span class="n">map</span><span class="o">.</span><span class="na">getOrDefault</span><span class="o">(</span><span class="n">curr</span><span class="o">,</span> <span class="mi">0</span><span class="o">)+</span><span class="mi">1</span><span class="o">);</span>
+        <span class="n">backtrack</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">left</span><span class="o">,</span> <span class="n">map</span><span class="o">,</span> <span class="n">curr</span><span class="o">,</span> <span class="n">sum</span><span class="o">);</span>
+        <span class="n">backtrack</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">right</span><span class="o">,</span> <span class="n">map</span><span class="o">,</span> <span class="n">curr</span><span class="o">,</span> <span class="n">sum</span><span class="o">);</span>
+        <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">curr</span><span class="o">,</span> <span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">curr</span><span class="o">)-</span><span class="mi">1</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3 id="572-subtree-of-another-tree">572. Subtree of Another Tree<a class="headerlink" href="#572-subtree-of-another-tree" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/subtree-of-another-tree/">Link</a></li>
+<li>Tags: Tree</li>
+<li>Stars: 2</li>
+</ul>
+<h4 id="recursive_9">recursive<a class="headerlink" href="#recursive_9" title="Permanent link"></a></h4>
+<p>ATTENTION: <code>isSubtree</code> and <code>isEqual</code> are different DFS process. Do not try to integrate into a single function.
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isSubtree</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">s</span><span class="o">,</span> <span class="n">TreeNode</span> <span class="n">t</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">s</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">isEqual</span><span class="o">(</span><span class="n">s</span><span class="o">,</span> <span class="n">t</span><span class="o">))</span> <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="k">return</span> <span class="n">isSubtree</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">left</span><span class="o">,</span> <span class="n">t</span><span class="o">)</span> <span class="o">||</span> <span class="n">isSubtree</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">right</span><span class="o">,</span> <span class="n">t</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">isEqual</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">a</span><span class="o">,</span> <span class="n">TreeNode</span> <span class="n">b</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">a</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">b</span><span class="o">==</span><span class="kc">null</span><span class="o">){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">a</span><span class="o">==</span><span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">b</span><span class="o">==</span><span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">a</span><span class="o">.</span><span class="na">val</span> <span class="o">!=</span> <span class="n">b</span><span class="o">.</span><span class="na">val</span><span class="o">)</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="k">return</span> <span class="n">isEqual</span><span class="o">(</span><span class="n">a</span><span class="o">.</span><span class="na">left</span><span class="o">,</span> <span class="n">b</span><span class="o">.</span><span class="na">left</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="n">isEqual</span><span class="o">(</span><span class="n">a</span><span class="o">.</span><span class="na">right</span><span class="o">,</span> <span class="n">b</span><span class="o">.</span><span class="na">right</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div></p>
 <h1 id="topics">Topics<a class="headerlink" href="#topics" title="Permanent link"></a></h1>
+<h2 id="linked-list">Linked List<a class="headerlink" href="#linked-list" title="Permanent link"></a></h2>
+<h3 id="876-middle-of-the-linked-list">876. Middle of the Linked List<a class="headerlink" href="#876-middle-of-the-linked-list" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/middle-of-the-linked-list/">Link</a></li>
+<li>Tags: Linked List</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="slow-fast">slow-fast<a class="headerlink" href="#slow-fast" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">ListNode</span> <span class="nf">middleNode</span><span class="o">(</span><span class="n">ListNode</span> <span class="n">head</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">head</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="n">ListNode</span> <span class="n">slow</span> <span class="o">=</span> <span class="n">head</span><span class="o">,</span> <span class="n">fast</span> <span class="o">=</span> <span class="n">head</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">fast</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">fast</span><span class="o">.</span><span class="na">next</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="n">fast</span> <span class="o">=</span> <span class="n">fast</span><span class="o">.</span><span class="na">next</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+            <span class="n">slow</span> <span class="o">=</span> <span class="n">slow</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">slow</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
 <h2 id="backtracking-questions">Backtracking Questions<a class="headerlink" href="#backtracking-questions" title="Permanent link"></a></h2>
 <p><a href="https://leetcode.com/problems/permutations/discuss/18239/A-general-approach-to-backtracking-questions-in-Java-(Subsets-Permutations-Combination-Sum-Palindrome-Partioning)">Reference</a></p>
 <p><strong>Backtrack == 发散式DFS</strong></p>
@@ -5729,7 +5861,7 @@ e.g. If both <code>[1,3,3]</code> and <code>[3,1,3]</code> are in the result and
 <span class="o">}</span>
 </pre></div>
 
-<h4 id="recursive_9">recursive<a class="headerlink" href="#recursive_9" title="Permanent link"></a></h4>
+<h4 id="recursive_10">recursive<a class="headerlink" href="#recursive_10" title="Permanent link"></a></h4>
 <p>Attention: strLen might OVERFLOW!!!!!!! Thus, we must use long. 
 <div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="n">String</span> <span class="nf">decodeAtIndex</span><span class="o">(</span><span class="n">String</span> <span class="n">S</span><span class="o">,</span> <span class="kt">int</span> <span class="n">K</span><span class="o">)</span> <span class="o">{</span>
