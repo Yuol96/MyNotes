@@ -492,7 +492,27 @@ class Solution {
 - Tags: Dynamic Programming
 - Stars: 1
 
-#### DP iterative
+#### DP iterative memo
+```java
+class Solution {
+    public int rob(int[] nums) {
+        if(nums.length == 0) return 0;
+        int[] dp = new int[nums.length];
+        dp[0] = nums[0];
+        for(int i=1; i<nums.length; i++){
+            dp[i] = nums[i];
+            if(i-2>=0) dp[i] += dp[i-2];
+            if(i-3>=0) dp[i] = Math.max(dp[i], dp[i-3]+nums[i]);
+        }
+        int result = dp[nums.length-1];
+        if(nums.length-2 >=0 && dp[nums.length-2] > result) result = dp[nums.length-2];
+        return result;
+        // dp[i] = Math.max(dp[i-2]+nums[i], dp[i-3]+nums[i]);
+    }
+}
+```
+
+#### DP iterative + 2 variables
 ```java
 class Solution {
     public int rob(int[] nums) {
@@ -536,6 +556,35 @@ class Solution {
             return map.get(i);
         map.put(i, Math.max(rob(nums, i-1), rob(nums, i-2) + nums[i]));
         return map.get(i);
+    }
+}
+```
+
+### 213. House Robber II
+- [Link](https://leetcode.com/problems/house-robber-ii/)
+- Tags: Dynamic Programming
+- Stars: 1
+
+#### 2 pass House Robber I
+```java
+class Solution {
+    public int rob(int[] nums) {
+        if(nums.length == 0) return 0;
+        if(nums.length == 1) return nums[0];
+        return Math.max(rob(nums, 0, nums.length-1), rob(nums, 1, nums.length));
+    }
+    public int rob(int[] nums, int start, int end){
+        if(start >= end) return 0;
+        int[] dp = new int[end-start];
+        dp[0] = nums[start];
+        for(int i=start+1; i<end; i++){
+            dp[i-start] = nums[i];
+            if(i-2>=start) dp[i-start]+=dp[i-2-start];
+            if(i-3>=start) dp[i-start] = Math.max(dp[i-start], dp[i-3-start]+nums[i]);
+        }
+        int result = dp[end-1-start];
+        if(end-2>=start) result = Math.max(result, dp[end-2-start]);
+        return result;
     }
 }
 ```
@@ -3653,6 +3702,79 @@ class Solution {
     }
 }
 ```
+
+### 96. Unique Binary Search Trees
+- [Link](https://leetcode.com/problems/unique-binary-search-trees/)
+- Tags: Dynamic Programming, Tree
+- Stars: 2
+
+#### DP
+An additional node n only has two directions available for connection:
+```
+(subtree a)
+        \
+         (node n)
+        /
+(subtree b)
+```
+Subtree a and b together contains all the nodes from 1 to n-1, and all the nodes in subtree a must be smaller than any node of subtree b. 
+For each possible combination of subtree a and b, the additional node n brings about `f(#nodes of a) * f(#nodes of b)` additional unique BSTs. 
+Therefore, the DP formula is `f(n) = sum([f(i) * f(n-1-i) for i in range(0, n)])`
+
+```java
+class Solution {
+    public int numTrees(int n) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        map.put(0,1);
+        for(int i=1; i<=n; i++){
+            int temp = 0;
+            for(int j=0; j<i; j++){
+                temp += map.get(j) * map.get(i-1-j);
+            }
+            map.put(i, temp);
+        }
+        return map.get(n);
+    }
+}
+```
+
+### 438. Find All Anagrams in a String
+- [Link](https://leetcode.com/problems/find-all-anagrams-in-a-string/)
+- Tags: Hash Table
+- Stars: 1
+
+#### sliding window
+```java
+class Solution {
+    public List<Integer> findAnagrams(String s, String p) {
+        List<Integer> result = new ArrayList<>();
+        if(s.length() < p.length()) return result;
+        int[] pattern = getPattern(p, 0, p.length());
+        int[] stat = getPattern(s, 0, p.length()-1);
+        int i=0;
+        while(true){
+            if(i + p.length() - 1 == s.length()) break;
+            stat[s.charAt(i + p.length()-1)-'a']++;
+            if(isSame(stat, pattern)) result.add(i);
+            stat[s.charAt(i)-'a']--;
+            i++;
+        }
+        return result;
+    }
+    private int[] getPattern(String s, int start, int end){
+        int[] pattern = new int[26];
+        for(int i=start; i<end; i++)
+            pattern[s.charAt(i)-'a']++;
+        return pattern;
+    }
+    private boolean isSame(int[] a, int[] b){
+        for(int i=0; i<26; i++)
+            if(a[i] != b[i]) return false;
+        return true;
+    }
+}
+```
+
 
 # Topics
 
