@@ -249,6 +249,39 @@ class Solution {
 
 Other Sub-optimal methods: Hash Table, Sorting (must appear at n/2 position), Randomization (random pick one and check if it is majority) 
 
+#### Quick Selection to find the median
+```java
+class Solution {
+    public int majorityElement(int[] nums) {
+        int k = ((nums.length-1)>>1);
+        int l=0, r=nums.length-1;
+        while(l<r){
+            int j = partition(nums, l, r);
+            if(j == k) return nums[k];
+            else if(j>k) r = j-1;
+            else l = j+1;
+        }
+        return nums[k];
+    }
+    private int partition(int[] nums, int l, int r){
+        int i=l, j=r+1;
+        while(true){
+            while(nums[++i] < nums[l] && i<r);
+            while(nums[l] < nums[--j] && j>l);
+            if(i>=j) break;
+            swap(nums, i, j);
+        }
+        swap(nums, l, j);
+        return j;
+    }
+    private void swap(int[] nums, int i, int j){
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
+```
+
 ### 242. Valid Anagram
 - [Link](https://leetcode.com/problems/valid-anagram/)
 - Tags: Hash Table, Sort
@@ -585,6 +618,54 @@ class Solution {
         int result = dp[end-1-start];
         if(end-2>=start) result = Math.max(result, dp[end-2-start]);
         return result;
+    }
+}
+```
+
+### 337. House Robber III
+- [Link](https://leetcode.com/problems/house-robber-iii/)
+- Tags: Tree, DFS
+- Stars: 2
+
+#### DFS
+```java
+class Solution {
+    public int rob(TreeNode root) {
+        return rob(root, false);
+    }
+    public int rob(TreeNode root, boolean parentRobbed){
+        if(root == null) return 0;
+        if(parentRobbed) return rob(root.left, false) + rob(root.right, false);
+        return Math.max(rob(root.left, false) + rob(root.right, false), 
+                        rob(root.left, true) + rob(root.right, true) + root.val);
+    }
+}
+```
+
+#### DFS optimized (memo)
+```java
+class Solution {
+    public int rob(TreeNode root) {
+        Tuple tup = DFS(root);
+        return Math.max(tup.robRoot, tup.notRobRoot);
+    }
+    private Tuple DFS(TreeNode root) {
+        if(root == null) return new Tuple(0,0);
+        Tuple l = DFS(root.left);
+        Tuple r = DFS(root.right);
+        int robRoot = root.val + l.notRobRoot + r.notRobRoot;
+        int notRobRoot = Math.max(l.notRobRoot + r.notRobRoot, 
+                                  Math.max(l.notRobRoot + r.robRoot, 
+                                           Math.max(l.robRoot + r.notRobRoot, 
+                                                    l.robRoot + r.robRoot)));
+        return new Tuple(robRoot, notRobRoot);
+    }
+}
+public class Tuple {
+    int robRoot, notRobRoot;
+    Tuple(int a, int b){
+        robRoot = a;
+        notRobRoot = b;
     }
 }
 ```
@@ -3519,6 +3600,61 @@ class Solution {
         if(result < Integer.MIN_VALUE) return Integer.MIN_VALUE;
         else if (result > Integer.MAX_VALUE) return Integer.MAX_VALUE;
         return (int)result;
+    }
+}
+```
+
+### 222. Count Complete Tree Nodes
+- [Link](https://leetcode.com/problems/count-complete-tree-nodes/)
+- Tags: Binary Search, Tree
+- Stars: 2
+
+#### Binary Search in a tree
+Compute the left height `h` in each iteration. 
+if #nodes of right subtree > #perfect complete tree with height `h-2`, we can conclude that the left subtree must be a perfect complete tree with height `h-1`.
+```java
+class Solution {
+    public int countNodes(TreeNode root) {
+        if(root == null) return 0;
+        int height = getLeftHeight(root);
+        if(height == 0) return 1;
+        if(height == 1) return root.right == null ? 2 : 3;
+        int rightNum = countNodes(root.right);
+        if(rightNum > computeTotalNodes(height-2))
+            return computeTotalNodes(height-1) + rightNum + 1;
+        return countNodes(root.left) + rightNum + 1;
+    }
+    private int computeTotalNodes(int height){
+        return (1<<(height+1))-1;
+    }
+    private int getLeftHeight(TreeNode root){
+        int count = 0;
+        while(root.left != null){
+            count++;
+            root = root.left;
+        }
+        return count;
+    }
+}
+```
+
+#### concise version
+```java
+class Solution {
+    public int countNodes(TreeNode root) {
+        int height = getHeight(root);
+        if(height == 0) return 0;
+        if(getHeight(root.right) == height-1)
+            return (1<<height-1) + countNodes(root.right);
+        return countNodes(root.left) + (1<<(height-2));
+    }
+    private int getHeight(TreeNode root){
+        int count = 0;
+        while(root != null){
+            count++;
+            root = root.left;
+        }
+        return count;
     }
 }
 ```
