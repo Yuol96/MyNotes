@@ -3659,6 +3659,327 @@ class Solution {
 }
 ```
 
+### 53. Maximum Subarray
+- [Link](https://leetcode.com/problems/maximum-subarray/)
+- Tags: Array, Divide and Conquer, Dynamic Programming
+- Stars: 1
+
+#### DP
+```java
+class Solution {
+    public int maxSubArray(int[] nums) {
+        if(nums.length == 0) return 0;
+        int dp = nums[0], result = nums[0];
+        for(int i=1; i<nums.length; i++){
+            if(dp < 0) dp = nums[i];
+            else dp += nums[i];
+            if(result < dp) result = dp;
+        }
+        return result;
+    }
+}
+```
+
+#### Divide and Conquer
+```java
+// not implemented yet
+```
+
+### 343. Integer Break
+- [Link](https://leetcode.com/problems/integer-break/)
+- Tags: Math, Dynamic Programming
+- Stars: 3
+
+#### Math solution
+```java
+class Solution {
+    public int integerBreak(int n) {
+        if(n == 2) return 1;
+        if(n == 3) return 2;
+        int result = 1;
+        while(n>4){
+            result *= 3;
+            n -= 3;
+        }
+        result *= n;
+        return result;
+    }
+}
+```
+
+### 415. Add Strings
+- [Link](https://leetcode.com/problems/add-strings/)
+- Tags: Math
+- Stars: 1
+
+#### while loop with StringBuilder.insert(0, xxx)
+```java
+class Solution {
+    public String addStrings(String num1, String num2) {
+        StringBuilder sb = new StringBuilder();
+        int i=num1.length()-1, j=num2.length()-1;
+        int cin = 0;
+        while(i>=0 || j>=0){
+            int temp = cin;
+            if(i>=0) temp += num1.charAt(i--)-'0';
+            if(j>=0) temp += num2.charAt(j--)-'0';
+            if(temp > 9){
+                cin = 1;
+                temp %= 10;
+            }
+            else cin = 0;
+            sb.insert(0, temp);
+        }
+        if(cin > 0) sb.insert(0, cin);
+        return sb.toString();
+    }
+}
+```
+
+### 43. Multiply Strings
+- [Link](https://leetcode.com/problems/multiply-strings/)
+- Tags: Math, String
+- Stars: 2
+
+#### StringBuilder.insert
+```java
+class Solution {
+    public String multiply(String num1, String num2) {
+        StringBuilder sb = new StringBuilder();
+        int base = 0, carry = 0;
+        while(++base <= num1.length() + num2.length()){
+            for(int i=0; i<base && i<num1.length(); i++){
+                int j = base-1-i;
+                if(j >= num2.length()) continue;
+                carry += (num1.charAt(num1.length()-1-i)-'0') * (num2.charAt(num2.length()-1-j)-'0');
+            }
+            sb.insert(0, carry%10);
+            carry /= 10;
+        }
+        if(carry > 0) sb.insert(0, carry);
+        for(int i=0; i<sb.length(); i++){
+            if(sb.charAt(i) != '0') return sb.substring(i, sb.length());
+        }
+        return "0";
+    }
+}
+```
+
+### 349. Intersection of Two Arrays
+- [Link](https://leetcode.com/problems/intersection-of-two-arrays/)
+- Tags: Hash Table, Two Pointers, Binary Search, Sort
+- Stars: 1
+
+#### Hash Set 2ms
+```java
+class Solution {
+    public int[] intersection(int[] nums1, int[] nums2) {
+        List<Integer> list = new ArrayList<>();
+        HashSet<Integer> set = new HashSet<>();
+        for(int num: nums1) set.add(num);
+        for(int num: nums2) {
+            if(set.contains(num)){
+                list.add(num);
+                set.remove(num);
+            }
+        }
+        int[] result = new int[list.size()];
+        for(int i=0; i<list.size(); i++)
+            result[i] = list.get(i);
+        return result;
+    }
+}
+```
+
+#### Two pointers 2ms
+```java
+class Solution {
+    public int[] intersection(int[] nums1, int[] nums2) {
+        List<Integer> list = new ArrayList<>();
+        Arrays.sort(nums1);
+        Arrays.sort(nums2);
+        int i=0, j=0;
+        while(i<nums1.length && j<nums2.length){
+            if(nums1[i] == nums2[j]){
+                list.add(nums1[i]);
+                i++; j++;
+                while(i<nums1.length && nums1[i] == nums1[i-1]) i++;
+                while(j<nums2.length && nums2[j] == nums2[j-1]) j++;
+            }
+            else if(nums1[i] > nums2[j]) {
+                j++;
+                while(j<nums2.length && nums2[j] == nums2[j-1]) j++;
+            }
+            else {
+                i++;
+                while(i<nums1.length && nums1[i] == nums1[i-1]) i++;
+            }
+        }
+        int[] result = new int[list.size()];
+        for(int k=0; k<list.size(); k++)
+            result[k] = list.get(k);
+        return result;
+    }
+}
+```
+
+### 350. Intersection of Two Arrays II
+- [Link](https://leetcode.com/problems/intersection-of-two-arrays-ii/)
+- Tags: Hash Table, Two Pointers, Binary Search, Sort
+- Stars: 2
+
+#### Hash Table O(n)time, O(n)space  2ms
+```java
+class Solution {
+    public int[] intersect(int[] nums1, int[] nums2) {
+        List<Integer> list = new ArrayList<>();
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int num: nums1)
+            map.put(num, map.getOrDefault(num, 0)+1);
+        for(int num : nums2){
+            int temp = map.getOrDefault(num, 0);
+            if(temp > 0){
+                map.put(num, temp-1);
+                list.add(num);
+            }
+        }
+        int[] result = new int[list.size()];
+        for(int i=0; i<list.size(); i++)
+            result[i] = list.get(i);
+        return result;
+    }
+}
+```
+
+#### Two pointers O(nlogn)time O(1) space, 1ms
+```java
+class Solution {
+    public int[] intersect(int[] nums1, int[] nums2) {
+        List<Integer> list = new ArrayList<>();
+        Arrays.sort(nums1);
+        Arrays.sort(nums2);
+        int i=0, j=0;
+        while(i<nums1.length && j<nums2.length){
+            if(nums1[i] < nums2[j]) i++;
+            else if(nums1[i] > nums2[j]) j++;
+            else {
+                list.add(nums1[i]);
+                i++; j++;
+            }
+        }
+        int[] result = new int[list.size()];
+        for(int k=0; k<list.size(); k++)
+            result[k] = list.get(k);
+        return result;
+    }
+}
+```
+
+### 101. Symmetric Tree
+- [Link](https://leetcode.com/problems/symmetric-tree/)
+- Tags: Tree, DFS, BFS
+- Stars: 1
+
+#### DFS
+```java
+class Solution {
+    public boolean isSymmetric(TreeNode root) {
+        if(root == null) return true;
+        return isSymmetric(root.left, root.right);
+    }
+    private boolean isSymmetric(TreeNode a, TreeNode b){
+        if(a==null) return b==null;
+        if(b==null) return false;
+        if(a.val != b.val) return false;
+        return isSymmetric(a.right, b.left) && isSymmetric(a.left, b.right);
+    }
+}
+```
+
+### 69. Sqrt(x)
+- [Link](https://leetcode.com/problems/sqrtx/)
+- Tags: Math, Binary Search
+- Stars: 1
+
+#### binary search
+```java
+class Solution {
+    public int mySqrt(int x) {
+        int l=0, r=46340;
+        while(l+1 < r){
+            int mid = l + ((r-l)>>1);
+            if(mid*mid == x) return mid;
+            else if (mid*mid > x) r = mid;
+            else l = mid;
+        }
+        if(r*r <= x) return r;
+        return l;
+    }
+}
+```
+
+### 674. Longest Continuous Increasing Subsequence
+- [Link](https://leetcode.com/problems/longest-continuous-increasing-subsequence/)
+- Tags: Array
+- Stars: 1
+
+#### DP
+```java
+class Solution {
+    public int findLengthOfLCIS(int[] nums) {
+        if(nums.length == 0) return 0;
+        int maxLen = 1, result = 1;
+        for(int i=1; i<nums.length; i++){
+            if(nums[i] > nums[i-1]) maxLen++;
+            else {
+                if(result < maxLen) result = maxLen;
+                maxLen = 1;
+            }
+        }
+        if(result < maxLen) result = maxLen;
+        return result;
+    }
+}
+```
+
+### 673. Number of Longest Increasing Subsequence
+- [Link](https://leetcode.com/problems/number-of-longest-increasing-subsequence/)
+- Tags: Dynamic Programming
+- Stars: 3
+
+#### DP O(n^2)time
+```java
+class Solution {
+    public int findNumberOfLIS(int[] nums) {
+        if(nums.length == 0) return 0;
+        int[] len = new int[nums.length]; // the longest length of Increasing Subsequence that ends with nums[i]
+        int[] count = new int[nums.length];// the number of longest Increasing Subsequence that ends with nums[i]
+        len[0] = 1;
+        count[0] = 1;
+        int maxLen = 1, result = 1;
+        for(int i=1; i<nums.length; i++){
+            len[i] = count[i] = 1;
+            for(int j=0; j<i; j++){
+                if(nums[i] > nums[j]){
+                    if(len[i] == len[j]+1) count[i] += count[j];
+                    else if(len[i] < len[j]+1) {
+                        len[i] = len[j]+1;
+                        count[i] = count[j];
+                    }
+                }
+            }
+            if(maxLen == len[i]) result += count[i];
+            else if(maxLen < len[i]) {
+                maxLen = len[i];
+                result = count[i];
+            }
+        }
+        return result;
+    }
+}
+```
+
+
 ## Top 100 Liked Questions
 
 ### 461. Hamming Distance
@@ -4564,26 +4885,19 @@ class Solution {
 #### HashSet, clear but slow
 ```java
 class Solution {
+    List<List<Integer>> result = new ArrayList<>();
     public List<List<Integer>> threeSum(int[] nums) {
-        List<List<Integer>> result = new ArrayList<>();
-        
+        if(nums.length == 0) return result;
         HashSet<Integer> set = new HashSet<>();
         for(int num: nums) set.add(num);
-        
         Arrays.sort(nums);
-        int i=0; 
-        while(i<nums.length-2){
-            int j=i+1;
-            while(j<nums.length-1){
-                if(set.contains(-(nums[i]+nums[j])) && -(nums[i]+nums[j]) >= nums[j+1]) 
+        for(int i=0; i<nums.length-2; i++){
+            if(i>0 && nums[i] == nums[i-1]) continue;
+            for(int j=i+1; j<nums.length-1; j++){
+                if(j>i+1 && nums[j] == nums[j-1]) continue;
+                if(set.contains(-(nums[i]+nums[j])) && -(nums[i]+nums[j]) >= nums[j+1])
                     result.add(Arrays.asList((Integer)nums[i], (Integer)nums[j], (Integer)(-(nums[i]+nums[j]))));
-                do {
-                    j++;
-                } while(j<nums.length-1 && nums[j] == nums[j-1]);
             }
-            do {
-                i++;
-            } while(i<nums.length-2 && nums[i] == nums[i-1]);
         }
         return result;
     }
@@ -4744,6 +5058,9 @@ class Solution {
 - 227 Basic Calculator II
 - 324 Wiggle Sort II
 - 5 Longest Palindromic Substring
+- 53 Maximum Subarray -- divide and conquer
+- explore more solutions of 43. Multiply Strings
+- explore more solutions of 673. Number of Longest Increasing Subsequence
 
 ## recursive to non-recursive
 
