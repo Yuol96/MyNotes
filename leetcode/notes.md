@@ -3979,6 +3979,167 @@ class Solution {
 }
 ```
 
+### 42. Trapping Rain Water
+- [Link](https://leetcode.com/problems/trapping-rain-water/)
+- Tags: Array, Two Pointers, Stack
+- Stars: 3
+
+#### My Solution, O(n) time, O(1) space
+1. Iterate `height` from left to right: each iteration, check if height[i] is the highest height (higher than `currHeight`). If true, count the volume of water between `currIdx`(i.e. the index of the currHeight position) and `i`. 
+2. The iterations above fail to account for water after the last highest height. Therefore, do the same thing from right to left again. 
+```java
+class Solution {
+    public int trap(int[] height) {
+        if(height.length < 2) return 0;
+        int currHeight = 0, currIdx = 0, result = 0;
+        // Iterate from left to right
+        for(int i=0; i<height.length; i++){
+            if(height[i] >= currHeight){
+                for(int j=currIdx+1; j<i; j++)
+                    result += currHeight-height[j];
+                currHeight = height[i];
+                currIdx = i;
+            }
+        }
+        int midIdx = currIdx, midHeight=currHeight;
+        currHeight = 0; currIdx = height.length-1;
+        // Iterate from right to left
+        for(int i=height.length-1; i>=midIdx; i--){
+            if(height[i] >= currHeight){
+                for(int j=i+1; j<currIdx; j++)
+                    result += currHeight-height[j];
+                currHeight = height[i];
+                currIdx = i;
+            }
+            if(height[i] == midHeight) break;
+        }
+        return result;
+    }
+}
+```
+
+#### one-pass solution, O(n) time, O(1) space
+Two pointers!  
+If height[i] <= height[j], there are only two situations:  
+1) height[i] is the highest in subarray from 0 to i. For this situation, the `result` remains unchanged.  
+2) height[i] is not the highest from left, there must be water above it, and the height of water above height[i] should be `maxLeftHeight - height[i]`. 
+```java
+class Solution {
+    public int trap(int[] height) {
+        if(height.length < 2) return 0;
+        int i=0, j=height.length-1;
+        int result = 0, maxLeftHeight = 0, maxRightHeight = 0;
+        while(i<=j){
+            if(height[i] <= height[j]){
+                if(maxLeftHeight < height[i]) maxLeftHeight = height[i];
+                result += maxLeftHeight-height[i];
+                i++;
+            }
+            else {
+                if(maxRightHeight < height[j]) maxRightHeight = height[j];
+                result += maxRightHeight-height[j];
+                j--;
+            }
+        }
+        return result;
+    }
+}
+```
+
+### 128. Longest Consecutive Sequence
+- [Link](https://leetcode.com/problems/longest-consecutive-sequence/)
+- Tags: Array, Union Find
+- Stars: 3
+
+#### union find based on HashMap, only beats 27.49% in time and 34.14% in space
+```java
+class Solution {
+    public int longestConsecutive(int[] nums) {
+        if(nums.length == 0) return 0;
+        HashMap<Integer, Integer> uf = new HashMap<>();
+        HashMap<Integer, Integer> lens = new HashMap<>();
+        for(int num: nums){
+            if(uf.containsKey(num)) continue;
+            uf.put(num, num);
+            lens.put(num, 1);
+            if(uf.get(num-1)!=null) union(uf, lens, num, num-1);
+            if(uf.get(num+1)!=null) union(uf, lens, num, num+1);
+        }
+        int result = 0;
+        for(int num: nums)
+            if(uf.get(num) == num && result < lens.get(num)) result = lens.get(num);
+        return result;
+    }
+    private void union(HashMap<Integer, Integer> uf, HashMap<Integer, Integer> lens,
+                       int a, int b){
+        int roota = find(uf, a), rootb = find(uf, b);
+        if(roota==rootb) return ;
+        if(lens.get(roota) <= lens.get(rootb)){
+            uf.put(roota, rootb);
+            lens.put(rootb, lens.get(roota)+lens.get(rootb));
+        }
+        else {
+            uf.put(rootb, roota);
+            lens.put(roota, lens.get(roota)+lens.get(rootb));
+        }
+    }
+    private int find(HashMap<Integer, Integer> uf, int a){
+        while(uf.get(a) != a){
+            int b = uf.get(a);
+            uf.put(a, uf.get(b));
+            a = b;
+        }
+        return a;
+    }
+}
+```
+
+#### only the boundaries, real O(n) time, beats 90.75% in time
+The tricky part was to understand why only the boundaries need to be updated and not the entire sequence with the new sum.
+```java
+class Solution {
+    public int longestConsecutive(int[] nums) {
+        if(nums.length == 0) return 0;
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int result = 0;
+        for(int num: nums){
+            if(map.containsKey(num)) continue;
+            // get left and right sequence length
+            int leftLen = map.getOrDefault(num-1, 0);
+            int rightLen = map.getOrDefault(num+1, 0);
+            map.put(num, leftLen+rightLen+1);
+            // update the return value `result`
+            result = Math.max(result, leftLen+rightLen+1);
+            // we only need to udpate the ends of a sequence
+            if(leftLen>0) map.put(num-leftLen, leftLen+rightLen+1);
+            if(rightLen>0) map.put(num+rightLen, leftLen+rightLen+1);
+        }
+        return result;
+    }
+}
+```
+
+#### GENIUS!!
+```java
+class Solution {
+    public int longestConsecutive(int[] nums) {
+        HashSet<Integer> set = new HashSet<>();
+        for(int num : nums) set.add(num);
+        int result = 0;
+        for(int num: set){
+            if(set.contains(num-1)) continue;
+            int idx = num+1, count = 1;
+            while(set.contains(idx)){
+                count++;
+                idx++;
+            }
+            if(result < count) result = count;
+        }
+        return result;
+    }
+}
+```
+
 
 ## Top 100 Liked Questions
 
