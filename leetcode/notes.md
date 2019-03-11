@@ -751,7 +751,7 @@ class Solution {
 ### 155. Min Stack
 - [Link](https://leetcode.com/problems/min-stack/)
 - Tags: Stack, Design
-- Stars: 3
+- Stars: 2
 
 #### Use two stacks
 Store series of minValue into another stack to obtain O(1) time!
@@ -879,13 +879,6 @@ class Solution {
         }
         return newhead;
     }
-    // private void printList(ListNode head){
-    //     while(head!=null){
-    //         System.out.printf("%d ", head.val);
-    //         head = head.next;
-    //     }
-    //     System.out.println();
-    // }
 }
 ```
 
@@ -960,27 +953,15 @@ We don't need to know the length of each lists. We just want to ensure that two 
 ```java
 public class Solution {
     public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
-        if(headA==null||headB==null)
-            return null;
-        ListNode p=headA, q=headB;
-        boolean switchA=false, switchB=false;
-        while(p!=q){
-            if(p.next!=null)
-                p = p.next;
-            else if(!switchA){
-                p = headB;
-                switchA = true;
-            }
-            else return null;
-            if(q.next!=null)
-                q = q.next;
-            else if(!switchB){
-                q = headA;
-                switchB = true;
-            }
-            else return null;
+        ListNode a = headA, b = headB;
+        while(true){
+            if(a == b) break;
+            if(a != null) a = a.next;
+            else a = headB;
+            if(b != null) b = b.next;
+            else b = headA;
         }
-        return p;
+        return a;
     }
 }
 ```
@@ -4140,6 +4121,99 @@ class Solution {
 }
 ```
 
+### 329. Longest Increasing Path in a Matrix
+- [Link](https://leetcode.com/problems/longest-increasing-path-in-a-matrix/)
+- Tags: DFS, Topological Sort, Memoization
+- Stars: 3
+
+#### My solution, DFS+Memoization, only beats 18% in time
+1. borrowed idea from 128#GENIUS!! where only starts from the smaller side to avoid bi-direction checks. That's why I use `isMin` instead of `isMinMax`. `isMin` is a function to check whether an element in `matrix` is the minimum compared to its surrounding neighbors. 
+2. Use DFS to get the longest increasing path starting from a local minimum. 
+3. Need to record all the intermediate outcomes to avoid waste of computation. (Memoization) 
+```java
+class Solution {
+    int[][] record;
+    public int longestIncreasingPath(int[][] matrix) {
+        if(matrix.length == 0 || matrix[0].length == 0) return 0;
+        record = new int[matrix.length][matrix[0].length];
+        boolean[][] mark = new boolean[matrix.length][matrix[0].length];
+        int result = 0;
+        for(int i=0; i<matrix.length; i++)
+            for(int j=0; j<matrix[0].length; j++){
+                if(!isMin(matrix, i, j)) continue;
+                int temp = DFS(matrix, mark, i, j);
+                if(result < temp) result = temp;
+            }
+        return result;
+    }
+    private int DFS(int[][] matrix, boolean[][] mark, int i, int j){
+        if(i<0 || j<0 || i>= matrix.length || j>= matrix[0].length) return 0;
+        if(record[i][j] > 0) return record[i][j];
+        mark[i][j] = true;
+        int result = 1;
+        if(i-1>=0 && matrix[i-1][j] > matrix[i][j]) 
+            result = Math.max(result, 1+DFS(matrix, mark, i-1, j));
+        if(i+1<matrix.length && matrix[i+1][j] > matrix[i][j]) 
+            result = Math.max(result, 1+DFS(matrix, mark, i+1, j));
+        if(j-1>=0 && matrix[i][j-1] > matrix[i][j]) 
+            result = Math.max(result, 1+DFS(matrix, mark, i, j-1));
+        if(j+1<matrix[0].length && matrix[i][j+1] > matrix[i][j]) 
+            result = Math.max(result, 1+DFS(matrix, mark, i, j+1));
+        mark[i][j] = false;
+        record[i][j] = result;
+        return result;
+    }
+    private boolean isMin(int[][] matrix, int i, int j){
+        boolean result = true;
+        if(i-1>=0 && matrix[i-1][j] < matrix[i][j]) return false;
+        if(i+1<matrix.length && matrix[i+1][j] < matrix[i][j]) return false;
+        if(j-1>=0 && matrix[i][j-1] < matrix[i][j]) return false;
+        if(j+1<matrix[0].length && matrix[i][j+1] < matrix[i][j]) return false;
+        return true;
+    }
+}
+```
+
+#### optimized DFS, beats 98% in time
+1. compared with the first solution, I find that don't actually need `isMin` method. 
+2. I can use a static final `directions` to indicate all the possible four directions, instead of hard coding the four directions like the solution above. 
+3. the `mark` boolean array can be discarded, as the `record` has already contains the information. 
+```java
+class Solution {
+    public int[][] record;
+    public final static int[][] directions = {{0,1},{0,-1},{1,0},{-1,0}};
+    public int longestIncreasingPath(int[][] matrix) {
+        if(matrix.length == 0 || matrix[0].length == 0) return 0;
+        record = new int[matrix.length][matrix[0].length];
+        int result = 0;
+        for(int i=0; i<matrix.length; i++)
+            for(int j=0; j<matrix[0].length; j++){
+                int temp = DFS(matrix, i, j);
+                if(result < temp) result = temp;
+            }
+        return result;
+    }
+    private int DFS(final int[][] matrix, final int i, final int j){
+        // if(i<0 || j<0 || i>= matrix.length || j>= matrix[0].length) return 0;
+        if(record[i][j] != 0) return record[i][j];
+        int result = 1;
+        for(int[] direction : directions){
+            int x = i+direction[0], y = j+direction[1];
+            if(x>=0 && y>=0 && x<matrix.length && y<matrix[0].length 
+               && matrix[x][y] > matrix[i][j])
+                result = Math.max(result, 1+DFS(matrix, x, y));
+        }
+        record[i][j] = result;
+        return result;
+    }
+}
+```
+
+#### Topological Sort
+https://leetcode.com/problems/longest-increasing-path-in-a-matrix/discuss/78336/Graph-theory-Java-solution-O(v2)-no-DFS
+
+
+
 
 ## Top 100 Liked Questions
 
@@ -4389,6 +4463,51 @@ class Solution {
         for(int i=0; i<26; i++)
             if(a[i] != b[i]) return false;
         return true;
+    }
+}
+```
+
+### 20. Valid Parentheses
+- [Link](https://leetcode.com/problems/valid-parentheses/)
+- Tags: String, Stack
+- Stars: 1
+
+#### stack
+```java
+class Solution {
+    public boolean isValid(String s) {
+        if(s.length() == 0) return true;
+        Stack<Character> st = new Stack<>();
+        for(int i=0; i<s.length(); i++){
+            if(s.charAt(i) == '(') st.add(')');
+            else if(s.charAt(i) == '[') st.add(']');
+            else if(s.charAt(i) == '{') st.add('}');
+            else {
+                if(st.isEmpty() || (char)(st.pop()) != s.charAt(i)) return false;
+            }
+        }
+        return st.size() == 0;
+    }
+}
+```
+
+### 581. Shortest Unsorted Continuous Subarray
+- [Link](https://leetcode.com/problems/shortest-unsorted-continuous-subarray/)
+- Tags: Array
+- Stars: 3
+
+#### sort and compare, O(nlogn) time and O(n) space, suboptimal
+```java
+class Solution {
+    public int findUnsortedSubarray(int[] nums) {
+        if(nums.length == 0) return 0;
+        int[] copy = Arrays.copyOfRange(nums, 0, nums.length);
+        Arrays.sort(copy);
+        int i=0, j=nums.length-1;
+        while(i<j && nums[i] == copy[i]) i++;
+        while(i<j && nums[j] == copy[j]) j--;
+        if(i == j) return 0;
+        return j-i+1;
     }
 }
 ```
