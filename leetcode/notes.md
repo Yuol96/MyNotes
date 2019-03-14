@@ -145,7 +145,7 @@ class Solution {
 ### 169. Majority Element
 - [Link](https://leetcode.com/problems/majority-element/)
 - Tags: Array, Divide and Conquer, Bit Manipulation
-- Stars: 3
+- Stars: 2
 
 #### Heavy Guardian (Moore Voting)
 ```java
@@ -520,6 +520,23 @@ class Solution {
 }
 ```
 
+#### binary search
+```java
+class Solution {
+    public boolean isPowerOfThree(int n) {
+        int l=0, r=19;
+        while(l<=r){
+            int mid = l + ((r-l)>>1);
+            int power = (int)Math.pow(3, mid);
+            if(power == n) return true;
+            else if(power > n) r = mid-1;
+            else l = mid+1;
+        }
+        return false;
+    }
+}
+```
+
 ### 198. House Robber
 - [Link](https://leetcode.com/problems/house-robber/)
 - Tags: Dynamic Programming
@@ -625,7 +642,7 @@ class Solution {
 ### 337. House Robber III
 - [Link](https://leetcode.com/problems/house-robber-iii/)
 - Tags: Tree, DFS
-- Stars: 2
+- Stars: 3
 
 #### DFS
 ```java
@@ -678,7 +695,7 @@ public class Tuple {
 #### 数组初始化
 注意：默认初始化，数组元素相当于对象的成员变量，默认值跟成员变量的规则一样。**数字0**，布尔false，char\u0000，引用：null
 
-本题不适合把`Arrays.asList()`转化为List, `.asList`方法不适用于基本数据类型（byte,short,int,long,float,double,boolean）
+本题不适合把`Arrays.asList()`转化为List, `.asList`方法不适用于基本数据类型（byte, short, int, long, float, double, boolean）
 ```java
 class Solution {
     public int[] plusOne(int[] digits) {
@@ -699,7 +716,7 @@ class Solution {
 ### 172. Factorial Trailing Zeroes
 - [Link](https://leetcode.com/problems/factorial-trailing-zeroes/)
 - Tags: Math
-- Stars: 2
+- Stars: 3
 
 #### Increment (Time Limit Exceeded)
 Time: O(n)
@@ -2087,6 +2104,26 @@ class Solution {
 }
 ```
 
+#### binary search too
+```java
+class Solution {
+    public int findPeakElement(int[] nums) {
+        if(nums.length == 1) return 0;
+        // if(nums[0]>nums[1]) return 0;
+        if(nums[nums.length-1] > nums[nums.length-2]) return nums.length-1;
+        int l=0, r=nums.length-1;
+        while(l<r){
+            int mid = l+((r-l)>>1);
+            // if(nums[mid]>nums[mid-1]) l = mid;
+            // else r = mid-1;
+            if(nums[mid]>nums[mid+1]) r = mid;
+            else l = mid+1;
+        }
+        return l;
+    }
+}
+```
+
 ### 103. Binary Tree Zigzag Level Order Traversal
 - [Link](https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/)
 - Tags: Stack, Tree, BFS
@@ -2730,6 +2767,8 @@ class Solution {
 
 #### sort
 The way of writting a sort function can be simplified to `intervals.sort((o1, o2)->o1.start-o2.start);`.
+
+Take a look at [435. Non-overlapping Intervals](#435. Non-overlapping Intervals) 
 ```java
 class Solution {
     public List<Interval> merge(List<Interval> intervals) {
@@ -2757,6 +2796,11 @@ class Solution {
     }
 }
 ```
+
+### 435. Non-overlapping Intervals
+- [Link](https://leetcode.com/problems/non-overlapping-intervals/description/)
+- Tags: Greedy
+- Stars: 2
 
 ### 134. Gas Station
 - [Link](https://leetcode.com/problems/gas-station/)
@@ -2802,7 +2846,7 @@ class Solution {
 ### 33. Search in Rotated Sorted Array
 - [Link](https://leetcode.com/problems/search-in-rotated-sorted-array/)
 - Tags: Array, Binary Search
-- Stars: 1
+- Stars: 2
 
 #### Method 1: use binary search for 3 times
 The most direct method is to find the pivot, and then separate `nums` into two subarrays according to the position of the pivot, and then apply binary search to each subarray. 
@@ -3960,6 +4004,32 @@ class Solution {
 }
 ```
 
+### 324. Wiggle Sort II
+- [Link](https://leetcode.com/problems/wiggle-sort-ii/)
+- Tags: Sort
+- Stars: 3
+
+#### sort and reverse, O(nlogn) time 
+This solution can be optimized by virtual indexing! 
+
+[Explanation/Proof for the correctness](https://leetcode.com/problems/wiggle-sort-ii/discuss/77678/3-lines-Python-with-Explanation-Proof)
+```java
+class Solution {
+    public void wiggleSort(int[] nums) {
+        if(nums.length == 0) return ;
+        int[] copy = nums.clone();
+        Arrays.sort(copy);
+        int l = (nums.length-1)/2, r = nums.length-1;
+        int i=0;
+        while(i<nums.length){
+            nums[i++] = copy[l--];
+            if(r==(nums.length-1)/2) break;
+            nums[i++] = copy[r--];
+        }
+    }
+}
+```
+
 ### 42. Trapping Rain Water
 - [Link](https://leetcode.com/problems/trapping-rain-water/)
 - Tags: Array, Two Pointers, Stack
@@ -4212,8 +4282,389 @@ class Solution {
 #### Topological Sort
 https://leetcode.com/problems/longest-increasing-path-in-a-matrix/discuss/78336/Graph-theory-Java-solution-O(v2)-no-DFS
 
+### 315. Count of Smaller Numbers After Self
+- [Link](https://leetcode.com/problems/count-of-smaller-numbers-after-self/)
+- Tags: Divide and Conquer, Binary Indexed Tree, Segment Tree, Binary Search Tree
+- Stars: 3
 
+#### lower bound binary search insertion, O(nlogn) time and O(n) space. 
+insert the elements of `nums` into `order` one by one from tail to head. 
+```java
+class Solution {
+    public List<Integer> countSmaller(int[] nums) {
+        List<Integer> result = new ArrayList<>();
+        if(nums.length == 0) return result;
+        List<Integer> order = new ArrayList<>();
+        result.add(0);
+        order.add(nums[nums.length-1]);
+        for(int i=nums.length-2; i>=0; i--){
+            int idx = binarySearch(order, nums[i]);
+            if(idx<0) idx = -(idx+1);
+            result.add(0, idx);
+            order.add(idx, nums[i]);
+        }
+        return result;
+    }
+    private int binarySearch(List<Integer> list, int target){
+        int l=0, r=list.size()-1;
+        while(l+1 < r){
+            int mid = l+((r-l)>>1);
+            if(list.get(mid) >= target) r = mid;
+            else l = mid;
+        }
+        if(list.get(l) >= target) return l;
+        if(list.get(r) >= target) return r;
+        return r+1;
+    }
+}
+```
 
+### 239. Sliding Window Maximum
+- [Link](https://leetcode.com/problems/sliding-window-maximum/)
+- Tags: Heap, Sliding Window
+- Stars: 3
+
+#### My solution, MaxQueue
+MaxQueue is implemented by two MaxStack.
+```java
+class Solution {
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        if(nums.length == 0) return new int[0];
+        MaxQueue qu = new MaxQueue();
+        int[] result = new int[nums.length-k+1];
+        int p = 0;
+        for(int i=0; i<nums.length; i++){
+            qu.add(nums[i]);
+            if(qu.size() == k){
+                result[p++] = qu.getMax();
+                qu.pop();
+            }
+        }
+        return result;
+    }
+}
+class MaxQueue {
+    public MaxStack st1 = new MaxStack(), st2 = new MaxStack();
+    public void add(int x){
+        st1.add(x);
+    }
+    public int size(){
+        return st1.size() + st2.size();
+    }
+    public int pop(){
+        if(st2.isEmpty()){
+            assert !st1.isEmpty();
+            while(!st1.isEmpty()){
+                st2.add(st1.pop());
+            }
+        }
+        return st2.pop();
+    }
+    public int getMax(){
+        return Math.max(st1.getMax(), st2.getMax());
+    }
+}
+class MaxStack {
+    public Stack<Integer> st = new Stack(), maxSt = new Stack();
+    public int maxVal = Integer.MIN_VALUE;
+    public void add(int x){
+        if(maxVal < x) maxVal = x;
+        maxSt.add(maxVal);
+        st.add(x);
+    }
+    public int size(){
+        return st.size();
+    }
+    public boolean isEmpty(){
+        return st.isEmpty();
+    }
+    public int pop(){
+        maxSt.pop();
+        maxVal = maxSt.size() == 0 ? Integer.MIN_VALUE : maxSt.peek();
+        return st.pop();
+    }
+    public int getMax(){
+        return maxVal;
+    }
+}
+```
+
+### 295. Find Median from Data Stream
+- [Link](https://leetcode.com/problems/find-median-from-data-stream/)
+- Tags: Heap, Design
+- Stars: 2
+
+#### lower bound binary search insertion
+```java
+class MedianFinder {
+    List<Integer> list;
+    public MedianFinder() {
+        list = new ArrayList<>();
+    }
+    public void addNum(int num) {
+        int idx = binarySearch(list, num);
+        list.add(idx, num);
+    }
+    public double findMedian() {
+        if(list.size()%2 == 1) return (double)list.get(list.size()/2);
+        return (list.get(list.size()/2)+list.get(list.size()/2-1))/2.0;
+    }
+    private int binarySearch(List<Integer> list, int target){
+        if(list.size() == 0) return 0;
+        int l=0, r=list.size()-1;
+        while(l<r){
+            int mid = l + ((r-l)>>1);
+            if(list.get(mid) >= target) r = mid-1;
+            else l = mid + 1;
+        }
+        if(list.get(l) >=target) return l;
+        return l+1;
+    }
+}
+```
+
+#### minHeap and maxHeap
+```java
+class MedianFinder {
+    PriorityQueue<Integer> maxHeap;
+    PriorityQueue<Integer> minHeap;
+    public MedianFinder() {
+        maxHeap = new PriorityQueue<>(Comparator.reverseOrder());
+        minHeap = new PriorityQueue<>();
+    }
+    public void addNum(int num) {
+        if(maxHeap.isEmpty() || maxHeap.peek() >= num) maxHeap.add(num);
+        else minHeap.add(num);
+        while(maxHeap.size() < minHeap.size())
+            maxHeap.add(minHeap.poll());
+        while(maxHeap.size()-1 > minHeap.size())
+            minHeap.add(maxHeap.poll());
+    }
+    public double findMedian() {
+        if(maxHeap.size() == minHeap.size()) return (maxHeap.peek()+minHeap.peek())/2.0;
+        return (double)maxHeap.peek();
+    }
+}
+```
+
+### 23. Merge k Sorted Lists
+- [Link](https://leetcode.com/problems/merge-k-sorted-lists/)
+- Tags: Linked List, Divide and Conquer, Heap
+- Stars: 2
+
+#### minHeap, 41ms
+```java
+class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        if(lists.length == 0) return null;
+        ListNode head = new ListNode(0), curr = head;
+        PriorityQueue<Tuple> qu = new PriorityQueue<>(
+            (tup1, tup2) -> (tup1.node.val-tup2.node.val));
+        for(int i=0; i<lists.length; i++){
+            if(lists[i] != null){
+                qu.add(new Tuple(i, lists[i]));
+                lists[i] = lists[i].next;
+            }
+        }
+        while(!qu.isEmpty()){
+            Tuple tup = qu.poll();
+            curr.next = tup.node;
+            curr = curr.next;
+            if(lists[tup.idx] != null){
+                qu.add(new Tuple(tup.idx, lists[tup.idx]));
+                lists[tup.idx] = lists[tup.idx].next;
+            }
+        }
+        return head.next;
+    }
+}
+class Tuple {
+    int idx;
+    ListNode node;
+    public Tuple(int i, ListNode n){
+        idx = i;
+        node = n;
+    }
+}
+```
+
+#### minHeap, simplified version, 9ms
+```java
+class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        if(lists.length == 0) return null;
+        ListNode head = new ListNode(0), curr = head;
+        PriorityQueue<ListNode> qu = new PriorityQueue<>(new Comparator<ListNode>(){
+            public int compare(ListNode a, ListNode b){
+                return a.val - b.val;
+            }
+        });
+        for(ListNode node : lists)
+            if(node != null) qu.add(node);
+        while(!qu.isEmpty()){
+            curr.next = qu.poll();
+            curr = curr.next;
+            if(curr.next != null) qu.add(curr.next);
+        }
+        return head.next;
+    }
+}
+```
+
+#### divide and conquer, use merge 2 linkedlist, 5ms beats 100% in time
+```java
+class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        if(lists.length == 0) return null;
+        return mergeKLists(lists, 0, lists.length-1);
+    }
+    public ListNode mergeKLists(ListNode[] lists, int start, int end){
+        if(start == end) return lists[start];
+        int mid = start + ((end-start)>>1);
+        ListNode l1 = mergeKLists(lists, start, mid);
+        ListNode l2 = mergeKLists(lists, mid+1, end);
+        return merge(l1, l2);
+    }
+    private ListNode merge(ListNode l1, ListNode l2){
+        if(l1 == null) return l2;
+        if(l2 == null) return l1;
+        if(l1.val < l2.val){
+            l1.next = merge(l1.next, l2);
+            return l1;
+        }
+        else {
+            l2.next = merge(l1, l2.next);
+            return l2;
+        }
+    }
+}
+```
+
+### 124. Binary Tree Maximum Path Sum
+- [Link](https://leetcode.com/problems/binary-tree-maximum-path-sum/)
+- Tags: Tree, DFS
+- Stars: 2
+
+#### DFS, (tree-like) maximum subarray
+```java
+class Solution {
+    int result = Integer.MIN_VALUE;
+    public int maxPathSum(TreeNode root) {
+        if(root == null) return 0;
+        DFS(root);
+        return result;
+    }
+    private int DFS(TreeNode root){
+        if(root == null) return 0;
+        int left = Math.max(0, DFS(root.left)), right = Math.max(0, DFS(root.right));
+        result = Math.max(result, left+right+root.val);
+        return Math.max(left, right)+root.val;
+    }
+}
+```
+
+### 41. First Missing Positive
+- [Link](https://leetcode.com/problems/first-missing-positive/)
+- Tags: Array
+- Stars: 3
+
+#### establish val2index and index2val mapping, O(n) time and O(1) space
+1. ignore all elements that are <= 0 or > nums.length
+2. establish val2index and index2val mapping for the remaining elements. i.e. `val2index[i] = i-1` and `index2val[i] = i+1`. 
+3. iterate `nums`. For each num, swap this num to the index that it is supposed to be. 
+4. the condition `nums[nums[i]-1] != nums[i]` in the while loop is used to avoid infinite loop caused by duplicates. 
+```java
+class Solution {
+    public int firstMissingPositive(int[] nums) {
+        if(nums.length == 0) return 1;
+        for(int i=0; i<nums.length; i++){
+            while(nums[i]>0 && nums[i] <= nums.length && 
+                  nums[i] != i+1 && nums[nums[i]-1] != nums[i])
+                swap(nums, nums[i]-1, i);
+        }
+        for(int i=0; i<nums.length; i++)
+            if(nums[i] != i+1) return i+1;
+        return nums.length+1;
+    }
+    private void swap(int[] nums, int i, int j){
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
+```
+
+#### O(n) time and O(n) space
+We only need to mark numbers in [1, nums.length]. 
+```java
+class Solution {
+    public int firstMissingPositive(int[] nums) {
+        if(nums.length == 0) return 1;
+        boolean[] mark = new boolean[nums.length];
+        for(int num: nums)
+            if(num>0 && num<=nums.length) mark[num-1] = true;
+        for(int i=0; i<mark.length; i++)
+            if(!mark[i]) return i+1;
+        return nums.length+1;
+    }
+}
+```
+
+### 4. Median of Two Sorted Arrays
+- [Link](https://leetcode.com/problems/median-of-two-sorted-arrays/)
+- Tags: Array, Binary Search, Divide and Conquer
+- Stars: 3
+
+#### binary search
+To avoid boundary check, use 
+```
+l1 = mid1 == 0 ? Integer.MIN_VALUE : nums1[mid1-1];
+r1 = mid1 == nums1.length ? Integer.MAX_VALUE : nums1[mid1];
+l2 = mid2 == 0 ? Integer.MIN_VALUE : nums2[mid2-1];
+r2 = mid2 == nums2.length ? Integer.MAX_VALUE : nums2[mid2];
+```
+.
+
+```java
+class Solution {
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        // make sure nums1.length >= nums2.length
+        if(nums1.length < nums2.length) return findMedianSortedArrays(nums2, nums1);
+        int l = 0, r = nums1.length;
+        // mid: the index to divide the nums into two parts. range [0, nums.length], (nums.length+1) possible values in total
+        // l1: the value just before mid1 
+        // r1: the value just after mid1 
+        int mid1 = 0, mid2 = 0, l1=0, r1=0, l2=0,  r2=0;
+        while(l<r){
+            mid1 = l + ((r-l)>>1);
+            mid2 = (nums1.length+nums2.length+1)/2 - mid1;
+            if(mid2 > nums2.length) {
+                l = mid1+1;
+                continue;
+            }
+            else if(mid2 < 0){
+                r = mid1-1;
+                continue;
+            }
+            l1 = mid1 == 0 ? Integer.MIN_VALUE : nums1[mid1-1];
+            r1 = mid1 == nums1.length ? Integer.MAX_VALUE : nums1[mid1];
+            l2 = mid2 == 0 ? Integer.MIN_VALUE : nums2[mid2-1];
+            r2 = mid2 == nums2.length ? Integer.MAX_VALUE : nums2[mid2];
+            if(l1 <= r2 && l2<=r1) break;
+            if(l1 > r2) r = mid1 - 1;
+            if(l2 > r1) l = mid1 + 1;
+        }
+        mid1 = l + ((r-l)>>1);
+        mid2 = (nums1.length+nums2.length+1)/2 - mid1;
+        l1 = mid1 == 0 ? Integer.MIN_VALUE : nums1[mid1-1];
+        r1 = mid1 == nums1.length ? Integer.MAX_VALUE : nums1[mid1];
+        l2 = mid2 == 0 ? Integer.MIN_VALUE : nums2[mid2-1];
+        r2 = mid2 == nums2.length ? Integer.MAX_VALUE : nums2[mid2];
+        if((nums1.length+nums2.length)%2==1) return Math.max(l1, l2);
+        return (Math.max(l1, l2) + Math.min(r1, r2))/2.0;
+    }
+}
+```
 
 ## Top 100 Liked Questions
 
@@ -4496,7 +4947,7 @@ class Solution {
 - Tags: Array
 - Stars: 3
 
-#### sort and compare, O(nlogn) time and O(n) space, suboptimal
+#### my solution, sort and compare, O(nlogn) time and O(n) space, suboptimal
 ```java
 class Solution {
     public int findUnsortedSubarray(int[] nums) {
@@ -4508,6 +4959,86 @@ class Solution {
         while(i<j && nums[j] == copy[j]) j--;
         if(i == j) return 0;
         return j-i+1;
+    }
+}
+```
+
+#### my solution, binary search
+```java
+class Solution {
+    public int findUnsortedSubarray(int[] nums) {
+        if(nums.length == 0) return 0;
+        int i=0, j=nums.length-1;
+        // skip the ordered subarray started from head. 
+        while(i<j && nums[i] <= nums[i+1]) i++;
+        // go left to ensure all duplicates of nums[i] has an index >= i. 
+        if(i == j) return 0;
+        else while(i>0 && nums[i-1] == nums[i]) i--;
+        // skip the ordered subarray ended with tail. 
+        while(i<j && nums[j-1] <= nums[j]) j--;
+        // go right to ensure all duplicates of nums[j] has an index <= j. 
+        if(i == j) return 0;
+        else while(j<nums.length-1 && nums[j+1] == nums[j]) j++;
+        // get the minVal and maxVal of subarray between i and j
+        int minVal = nums[i], maxVal = nums[j];
+        for(int k=i; k<=j; k++){
+            if(minVal > nums[k]) minVal = nums[k];
+            if(maxVal < nums[k]) maxVal = nums[k];
+        }
+        // find idx s.t. all elements in nums[0:idx] are < minVal
+        // notice we set target of binary search to minVal+1 instead of minVal
+        int minIdx = Arrays.binarySearch(nums, 0, i, minVal+1);
+        if(minIdx < 0) minIdx = -(minIdx+1);
+        // find idx s.t. all elements in nums[idx:] are >= maxVal
+        int maxIdx = Arrays.binarySearch(nums, j+1, nums.length, maxVal);
+        if(maxIdx < 0) maxIdx = -(maxIdx+1);
+        return maxIdx - minIdx;
+    }
+}
+```
+
+#### GENIUS!!
+```java
+class Solution {
+    public int findUnsortedSubarray(int[] nums) {
+        if(nums.length == 0) return 0;
+        int start=-1, end=-2, currMax = nums[0], currMin = nums[nums.length-1];
+        for(int i=0; i<nums.length; i++){
+            currMax = Math.max(currMax, nums[i]);
+            if(currMax > nums[i]) end = i;
+            currMin = Math.min(currMin, nums[nums.length-i-1]);
+            if(currMin < nums[nums.length-i-1]) start = nums.length-i-1;
+        }
+        return end-start+1;
+    }
+}
+```
+
+## Others
+
+### 129. Sum Root to Leaf Numbers
+- [Link](https://leetcode.com/problems/sum-root-to-leaf-numbers/)
+- Tags: Tree, DFS
+- Stars: 1
+
+#### DFS
+```java
+class Solution {
+    int result = 0;
+    public int sumNumbers(TreeNode root) {
+        if(root == null) return 0;
+        DFS(root, 0);
+        return result;
+    }
+    public void DFS(TreeNode root, int curr){
+        curr *= 10;
+        curr += root.val;
+        if(root.left == null && root.right == null){
+            result += curr;
+            return ;
+        }
+        if(root.left != null) DFS(root.left, curr);
+        if(root.right != null) DFS(root.right, curr);
     }
 }
 ```
@@ -5336,9 +5867,10 @@ class Solution {
 
 - 208 Implement Trie
 - 227 Basic Calculator II
-- 324 Wiggle Sort II
+- 324 Wiggle Sort II -- Explanation/Proof for the correctness, Virtual Indexing
 - 5 Longest Palindromic Substring
 - 53 Maximum Subarray -- divide and conquer
+- 435 Non-overlapping Intervals (已经有###了)
 - explore more solutions of 43. Multiply Strings
 - explore more solutions of 673. Number of Longest Increasing Subsequence
 
