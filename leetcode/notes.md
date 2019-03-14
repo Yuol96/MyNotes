@@ -5046,6 +5046,92 @@ class Solution {
 
 # Topics
 
+## String
+
+### 557. Reverse Words in a String III
+- [Link](https://leetcode.com/problems/reverse-words-in-a-string-iii/)
+- Tags: String
+- Stars: 1
+
+#### two pointers reverse word by word
+```java
+class Solution {
+    public String reverseWords(String s) {
+        int i=0;
+        StringBuilder sb = new StringBuilder(s);
+        while(i<sb.length()){
+            while(i<sb.length() && sb.charAt(i) == ' ') i++;
+            int j = i;
+            while(j<sb.length() && sb.charAt(j) != ' ') j++;
+            reverse(sb, i, j-1);
+            i = j+1;
+        }
+        return sb.toString();
+    }
+    private void reverse(StringBuilder sb, int i, int j){
+        while(i<j) swap(sb, i++, j--);
+    }
+    private void swap(StringBuilder sb, int i, int j){
+        char c = sb.charAt(i);
+        sb.setCharAt(i, sb.charAt(j));
+        sb.setCharAt(j, c);
+    }
+}
+```
+
+#### Built-in functions
+```java
+class Solution {
+    public String reverseWords(String s) {
+        String[] strs = s.split(" ");
+        for(int i=0; i<strs.length; i++){
+            strs[i] = (new StringBuilder(strs[i])).reverse().toString();
+        }
+        return String.join(" ", Arrays.asList(strs));
+    }
+}
+```
+
+### 893. Groups of Special-Equivalent Strings
+- [Link](https://leetcode.com/problems/groups-of-special-equivalent-strings/)
+- Tags: String
+- Stars: 1
+
+#### HashArray
+The key is to encode the string into something hashable and put it all into a HashSet.
+
+Count number of characters for odd and even indices separately.  
+Odd-indexed characters are counted in chars[:26], while even-indexed characters are counted in chars[26:]. 
+```java
+class Solution {
+    public int numSpecialEquivGroups(String[] A) {
+        HashSet<HashArray> set = new HashSet<>();
+        for(String s : A){
+            HashArray harr = new HashArray(s);
+            set.add(harr);
+        }
+        return set.size();
+    }
+}
+class HashArray {
+    int[] chars = new int[52];
+    public HashArray(String s){
+        for(int i=0; i<s.length(); i+=2)
+            chars[s.charAt(i)-'a']++;
+        for(int i=1; i<s.length(); i+=2)
+            chars[s.charAt(i)-'a'+26]++;
+    }
+    public boolean equals(Object o){
+        for(int i=0; i<52; i++)
+            if(this.chars[i] != ((HashArray)o).chars[i]) return false;
+        return true;
+    }
+    public int hashCode(){
+        return Arrays.hashCode(chars);
+    }
+}
+```
+
 ## Linked List
 
 ### 876. Middle of the Linked List
@@ -5190,6 +5276,7 @@ class Solution {
 <span id="46-DP" />
 This is a DP-like solution. 
 For each iteration, you only consider the additional permutations that the k-th element brings about. 
+
 ```java
 class Solution {
     List<List<Integer>> result;

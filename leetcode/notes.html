@@ -1570,6 +1570,18 @@ body .markdown-body
 </ul>
 </li>
 <li><a href="#topics">Topics</a><ul>
+<li><a href="#string">String</a><ul>
+<li><a href="#557-reverse-words-in-a-string-iii">557. Reverse Words in a String III</a><ul>
+<li><a href="#two-pointers-reverse-word-by-word">two pointers reverse word by word</a></li>
+<li><a href="#built-in-functions">Built-in functions</a></li>
+</ul>
+</li>
+<li><a href="#893-groups-of-special-equivalent-strings">893. Groups of Special-Equivalent Strings</a><ul>
+<li><a href="#hasharray">HashArray</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a href="#linked-list">Linked List</a><ul>
 <li><a href="#876-middle-of-the-linked-list">876. Middle of the Linked List</a><ul>
 <li><a href="#slow-fast">slow-fast</a></li>
@@ -6579,6 +6591,88 @@ Therefore, the DP formula is <code>f(n) = sum([f(i) * f(n-1-i) for i in range(0,
 </pre></div>
 
 <h1 id="topics">Topics<a class="headerlink" href="#topics" title="Permanent link"></a></h1>
+<h2 id="string">String<a class="headerlink" href="#string" title="Permanent link"></a></h2>
+<h3 id="557-reverse-words-in-a-string-iii">557. Reverse Words in a String III<a class="headerlink" href="#557-reverse-words-in-a-string-iii" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/reverse-words-in-a-string-iii/">Link</a></li>
+<li>Tags: String</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="two-pointers-reverse-word-by-word">two pointers reverse word by word<a class="headerlink" href="#two-pointers-reverse-word-by-word" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">reverseWords</span><span class="o">(</span><span class="n">String</span> <span class="n">s</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span>
+        <span class="n">StringBuilder</span> <span class="n">sb</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">i</span><span class="o">&lt;</span><span class="n">sb</span><span class="o">.</span><span class="na">length</span><span class="o">()){</span>
+            <span class="k">while</span><span class="o">(</span><span class="n">i</span><span class="o">&lt;</span><span class="n">sb</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="n">sb</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">)</span> <span class="o">==</span> <span class="sc">&#39; &#39;</span><span class="o">)</span> <span class="n">i</span><span class="o">++;</span>
+            <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
+            <span class="k">while</span><span class="o">(</span><span class="n">j</span><span class="o">&lt;</span><span class="n">sb</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="n">sb</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">j</span><span class="o">)</span> <span class="o">!=</span> <span class="sc">&#39; &#39;</span><span class="o">)</span> <span class="n">j</span><span class="o">++;</span>
+            <span class="n">reverse</span><span class="o">(</span><span class="n">sb</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="o">);</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">sb</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">reverse</span><span class="o">(</span><span class="n">StringBuilder</span> <span class="n">sb</span><span class="o">,</span> <span class="kt">int</span> <span class="n">i</span><span class="o">,</span> <span class="kt">int</span> <span class="n">j</span><span class="o">){</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">i</span><span class="o">&lt;</span><span class="n">j</span><span class="o">)</span> <span class="n">swap</span><span class="o">(</span><span class="n">sb</span><span class="o">,</span> <span class="n">i</span><span class="o">++,</span> <span class="n">j</span><span class="o">--);</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">swap</span><span class="o">(</span><span class="n">StringBuilder</span> <span class="n">sb</span><span class="o">,</span> <span class="kt">int</span> <span class="n">i</span><span class="o">,</span> <span class="kt">int</span> <span class="n">j</span><span class="o">){</span>
+        <span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="n">sb</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+        <span class="n">sb</span><span class="o">.</span><span class="na">setCharAt</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">sb</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">j</span><span class="o">));</span>
+        <span class="n">sb</span><span class="o">.</span><span class="na">setCharAt</span><span class="o">(</span><span class="n">j</span><span class="o">,</span> <span class="n">c</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h4 id="built-in-functions">Built-in functions<a class="headerlink" href="#built-in-functions" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">reverseWords</span><span class="o">(</span><span class="n">String</span> <span class="n">s</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">String</span><span class="o">[]</span> <span class="n">strs</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">&quot; &quot;</span><span class="o">);</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">strs</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++){</span>
+            <span class="n">strs</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="o">(</span><span class="k">new</span> <span class="n">StringBuilder</span><span class="o">(</span><span class="n">strs</span><span class="o">[</span><span class="n">i</span><span class="o">])).</span><span class="na">reverse</span><span class="o">().</span><span class="na">toString</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">String</span><span class="o">.</span><span class="na">join</span><span class="o">(</span><span class="s">&quot; &quot;</span><span class="o">,</span> <span class="n">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="n">strs</span><span class="o">));</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3 id="893-groups-of-special-equivalent-strings">893. Groups of Special-Equivalent Strings<a class="headerlink" href="#893-groups-of-special-equivalent-strings" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/groups-of-special-equivalent-strings/">Link</a></li>
+<li>Tags: String</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="hasharray">HashArray<a class="headerlink" href="#hasharray" title="Permanent link"></a></h4>
+<p>The key is to encode the string into something hashable and put it all into a HashSet.</p>
+<p>Count number of characters for odd and even indices separately.<br />
+Odd-indexed characters are counted in chars[:26], while even-indexed characters are counted in chars[26:]. 
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">numSpecialEquivGroups</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">A</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">HashArray</span><span class="o">&gt;</span> <span class="n">set</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;&gt;();</span>
+        <span class="k">for</span><span class="o">(</span><span class="n">String</span> <span class="n">s</span> <span class="o">:</span> <span class="n">A</span><span class="o">){</span>
+            <span class="n">HashArray</span> <span class="n">harr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashArray</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+            <span class="n">set</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">harr</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">set</span><span class="o">.</span><span class="na">size</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="kd">class</span> <span class="nc">HashArray</span> <span class="o">{</span>
+    <span class="kt">int</span><span class="o">[]</span> <span class="n">chars</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="mi">52</span><span class="o">];</span>
+    <span class="kd">public</span> <span class="nf">HashArray</span><span class="o">(</span><span class="n">String</span> <span class="n">s</span><span class="o">){</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">s</span><span class="o">.</span><span class="na">length</span><span class="o">();</span> <span class="n">i</span><span class="o">+=</span><span class="mi">2</span><span class="o">)</span>
+            <span class="n">chars</span><span class="o">[</span><span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">)-</span><span class="sc">&#39;a&#39;</span><span class="o">]++;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">s</span><span class="o">.</span><span class="na">length</span><span class="o">();</span> <span class="n">i</span><span class="o">+=</span><span class="mi">2</span><span class="o">)</span>
+            <span class="n">chars</span><span class="o">[</span><span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">)-</span><span class="sc">&#39;a&#39;</span><span class="o">+</span><span class="mi">26</span><span class="o">]++;</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">equals</span><span class="o">(</span><span class="n">Object</span> <span class="n">o</span><span class="o">){</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">52</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+            <span class="k">if</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">chars</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">!=</span> <span class="o">((</span><span class="n">HashArray</span><span class="o">)</span><span class="n">o</span><span class="o">).</span><span class="na">chars</span><span class="o">[</span><span class="n">i</span><span class="o">])</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">hashCode</span><span class="o">(){</span>
+        <span class="k">return</span> <span class="n">Arrays</span><span class="o">.</span><span class="na">hashCode</span><span class="o">(</span><span class="n">chars</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div></p>
 <h2 id="linked-list">Linked List<a class="headerlink" href="#linked-list" title="Permanent link"></a></h2>
 <h3 id="876-middle-of-the-linked-list">876. Middle of the Linked List<a class="headerlink" href="#876-middle-of-the-linked-list" title="Permanent link"></a></h3>
 <ul>
@@ -6717,7 +6811,7 @@ Therefore, the DP formula is <code>f(n) = sum([f(i) * f(n-1-i) for i in range(0,
 <h4 id="my-backtracking-solution-not-general-but-faster">My Backtracking Solution (not general but faster)<a class="headerlink" href="#my-backtracking-solution-not-general-but-faster" title="Permanent link"></a></h4>
 <p><span id="46-DP" />
 This is a DP-like solution. 
-For each iteration, you only consider the additional permutations that the k-th element brings about. 
+For each iteration, you only consider the additional permutations that the k-th element brings about. </p>
 <div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
     <span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="n">result</span><span class="o">;</span>
     <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="nf">permute</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">)</span> <span class="o">{</span>
@@ -6745,7 +6839,8 @@ For each iteration, you only consider the additional permutations that the k-th 
         <span class="n">backtrack</span><span class="o">(</span><span class="n">nums</span><span class="o">,</span> <span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="o">);</span>
     <span class="o">}</span>
 <span class="o">}</span>
-</pre></div></p>
+</pre></div>
+
 <h4 id="marking-along-the-backtracking-paths-general-solution">Marking along the backtracking paths (general solution)<a class="headerlink" href="#marking-along-the-backtracking-paths-general-solution" title="Permanent link"></a></h4>
 <div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
     <span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
