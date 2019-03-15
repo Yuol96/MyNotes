@@ -17,6 +17,40 @@ sudo vim httpd.conf  # 修改Apache配置文件
 ```
 最后重启Apache即可
 
+### build a file server
+#### Node.js http-server
+```bash
+npm install http-server
+./node_modules/http-server/bin/http-server <path-to-target-directory>
+
+npm install http-server -g
+http-server <path-to-target-directory>
+http-server --help
+```
+
+#### Apache httpd
+[Mac解决Apache2目录权限问题](https://www.cnblogs.com/sweetheartly/articles/9439858.html)  
+[Mac下如何修改apache根目录](https://www.cnblogs.com/chuangshaogreat/p/7821407.html)  
+[MAC自带apache开启目录访问及基本配置](https://www.jianshu.com/p/a617691a7f4f)
+
+#### browser-sync
+```bash
+# move to the target directory
+browser-sync start --server --directory --files "**/*" --browser
+```
+
+#### ftpd-cli
+[Truly simple zero-config 5-sec FTP server in pure JavaScript](https://www.npmjs.com/package/ftpd-cli)  
+```bash
+npm install -g ftpd-cli
+# To start ftp daemon with anonymous access:
+ftpd-cli --directory path/to/files
+# To start ftp daemon with login-passwords only:
+ftpd-cli --directory path/to/files --user-password login:322
+# To stop daemon:
+ftpd-cli --stop
+```
+
 ### 找到使用某个port的进程
 ```bash
 lsof -i:<port>
