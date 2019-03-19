@@ -1567,6 +1567,13 @@ body .markdown-body
 </li>
 </ul>
 </li>
+<li><a href="#first-300-questions">First 300 Questions</a><ul>
+<li><a href="#292-nim-game">292. Nim Game</a><ul>
+<li><a href="#math-solution_1">Math solution</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#topics">Topics</a><ul>
@@ -1578,6 +1585,18 @@ body .markdown-body
 </li>
 <li><a href="#893-groups-of-special-equivalent-strings">893. Groups of Special-Equivalent Strings</a><ul>
 <li><a href="#hasharray">HashArray</a></li>
+</ul>
+</li>
+<li><a href="#824-goat-latin">824. Goat Latin</a><ul>
+<li><a href="#stringbuilder-modify-no-split">StringBuilder modify, no split</a></li>
+</ul>
+</li>
+<li><a href="#521-longest-uncommon-subsequence-i">521. Longest Uncommon Subsequence I</a><ul>
+<li><a href="#april-fools-question">April Fool&rsquo;s Question</a></li>
+</ul>
+</li>
+<li><a href="#917-reverse-only-letters">917. Reverse Only Letters</a><ul>
+<li><a href="#skipping-two-pointers-swap">skipping two pointers swap</a></li>
 </ul>
 </li>
 </ul>
@@ -6590,6 +6609,29 @@ Therefore, the DP formula is <code>f(n) = sum([f(i) * f(n-1-i) for i in range(0,
 <span class="o">}</span>
 </pre></div>
 
+<h2 id="first-300-questions">First 300 Questions<a class="headerlink" href="#first-300-questions" title="Permanent link"></a></h2>
+<h3 id="292-nim-game">292. Nim Game<a class="headerlink" href="#292-nim-game" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/nim-game/">Link</a></li>
+<li>Tags: Brainteaser, Minimax</li>
+<li>Stars: 2</li>
+</ul>
+<h4 id="math-solution_1">Math solution<a class="headerlink" href="#math-solution_1" title="Permanent link"></a></h4>
+<ol>
+<li>n might be very big. Thus, DP solutions doesn&rsquo;t work (for the reason that O(n) time is too slow). </li>
+<li>try to write down several answers for small n:<br />
+<code>n = 1 2 3 4 5 6 7 8 9 ...</code><br />
+<code>ans = t t t f t t t f t ...</code><br />
+We can see that the answers repeated in a <code>t t t f</code> pattern. Actually, the DP formula is<br />
+<code>dp[i] = !dp[i-1] || !dp[i-2] || !dp[i-3]</code>. </li>
+</ol>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">canWinNim</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">n</span><span class="o">%</span><span class="mi">4</span><span class="o">!=</span><span class="mi">0</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
 <h1 id="topics">Topics<a class="headerlink" href="#topics" title="Permanent link"></a></h1>
 <h2 id="string">String<a class="headerlink" href="#string" title="Permanent link"></a></h2>
 <h3 id="557-reverse-words-in-a-string-iii">557. Reverse Words in a String III<a class="headerlink" href="#557-reverse-words-in-a-string-iii" title="Permanent link"></a></h3>
@@ -6673,6 +6715,88 @@ Odd-indexed characters are counted in chars[:26], while even-indexed characters 
     <span class="o">}</span>
 <span class="o">}</span>
 </pre></div></p>
+<h3 id="824-goat-latin">824. Goat Latin<a class="headerlink" href="#824-goat-latin" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/goat-latin/">Link</a></li>
+<li>Tags: String</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="stringbuilder-modify-no-split">StringBuilder modify, no split<a class="headerlink" href="#stringbuilder-modify-no-split" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Character</span><span class="o">&gt;</span> <span class="n">set</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;&gt;(</span>
+        <span class="n">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="k">new</span> <span class="n">Character</span><span class="o">[]</span> <span class="o">{</span><span class="sc">&#39;a&#39;</span><span class="o">,</span> <span class="sc">&#39;e&#39;</span><span class="o">,</span> <span class="sc">&#39;i&#39;</span><span class="o">,</span><span class="sc">&#39;o&#39;</span><span class="o">,</span><span class="sc">&#39;u&#39;</span><span class="o">,</span><span class="sc">&#39;A&#39;</span><span class="o">,</span><span class="sc">&#39;E&#39;</span><span class="o">,</span><span class="sc">&#39;I&#39;</span><span class="o">,</span><span class="sc">&#39;O&#39;</span><span class="o">,</span><span class="sc">&#39;U&#39;</span><span class="o">}));</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">toGoatLatin</span><span class="o">(</span><span class="n">String</span> <span class="n">s</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">StringBuilder</span> <span class="n">sb</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">,</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="kc">true</span><span class="o">){</span>
+            <span class="k">while</span><span class="o">(</span><span class="n">i</span><span class="o">&lt;</span><span class="n">sb</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="n">sb</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">)</span> <span class="o">==</span> <span class="sc">&#39; &#39;</span><span class="o">)</span> <span class="n">i</span><span class="o">++;</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">sb</span><span class="o">.</span><span class="na">length</span><span class="o">())</span> <span class="k">break</span><span class="o">;</span>
+            <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
+            <span class="k">while</span><span class="o">(</span><span class="n">j</span><span class="o">&lt;</span><span class="n">sb</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="n">sb</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">j</span><span class="o">)</span> <span class="o">!=</span> <span class="sc">&#39; &#39;</span><span class="o">)</span> <span class="n">j</span><span class="o">++;</span>
+            <span class="n">count</span><span class="o">++;</span>
+
+            <span class="k">if</span><span class="o">(</span><span class="n">beginsWithVowels</span><span class="o">(</span><span class="n">sb</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">j</span><span class="o">))</span> <span class="o">{</span>
+                <span class="n">sb</span><span class="o">.</span><span class="na">insert</span><span class="o">(</span><span class="n">j</span><span class="o">,</span> <span class="s">&quot;ma&quot;</span><span class="o">);</span>
+                <span class="n">j</span> <span class="o">+=</span> <span class="mi">2</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="k">else</span><span class="o">{</span>
+                <span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="n">sb</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+                <span class="n">sb</span><span class="o">.</span><span class="na">delete</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">);</span>
+                <span class="n">sb</span><span class="o">.</span><span class="na">insert</span><span class="o">(</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="n">c</span><span class="o">);</span>
+                <span class="n">sb</span><span class="o">.</span><span class="na">insert</span><span class="o">(</span><span class="n">j</span><span class="o">,</span> <span class="s">&quot;ma&quot;</span><span class="o">);</span>
+                <span class="n">j</span><span class="o">+=</span><span class="mi">2</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">k</span><span class="o">&lt;</span><span class="n">count</span><span class="o">;</span> <span class="n">k</span><span class="o">++)</span> <span class="n">sb</span><span class="o">.</span><span class="na">insert</span><span class="o">(</span><span class="n">j</span><span class="o">++,</span> <span class="sc">&#39;a&#39;</span><span class="o">);</span>
+
+            <span class="n">i</span> <span class="o">=</span> <span class="n">j</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">sb</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">beginsWithVowels</span><span class="o">(</span><span class="n">StringBuilder</span> <span class="n">sb</span><span class="o">,</span> <span class="kt">int</span> <span class="n">start</span><span class="o">,</span> <span class="kt">int</span> <span class="n">end</span><span class="o">){</span>
+        <span class="k">return</span> <span class="n">set</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="n">sb</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">start</span><span class="o">));</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3 id="521-longest-uncommon-subsequence-i">521. Longest Uncommon Subsequence I<a class="headerlink" href="#521-longest-uncommon-subsequence-i" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/longest-uncommon-subsequence-i/">Link</a></li>
+<li>Tags: String</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="april-fools-question">April Fool&rsquo;s Question<a class="headerlink" href="#april-fools-question" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">findLUSlength</span><span class="o">(</span><span class="n">String</span> <span class="n">a</span><span class="o">,</span> <span class="n">String</span> <span class="n">b</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">b</span><span class="o">)</span> <span class="o">?</span> <span class="o">-</span><span class="mi">1</span> <span class="o">:</span> <span class="n">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">a</span><span class="o">.</span><span class="na">length</span><span class="o">(),</span> <span class="n">b</span><span class="o">.</span><span class="na">length</span><span class="o">());</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3 id="917-reverse-only-letters">917. Reverse Only Letters<a class="headerlink" href="#917-reverse-only-letters" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/reverse-only-letters/">Link</a></li>
+<li>Tags: String</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="skipping-two-pointers-swap">skipping two pointers swap<a class="headerlink" href="#skipping-two-pointers-swap" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">reverseOnlyLetters</span><span class="o">(</span><span class="n">String</span> <span class="n">S</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">StringBuilder</span> <span class="n">s</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="o">(</span><span class="n">S</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="na">length</span><span class="o">()-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="kc">true</span><span class="o">){</span>
+            <span class="k">while</span><span class="o">(</span><span class="n">i</span><span class="o">&lt;</span><span class="n">j</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">Character</span><span class="o">.</span><span class="na">isLetter</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">)))</span> <span class="n">i</span><span class="o">++;</span>
+            <span class="k">while</span><span class="o">(</span><span class="n">i</span><span class="o">&lt;</span><span class="n">j</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">Character</span><span class="o">.</span><span class="na">isLetter</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">j</span><span class="o">)))</span> <span class="n">j</span><span class="o">--;</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="n">j</span><span class="o">)</span> <span class="k">break</span><span class="o">;</span>
+            <span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+            <span class="n">s</span><span class="o">.</span><span class="na">setCharAt</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">j</span><span class="o">));</span>
+            <span class="n">s</span><span class="o">.</span><span class="na">setCharAt</span><span class="o">(</span><span class="n">j</span><span class="o">,</span> <span class="n">c</span><span class="o">);</span>
+            <span class="n">i</span><span class="o">++;</span> <span class="n">j</span><span class="o">--;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
 <h2 id="linked-list">Linked List<a class="headerlink" href="#linked-list" title="Permanent link"></a></h2>
 <h3 id="876-middle-of-the-linked-list">876. Middle of the Linked List<a class="headerlink" href="#876-middle-of-the-linked-list" title="Permanent link"></a></h3>
 <ul>

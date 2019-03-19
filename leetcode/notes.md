@@ -5043,6 +5043,29 @@ class Solution {
 }
 ```
 
+## First 300 Questions
+
+### 292. Nim Game
+- [Link](https://leetcode.com/problems/nim-game/)
+- Tags: Brainteaser, Minimax
+- Stars: 2
+
+#### Math solution
+1. n might be very big. Thus, DP solutions doesn't work (for the reason that O(n) time is too slow). 
+2. try to write down several answers for small n:  
+`  n = 1 2 3 4 5 6 7 8 9 ...`  
+`ans = t t t f t t t f t ...`  
+We can see that the answers repeated in a `t t t f` pattern. Actually, the DP formula is  
+`dp[i] = !dp[i-1] || !dp[i-2] || !dp[i-3]`. 
+
+```java
+class Solution {
+    public boolean canWinNim(int n) {
+        return n%4!=0;
+    }
+}
+```
+
 
 # Topics
 
@@ -5128,6 +5151,88 @@ class HashArray {
     }
     public int hashCode(){
         return Arrays.hashCode(chars);
+    }
+}
+```
+
+### 824. Goat Latin
+- [Link](https://leetcode.com/problems/goat-latin/)
+- Tags: String
+- Stars: 1
+
+#### StringBuilder modify, no split
+```java
+class Solution {
+    HashSet<Character> set = new HashSet<>(
+        Arrays.asList(new Character[] {'a', 'e', 'i','o','u','A','E','I','O','U'}));
+    public String toGoatLatin(String s) {
+        StringBuilder sb = new StringBuilder(s);
+        int i = 0, count = 0;
+        while(true){
+            while(i<sb.length() && sb.charAt(i) == ' ') i++;
+            if(i == sb.length()) break;
+            int j = i;
+            while(j<sb.length() && sb.charAt(j) != ' ') j++;
+            count++;
+            
+            if(beginsWithVowels(sb, i, j)) {
+                sb.insert(j, "ma");
+                j += 2;
+            }
+            else{
+                char c = sb.charAt(i);
+                sb.delete(i, i+1);
+                sb.insert(j-1, c);
+                sb.insert(j, "ma");
+                j+=2;
+            }
+            for(int k=0; k<count; k++) sb.insert(j++, 'a');
+            
+            i = j;
+        }
+        return sb.toString();
+    }
+    private boolean beginsWithVowels(StringBuilder sb, int start, int end){
+        return set.contains(sb.charAt(start));
+    }
+}
+```
+
+### 521. Longest Uncommon Subsequence I
+- [Link](https://leetcode.com/problems/longest-uncommon-subsequence-i/)
+- Tags: String
+- Stars: 1
+
+#### April Fool's Question
+```java
+class Solution {
+    public int findLUSlength(String a, String b) {
+        return a.equals(b) ? -1 : Math.max(a.length(), b.length());
+    }
+}
+```
+
+### 917. Reverse Only Letters
+- [Link](https://leetcode.com/problems/reverse-only-letters/)
+- Tags: String
+- Stars: 1
+
+#### skipping two pointers swap
+```java
+class Solution {
+    public String reverseOnlyLetters(String S) {
+        StringBuilder s = new StringBuilder(S);
+        int i = 0, j = s.length()-1;
+        while(true){
+            while(i<j && !Character.isLetter(s.charAt(i))) i++;
+            while(i<j && !Character.isLetter(s.charAt(j))) j--;
+            if(i >= j) break;
+            char c = s.charAt(i);
+            s.setCharAt(i, s.charAt(j));
+            s.setCharAt(j, c);
+            i++; j--;
+        }
+        return s.toString();
     }
 }
 ```
