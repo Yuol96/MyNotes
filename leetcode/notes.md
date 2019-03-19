@@ -5066,6 +5066,25 @@ class Solution {
 }
 ```
 
+### 258. Add Digits
+- [Link](https://leetcode.com/problems/add-digits/)
+- Tags: Math
+- Stars: 3
+
+#### Math Solution
+For num > 0, the possible answer is 1,2,3,4,5,6,7,8,9. These answers occur periodically as num increases. 
+
+**For this kinds of questions, if you don't have any idea at first glance, try to write several answers for simple input cases to see if you can find something useful.** 
+
+```java
+class Solution {
+    public int addDigits(int num) {
+        if(num == 0) return 0;
+        return num%9 == 0 ? 9 : num%9;
+    }
+}
+```
+
 
 # Topics
 
