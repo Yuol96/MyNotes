@@ -370,7 +370,7 @@ def getFirst300(questions):
     first300 = list(filter(lambda question: question['index']<=300, questions))
     with open('./first300.md', 'w') as hd:
         for row in first300:
-            hd.write('- [ ] {} {}\t{}\t{}\n'.format(row['index'], row['title'], row['acceptance'], row['difficulty']))
+            hd.write('- [ ] [{}. {}]({}), {}, {}\n\n'.format(row['index'], row['title'], row['link'], row['acceptance'], row['difficulty']))
     return first300
 
 if __name__ == '__main__':

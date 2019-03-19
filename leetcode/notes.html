@@ -1572,6 +1572,14 @@ body .markdown-body
 <li><a href="#math-solution_1">Math solution</a></li>
 </ul>
 </li>
+<li><a href="#258-add-digits">258. Add Digits</a><ul>
+<li><a href="#math-solution_2">Math Solution</a></li>
+</ul>
+</li>
+<li><a href="#171-excel-sheet-column-number">171. Excel Sheet Column Number</a><ul>
+<li><a href="#on-time">O(n) time</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -6628,6 +6636,42 @@ We can see that the answers repeated in a <code>t t t f</code> pattern. Actually
 <div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">canWinNim</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
         <span class="k">return</span> <span class="n">n</span><span class="o">%</span><span class="mi">4</span><span class="o">!=</span><span class="mi">0</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3 id="258-add-digits">258. Add Digits<a class="headerlink" href="#258-add-digits" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/add-digits/">Link</a></li>
+<li>Tags: Math</li>
+<li>Stars: 3</li>
+</ul>
+<h4 id="math-solution_2">Math Solution<a class="headerlink" href="#math-solution_2" title="Permanent link"></a></h4>
+<p>For num &gt; 0, the possible answer is 1,2,3,4,5,6,7,8,9. These answers occur periodically as num increases. </p>
+<p><strong>For this kinds of questions, if you don&rsquo;t have any idea at first glance, try to write several answers for simple input cases to see if you can find something useful.</strong> </p>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">addDigits</span><span class="o">(</span><span class="kt">int</span> <span class="n">num</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">num</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">return</span> <span class="n">num</span><span class="o">%</span><span class="mi">9</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">9</span> <span class="o">:</span> <span class="n">num</span><span class="o">%</span><span class="mi">9</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3 id="171-excel-sheet-column-number">171. Excel Sheet Column Number<a class="headerlink" href="#171-excel-sheet-column-number" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/excel-sheet-column-number/">Link</a></li>
+<li>Tags: Math</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="on-time">O(n) time<a class="headerlink" href="#on-time" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">titleToNumber</span><span class="o">(</span><span class="n">String</span> <span class="n">s</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">char</span> <span class="n">c</span> <span class="o">:</span> <span class="n">s</span><span class="o">.</span><span class="na">toCharArray</span><span class="o">()){</span>
+            <span class="n">result</span> <span class="o">*=</span> <span class="mi">26</span><span class="o">;</span>
+            <span class="n">result</span> <span class="o">+=</span> <span class="n">c</span> <span class="o">-</span> <span class="sc">&#39;A&#39;</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span>
 </pre></div>

@@ -5085,6 +5085,25 @@ class Solution {
 }
 ```
 
+### 171. Excel Sheet Column Number
+- [Link](https://leetcode.com/problems/excel-sheet-column-number/)
+- Tags: Math
+- Stars: 1
+
+#### O(n) time
+```java
+class Solution {
+    public int titleToNumber(String s) {
+        int result = 0;
+        for(char c : s.toCharArray()){
+            result *= 26;
+            result += c - 'A' + 1;
+        }
+        return result;
+    }
+}
+```
+
 
 # Topics
 
