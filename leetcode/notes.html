@@ -1595,6 +1595,10 @@ body .markdown-body
 <li><a href="#dfs-stringbuilder">DFS + StringBuilder</a></li>
 </ul>
 </li>
+<li><a href="#118-pascals-triangle">118. Pascal&rsquo;s Triangle</a><ul>
+<li><a href="#iterative-adding-row-by-row-beats-100-100">iterative adding row by row, beats 100% 100%!</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -6837,6 +6841,34 @@ We can see that the answers repeated in a <code>t t t f</code> pattern. Actually
             <span class="k">if</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">right</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="n">backtrack</span><span class="o">(</span><span class="n">result</span><span class="o">,</span> <span class="n">root</span><span class="o">.</span><span class="na">right</span><span class="o">,</span> <span class="n">sb</span><span class="o">);</span>
         <span class="o">}</span>
         <span class="n">sb</span><span class="o">.</span><span class="na">delete</span><span class="o">(</span><span class="n">start</span><span class="o">,</span> <span class="n">sb</span><span class="o">.</span><span class="na">length</span><span class="o">());</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3 id="118-pascals-triangle">118. Pascal&rsquo;s Triangle<a class="headerlink" href="#118-pascals-triangle" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/pascals-triangle/">Link</a></li>
+<li>Tags: Array</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="iterative-adding-row-by-row-beats-100-100">iterative adding row by row, beats 100% 100%!<a class="headerlink" href="#iterative-adding-row-by-row-beats-100-100" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="nf">generate</span><span class="o">(</span><span class="kt">int</span> <span class="n">numRows</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">numRows</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">layer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+        <span class="n">layer</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+        <span class="n">result</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">layer</span><span class="o">);</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">level</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span> <span class="n">level</span> <span class="o">&lt;=</span> <span class="n">numRows</span><span class="o">;</span> <span class="n">level</span><span class="o">++){</span>
+            <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">newLayer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+            <span class="n">newLayer</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">layer</span><span class="o">.</span><span class="na">size</span><span class="o">()-</span><span class="mi">1</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+                <span class="n">newLayer</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">layer</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">)</span> <span class="o">+</span> <span class="n">layer</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">));</span>
+            <span class="n">newLayer</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+            <span class="n">result</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">newLayer</span><span class="o">);</span>
+            <span class="n">layer</span> <span class="o">=</span> <span class="n">newLayer</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span>
 </pre></div>

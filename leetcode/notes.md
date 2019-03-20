@@ -5259,6 +5259,34 @@ class Solution {
 }
 ```
 
+### 118. Pascal's Triangle
+- [Link](https://leetcode.com/problems/pascals-triangle/)
+- Tags: Array
+- Stars: 1
+
+#### iterative adding row by row, beats 100% 100%!
+```java
+class Solution {
+    public List<List<Integer>> generate(int numRows) {
+        List<List<Integer>> result = new ArrayList<>();
+        if(numRows == 0) return result;
+        List<Integer> layer = new ArrayList<>();
+        layer.add(1);
+        result.add(layer);
+        for(int level = 2; level <= numRows; level++){
+            List<Integer> newLayer = new ArrayList<>();
+            newLayer.add(1);
+            for(int i=0; i<layer.size()-1; i++)
+                newLayer.add(layer.get(i) + layer.get(i+1));
+            newLayer.add(1);
+            result.add(newLayer);
+            layer = newLayer;
+        }
+        return result;
+    }
+}
+```
+
 # Topics
 
 ## String

@@ -52,7 +52,7 @@
 
 - [x] [257. Binary Tree Paths](https://leetcode.com/problems/binary-tree-paths), 45.2%, Easy
 
-- [ ] [118. Pascal's Triangle](https://leetcode.com/problems/pascals-triangle), 44.8%, Easy
+- [x] [118. Pascal's Triangle](https://leetcode.com/problems/pascals-triangle), 44.8%, Easy
 
 - [ ] [202. Happy Number](https://leetcode.com/problems/happy-number), 44.4%, Easy
 
