@@ -334,6 +334,37 @@ class Solution {
 }
 ```
 
+#### swap sort
+Given a num in `nums`, one can easily know the postion that this num is supposed to be in. 
+
+O(n) sort:  
+```java
+class Solution {
+    public int missingNumber(int[] nums) {
+        int last = -1;
+        for(int i=0; i<nums.length; i++){
+            while(nums[i] != i){
+                if(nums[i] == -1) break;
+                if(nums[i] == nums.length){
+                    last = nums[i];
+                    nums[i] = -1;
+                }
+                else swap(nums, i, nums[i]);
+            }
+        }
+        for(int i=0; i<nums.length; i++){
+            if(i != nums[i]) return i;
+        }
+        return nums.length;
+    }
+    private void swap(int[] nums, int i, int j){
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
+```
+
 ### 121. Best Time to Buy and Sell Stock
 - [Link](https://leetcode.com/problems/best-time-to-buy-and-sell-stock/)
 - Tags: Array, Dynamic Programming
@@ -5104,6 +5135,129 @@ class Solution {
 }
 ```
 
+### 108. Convert Sorted Array to Binary Search Tree
+- [Link](https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/)
+- Tags: Tree, DFS
+- Stars: 1
+
+#### DFS
+```java
+class Solution {
+    public TreeNode sortedArrayToBST(int[] nums) {
+        return sortedArrayToBST(nums, 0, nums.length-1);
+    }
+    public TreeNode sortedArrayToBST(int[] nums, int l, int r) {
+        if(l > r) return null;
+        int mid = l + ((r-l)>>1);
+        TreeNode root = new TreeNode(nums[mid]);
+        root.left = sortedArrayToBST(nums, l, mid-1);
+        root.right = sortedArrayToBST(nums, mid+1, r);
+        return root;
+    }
+}
+```
+
+### 107. Binary Tree Level Order Traversal II
+- [Link](https://leetcode.com/problems/binary-tree-level-order-traversal-ii/)
+- Tags: Tree, BFS
+- Stars: 1
+
+#### BFS + level-count
+```java
+class Solution {
+    public List<List<Integer>> levelOrderBottom(TreeNode root) {
+        List<List<Integer>> result = new ArrayList<>();
+        if(root == null) return result;
+        Queue<TreeNode> qu = new LinkedList<>();
+        qu.add(root);
+        int count = 1;
+        List<Integer> layer = new ArrayList<>();
+        while(!qu.isEmpty()){
+            TreeNode node = qu.poll();
+            count--;
+            if(node.left != null) qu.add(node.left);
+            if(node.right != null) qu.add(node.right);
+            layer.add(node.val);
+            if(count == 0){
+                count = qu.size();
+                result.add(layer);
+                layer = new ArrayList<>();
+            }
+        }
+        Collections.reverse(result);
+        return result;
+    }
+}
+```
+
+#### BFS
+```java
+class Solution {
+    public List<List<Integer>> levelOrderBottom(TreeNode root) {
+        List<List<Integer>> result = new ArrayList<>();
+        if(root == null) return result;
+        DFS(result, root, 0);
+        Collections.reverse(result);
+        return result;
+    }
+    public void DFS(List<List<Integer>> result, TreeNode root, int level) {
+        if(result.size() < level+1) result.add(new ArrayList<>());
+        result.get(level).add(root.val);
+        if(root.left != null) DFS(result, root.left, level+1);
+        if(root.right != null) DFS(result, root.right, level+1);
+    }
+}
+```
+
+### 257. Binary Tree Paths
+- [Link](https://leetcode.com/problems/binary-tree-paths/)
+- Tags: Tree, DFS
+- Stars: 1
+
+#### DFS
+```java
+class Solution {
+    public List<String> binaryTreePaths(TreeNode root) {
+        List<String> result = new ArrayList<>();
+        if(root == null) return result;
+        backtrack(result, root, "");
+        return result;
+    }
+    private void backtrack(List<String> result, TreeNode root, String curr){
+        curr += curr.length() == 0 ? root.val : "->"+root.val;
+        if(root.left == null && root.right == null){
+            result.add(curr);
+            return ;
+        }
+        if(root.left != null) backtrack(result, root.left, curr);
+        if(root.right != null) backtrack(result, root.right, curr);
+    }
+}
+```
+
+#### DFS + StringBuilder
+```java
+class Solution {
+    public List<String> binaryTreePaths(TreeNode root) {
+        List<String> result = new ArrayList<>();
+        if(root == null) return result;
+        backtrack(result, root, new StringBuilder());
+        return result;
+    }
+    private void backtrack(List<String> result, TreeNode root, StringBuilder sb){
+        int start = sb.length();
+        sb.append(sb.length() == 0? root.val : "->" + root.val);
+        if(root.left == null && root.right == null){
+            result.add(sb.toString());
+        }
+        else {
+            if(root.left != null) backtrack(result, root.left, sb);
+            if(root.right != null) backtrack(result, root.right, sb);
+        }
+        sb.delete(start, sb.length());
+    }
+}
+```
 
 # Topics
 

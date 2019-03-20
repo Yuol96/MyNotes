@@ -38,19 +38,19 @@
 
 - [x] [100. Same Tree](https://leetcode.com/problems/same-tree), 49.5%, Easy
 
-- [ ] [108. Convert Sorted Array to Binary Search Tree](https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree), 49.5%, Easy
+- [x] [108. Convert Sorted Array to Binary Search Tree](https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree), 49.5%, Easy
 
 - [ ] [256. Paint House](https://leetcode.com/problems/paint-house), 48.3%, Easy
 
-- [ ] [268. Missing Number](https://leetcode.com/problems/missing-number), 47.7%, Easy
+- [x] [268. Missing Number](https://leetcode.com/problems/missing-number), 47.7%, Easy
 
-- [ ] [121. Best Time to Buy and Sell Stock](https://leetcode.com/problems/best-time-to-buy-and-sell-stock), 46.4%, Easy
+- [x] [121. Best Time to Buy and Sell Stock](https://leetcode.com/problems/best-time-to-buy-and-sell-stock), 46.4%, Easy
 
-- [ ] [21. Merge Two Sorted Lists](https://leetcode.com/problems/merge-two-sorted-lists), 46.1%, Easy
+- [x] [21. Merge Two Sorted Lists](https://leetcode.com/problems/merge-two-sorted-lists), 46.1%, Easy
 
-- [ ] [107. Binary Tree Level Order Traversal II](https://leetcode.com/problems/binary-tree-level-order-traversal-ii), 45.8%, Easy
+- [x] [107. Binary Tree Level Order Traversal II](https://leetcode.com/problems/binary-tree-level-order-traversal-ii), 45.8%, Easy
 
-- [ ] [257. Binary Tree Paths](https://leetcode.com/problems/binary-tree-paths), 45.2%, Easy
+- [x] [257. Binary Tree Paths](https://leetcode.com/problems/binary-tree-paths), 45.2%, Easy
 
 - [ ] [118. Pascal's Triangle](https://leetcode.com/problems/pascals-triangle), 44.8%, Easy
 
