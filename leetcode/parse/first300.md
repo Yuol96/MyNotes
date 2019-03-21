@@ -54,13 +54,13 @@
 
 - [x] [118. Pascal's Triangle](https://leetcode.com/problems/pascals-triangle), 44.8%, Easy
 
-- [ ] [202. Happy Number](https://leetcode.com/problems/happy-number), 44.4%, Easy
+- [x] [202. Happy Number](https://leetcode.com/problems/happy-number), 44.4%, Easy
 
-- [ ] [27. Remove Element](https://leetcode.com/problems/remove-element), 43.8%, Easy
+- [x] [27. Remove Element](https://leetcode.com/problems/remove-element), 43.8%, Easy
 
-- [ ] [235. Lowest Common Ancestor of a Binary Search Tree](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree), 43.7%, Easy
+- [x] [235. Lowest Common Ancestor of a Binary Search Tree](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree), 43.7%, Easy
 
-- [ ] [70. Climbing Stairs](https://leetcode.com/problems/climbing-stairs), 43.6%, Easy
+- [x] [70. Climbing Stairs](https://leetcode.com/problems/climbing-stairs), 43.6%, Easy
 
 - [ ] [270. Closest Binary Search Tree Value](https://leetcode.com/problems/closest-binary-search-tree-value), 43.3%, Easy
 

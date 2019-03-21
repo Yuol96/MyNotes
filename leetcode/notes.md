@@ -2742,6 +2742,25 @@ class Solution {
 }
 ```
 
+### 235. Lowest Common Ancestor of a Binary Search Tree
+- [Link](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/)
+- Tags: Tree
+- Stars: 1
+
+#### BST, beats 100%
+Please refer to **236**.
+```java
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if(root == null) return null;
+        if(p.val > q.val) return lowestCommonAncestor(root, q, p);
+        if(root.val < p.val) return lowestCommonAncestor(root.right, p, q);
+        if(root.val > q.val) return lowestCommonAncestor(root.left, p, q);
+        return root;
+    }
+}
+```
+
 ### 139. Word Break
 - [Link](https://leetcode.com/problems/word-break/)
 - Tags: Dynamic Programming
@@ -5283,6 +5302,43 @@ class Solution {
             layer = newLayer;
         }
         return result;
+    }
+}
+```
+
+### 27. Remove Element
+- [Link](https://leetcode.com/problems/remove-element/)
+- Tags: Array, Two Pointers
+- Stars: 1
+
+#### remove and swap with the last element, beats 100% in time
+```java
+class Solution {
+    public int removeElement(int[] nums, int val) {
+        if(nums.length == 0) return 0;
+        int i=0, j = nums.length-1;
+        while(i<=j){
+            if(nums[i] != val) i++;
+            else swap(nums, i, j--);
+        }
+        return j+1;
+    }
+    private void swap(int[] nums, int i, int j){
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
+```
+
+#### similar to [283. Move Zeroes](#283. Move Zeroes), keeps nums in order
+```java
+class Solution {
+    public int removeElement(int[] nums, int val) {
+        int p = 0;
+        for(int i=0; i<nums.length; i++)
+            if(nums[i] != val) nums[p++] = nums[i];
+        return p;
     }
 }
 ```
