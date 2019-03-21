@@ -5343,6 +5343,43 @@ class Solution {
 }
 ```
 
+### 119. Pascal's Triangle II
+- [Link](https://leetcode.com/problems/pascals-triangle-ii/)
+- Tags: Array
+- Stars: 2
+
+#### ArrayList insert
+```java
+class Solution {
+    public List<Integer> getRow(int rowIndex) {
+        List<Integer> result = new ArrayList<>();
+        result.add(1);
+        for(int i=1; i<=rowIndex; i++){
+            result.add(0, 0);
+            for(int j=0; j<result.size()-1; j++)
+                result.set(j, result.get(j) + result.get(j+1));
+        }
+        return result;
+    }
+}
+```
+
+#### Faster solution
+Avoid inserting elements into the head during iteration. 
+```java
+class Solution {
+    public List<Integer> getRow(int rowIndex) {
+        Integer[] result = new Integer[rowIndex+1];
+        result[rowIndex] = 1;
+        for(int i=rowIndex-1; i>=0; i--){
+            for(int j=i; j<rowIndex; j++)
+                result[j] = result[j] == null? result[j+1] : result[j] + result[j+1];
+        }
+        return Arrays.asList(result);
+    }
+}
+```
+
 # Topics
 
 ## String
@@ -6109,20 +6146,14 @@ class Solution {
 #### HashMap
 ```java
 class Solution {
-    HashMap<Integer, Integer> map;
-    
     public int[] twoSum(int[] nums, int target) {
-        map = new HashMap<Integer, Integer>();
+        HashMap<Integer, Integer> map = new HashMap<>();
         for(int i=0; i<nums.length; i++){
-            if(map.containsKey(target-nums[i])){
-                int[] ret = {map.get(target-nums[i]), i};
-                return ret;
-            }
-            else {
-                map.put(nums[i], i);
-            }
+            if(map.containsKey(target-nums[i]))
+                return new int[] {map.get(target-nums[i]), i};
+            map.put(nums[i], i);
         }
-        return null;
+        throw new IllegalArgumentException("No two sum solution");
     }
 }
 ```

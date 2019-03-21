@@ -64,13 +64,13 @@
 
 - [ ] [270. Closest Binary Search Tree Value](https://leetcode.com/problems/closest-binary-search-tree-value), 43.3%, Easy
 
-- [ ] [53. Maximum Subarray](https://leetcode.com/problems/maximum-subarray), 43.0%, Easy
+- [x] [53. Maximum Subarray](https://leetcode.com/problems/maximum-subarray), 43.0%, Easy
 
-- [ ] [101. Symmetric Tree](https://leetcode.com/problems/symmetric-tree), 42.9%, Easy
+- [x] [101. Symmetric Tree](https://leetcode.com/problems/symmetric-tree), 42.9%, Easy
 
-- [ ] [1. Two Sum](https://leetcode.com/problems/two-sum), 42.5%, Easy
+- [x] [1. Two Sum](https://leetcode.com/problems/two-sum), 42.5%, Easy
 
-- [ ] [119. Pascal's Triangle II](https://leetcode.com/problems/pascals-triangle-ii), 42.4%, Easy
+- [x] [119. Pascal's Triangle II](https://leetcode.com/problems/pascals-triangle-ii), 42.4%, Easy
 
 - [ ] [232. Implement Queue using Stacks](https://leetcode.com/problems/implement-queue-using-stacks), 42.3%, Easy
 
