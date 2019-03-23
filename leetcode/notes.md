@@ -5380,6 +5380,205 @@ class Solution {
 }
 ```
 
+### 232. Implement Queue using Stacks
+- [Link](https://leetcode.com/problems/implement-queue-using-stacks/)
+- Tags: Stack, Design
+- Stars: 1
+
+#### two stacks
+```java
+import java.util.EmptyStackException;
+class MyQueue {
+    Stack<Integer> st1, st2;
+    public MyQueue() {
+        st1 = new Stack<>();
+        st2 = new Stack<>();
+    }    
+    public void push(int x) {
+        st1.add(x);
+    }
+    public int pop() {
+        if(st2.isEmpty()){
+            if(st1.isEmpty()) throw new EmptyStackException();
+            while(!st1.isEmpty()) st2.add(st1.pop());
+        }
+        return st2.pop();
+    }
+    public int peek() {
+        if(st2.isEmpty()){
+            if(st1.isEmpty()) throw new EmptyStackException();
+            while(!st1.isEmpty()) st2.add(st1.pop());
+        }
+        return st2.peek();
+    }
+    public boolean empty() {
+        return st1.isEmpty() && st2.isEmpty();
+    }
+}
+ ```
+
+### 191. Number of 1 Bits
+- [Link](https://leetcode.com/problems/number-of-1-bits/)
+- Tags: Bit Manipulation
+- Stars: 1
+
+#### bit manipulation, beats 100% time and 100% space
+```java
+public class Solution {
+    public int hammingWeight(int n) {
+        n = (n&0x55555555) + ((n&0xAAAAAAAA)>>>1);
+        n = (n&0x33333333) + ((n&0xCCCCCCCC)>>>2);
+        n = (n&0x0F0F0F0F) + ((n&0xF0F0F0F0)>>>4);
+        n = (n&0x00FF00FF) + ((n&0xFF00FF00)>>>8);
+        n = (n&0x0000FFFF) + ((n&0xFFFF0000)>>>16);
+        return n;
+    }
+}
+```
+
+### 83. Remove Duplicates from Sorted List
+- [Link](https://leetcode.com/problems/remove-duplicates-from-sorted-list/)
+- Tags: Linked List
+- Stars: 1
+
+#### O(n) time
+```java
+class Solution {
+    public ListNode deleteDuplicates(ListNode head) {
+        if(head == null) return null;
+        ListNode curr = head;
+        while(curr.next != null){
+            if(curr.next.val == curr.val) curr.next = curr.next.next;
+            else curr = curr.next;
+        }
+        return head;
+    }
+}
+```
+
+### 231. Power of Two
+- [Link](https://leetcode.com/problems/power-of-two/)
+- Tags: Math, Bit Manipulation
+- Stars: 1
+- References: https://leetcode.com/problems/power-of-two/discuss/63966/4-different-ways-to-solve-Iterative-Recursive-Bit-operation-Math
+
+#### math
+Refer to [Power of Three](#326-power-of-three)
+```java
+class Solution {
+    public boolean isPowerOfTwo(int n) {
+        return (n > 0) && (1073741824%n == 0);
+    }
+}
+```
+
+#### bit manipulation
+```java
+class Solution {
+    public boolean isPowerOfTwo(int n) {
+        return (n>0) && (n&(n-1)) == 0;
+    }
+}
+```
+
+### 35. Search Insert Position
+- [Link](https://leetcode.com/problems/search-insert-position/)
+- Tags: Array, Binary Search
+- Stars: 1
+
+#### lower bound binary search insertion
+```java
+class Solution {
+    public int searchInsert(int[] nums, int target) {
+        int l = 0, r = nums.length;
+        while(l<r){
+            int mid = l + ((r-l)>>1);
+            if(nums[mid] == target) return mid;
+            else if(nums[mid] < target) l = mid+1;
+            else r = mid;
+        }
+        return l;
+    }
+}
+```
+
+### 110. Balanced Binary Tree
+- [Link](https://leetcode.com/problems/balanced-binary-tree/)
+- Tags: Tree, DFS
+- Stars: 1
+
+#### DFS
+```java
+class Solution {
+    boolean result = true;
+    public boolean isBalanced(TreeNode root) {
+        DFS(root);
+        return result;
+    }
+    private int DFS(TreeNode root){
+        if(root == null) return 0;
+        int left = DFS(root.left), right = DFS(root.right);
+        if(Math.abs(left-right) > 1) result = false;
+        return 1 + Math.max(left, right);
+    }
+}
+```
+
+#### another DFS (without environmental variable)
+```java
+class Solution {
+    public boolean isBalanced(TreeNode root) {
+        return DFS(root) != -1;
+    }
+    private int DFS(TreeNode root){
+        if(root == null) return 0;
+        int left = DFS(root.left);
+        if(left == -1) return -1;
+        int right = DFS(root.right);
+        if(right == -1) return -1;
+        if(Math.abs(left-right) > 1) return -1;
+        return 1 + Math.max(left, right);
+    }
+}
+```
+
+### 263. Ugly Number
+- [Link](https://leetcode.com/problems/ugly-number/)
+- Tags: Math
+- Stars: 1
+
+#### divide
+```java
+class Solution {
+    public boolean isUgly(int num) {
+        if(num == 0) return false;
+        while(num != 0 && num % 2 == 0) num /= 2;
+        while(num != 0 && num % 3 == 0) num /= 3;
+        while(num != 0 && num % 5 == 0) num /= 5;
+        return num == 1 || num == 0;
+    }
+}
+```
+
+### 26. Remove Duplicates from Sorted Array
+- [Link](https://leetcode.com/problems/remove-duplicates-from-sorted-array/)
+- Tags: Array, Two Pointers
+- Stars: 1
+
+#### two pointers
+```java
+class Solution {
+    public int removeDuplicates(int[] nums) {
+        int i=0;
+        for(int num: nums){
+            if(i>0 && nums[i-1] == num) continue;
+            nums[i++] = num;
+        }
+        return i;
+    }
+}
+```
+
 # Topics
 
 ## String

@@ -72,29 +72,29 @@
 
 - [x] [119. Pascal's Triangle II](https://leetcode.com/problems/pascals-triangle-ii), 42.4%, Easy
 
-- [ ] [232. Implement Queue using Stacks](https://leetcode.com/problems/implement-queue-using-stacks), 42.3%, Easy
+- [x] [232. Implement Queue using Stacks](https://leetcode.com/problems/implement-queue-using-stacks), 42.3%, Easy
 
-- [ ] [9. Palindrome Number](https://leetcode.com/problems/palindrome-number), 42.3%, Easy
+- [x] [9. Palindrome Number](https://leetcode.com/problems/palindrome-number), 42.3%, Easy
 
-- [ ] [191. Number of 1 Bits](https://leetcode.com/problems/number-of-1-bits), 42.2%, Easy
+- [x] [191. Number of 1 Bits](https://leetcode.com/problems/number-of-1-bits), 42.2%, Easy
 
-- [ ] [83. Remove Duplicates from Sorted List](https://leetcode.com/problems/remove-duplicates-from-sorted-list), 42.0%, Easy
+- [x] [83. Remove Duplicates from Sorted List](https://leetcode.com/problems/remove-duplicates-from-sorted-list), 42.0%, Easy
 
 - [ ] [246. Strobogrammatic Number](https://leetcode.com/problems/strobogrammatic-number), 41.8%, Easy
 
-- [ ] [231. Power of Two](https://leetcode.com/problems/power-of-two), 41.7%, Easy
+- [x] [231. Power of Two](https://leetcode.com/problems/power-of-two), 41.7%, Easy
 
-- [ ] [198. House Robber](https://leetcode.com/problems/house-robber), 40.8%, Easy
+- [x] [198. House Robber](https://leetcode.com/problems/house-robber), 40.8%, Easy
 
-- [ ] [66. Plus One](https://leetcode.com/problems/plus-one), 40.8%, Easy
+- [x] [66. Plus One](https://leetcode.com/problems/plus-one), 40.8%, Easy
 
-- [ ] [35. Search Insert Position](https://leetcode.com/problems/search-insert-position), 40.5%, Easy
+- [x] [35. Search Insert Position](https://leetcode.com/problems/search-insert-position), 40.5%, Easy
 
-- [ ] [110. Balanced Binary Tree](https://leetcode.com/problems/balanced-binary-tree), 40.5%, Easy
+- [x] [110. Balanced Binary Tree](https://leetcode.com/problems/balanced-binary-tree), 40.5%, Easy
 
-- [ ] [263. Ugly Number](https://leetcode.com/problems/ugly-number), 40.4%, Easy
+- [x] [263. Ugly Number](https://leetcode.com/problems/ugly-number), 40.4%, Easy
 
-- [ ] [26. Remove Duplicates from Sorted Array](https://leetcode.com/problems/remove-duplicates-from-sorted-array), 39.9%, Easy
+- [x] [26. Remove Duplicates from Sorted Array](https://leetcode.com/problems/remove-duplicates-from-sorted-array), 39.9%, Easy
 
 - [ ] [38. Count and Say](https://leetcode.com/problems/count-and-say), 39.7%, Easy
 
