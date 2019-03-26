@@ -1643,6 +1643,23 @@ body .markdown-body
 <li><a href="#two-pointers_1">two pointers</a></li>
 </ul>
 </li>
+<li><a href="#38-count-and-say">38. Count and Say</a><ul>
+<li><a href="#iterative_3">iterative</a></li>
+</ul>
+</li>
+<li><a href="#225-implement-stack-using-queues">225. Implement Stack using Queues</a><ul>
+<li><a href="#one-queue">one queue</a></li>
+<li><a href="#another-one-queue-solution">another one queue solution</a></li>
+</ul>
+</li>
+<li><a href="#67-add-binary">67. Add Binary</a><ul>
+<li><a href="#stringbuilder">StringBuilder</a></li>
+</ul>
+</li>
+<li><a href="#112-path-sum">112. Path Sum</a><ul>
+<li><a href="#dfs_9">DFS</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -1709,7 +1726,7 @@ body .markdown-body
 </ul>
 </li>
 <li><a href="#200-number-of-islands">200. Number of Islands</a><ul>
-<li><a href="#dfs_9">DFS</a></li>
+<li><a href="#dfs_10">DFS</a></li>
 </ul>
 </li>
 <li><a href="#131-palindrome-partitioning">131. Palindrome Partitioning</a><ul>
@@ -1757,7 +1774,7 @@ body .markdown-body
 </ul>
 </li>
 <li><a href="#880-decoded-string-at-index">880. Decoded String at Index</a><ul>
-<li><a href="#iterative_3">Iterative</a></li>
+<li><a href="#iterative_4">Iterative</a></li>
 <li><a href="#recursive_10">recursive</a></li>
 </ul>
 </li>
@@ -7202,6 +7219,136 @@ We can see that the answers repeated in a <code>t t t f</code> pattern. Actually
 <span class="o">}</span>
 </pre></div>
 
+<h3 id="38-count-and-say">38. Count and Say<a class="headerlink" href="#38-count-and-say" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/count-and-say/">Link</a></li>
+<li>Tags: String</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="iterative_3">iterative<a class="headerlink" href="#iterative_3" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">countAndSay</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">String</span> <span class="n">s</span> <span class="o">=</span> <span class="s">&quot;1&quot;</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="k">return</span> <span class="n">s</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">2</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;=</span><span class="n">n</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">getNextString</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">s</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="n">String</span> <span class="nf">getNextString</span><span class="o">(</span><span class="n">String</span> <span class="n">s</span><span class="o">){</span>
+        <span class="n">StringBuilder</span> <span class="n">sb</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="o">();</span>
+        <span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">,</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">s</span><span class="o">.</span><span class="na">length</span><span class="o">();</span> <span class="n">j</span><span class="o">++){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">j</span> <span class="o">==</span> <span class="n">i</span> <span class="o">||</span> <span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">)</span> <span class="o">==</span> <span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">j</span><span class="o">))</span> <span class="k">continue</span><span class="o">;</span>
+            <span class="n">sb</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">j</span><span class="o">-</span><span class="n">i</span><span class="o">);</span>
+            <span class="n">sb</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">));</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">j</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">sb</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">j</span><span class="o">-</span><span class="n">i</span><span class="o">);</span>
+        <span class="n">sb</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">));</span>
+        <span class="k">return</span> <span class="n">sb</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3 id="225-implement-stack-using-queues">225. Implement Stack using Queues<a class="headerlink" href="#225-implement-stack-using-queues" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/implement-stack-using-queues/">Link</a></li>
+<li>Tags: Stack, Design</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="one-queue">one queue<a class="headerlink" href="#one-queue" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">MyStack</span> <span class="o">{</span>
+    <span class="n">Queue</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">qu</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="nf">MyStack</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">qu</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">push</span><span class="o">(</span><span class="kt">int</span> <span class="n">x</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">qu</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">x</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">pop</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">Queue</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">temp</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">qu</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="o">)</span> <span class="n">temp</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">qu</span><span class="o">.</span><span class="na">poll</span><span class="o">());</span>
+        <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">qu</span><span class="o">.</span><span class="na">poll</span><span class="o">();</span>
+        <span class="n">qu</span> <span class="o">=</span> <span class="n">temp</span><span class="o">;</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">top</span><span class="o">()</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">pop</span><span class="o">();</span>
+        <span class="n">qu</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">temp</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">temp</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">empty</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">qu</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h4 id="another-one-queue-solution">another one queue solution<a class="headerlink" href="#another-one-queue-solution" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">MyStack</span> <span class="o">{</span>
+    <span class="n">Queue</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">qu</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="nf">MyStack</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">qu</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">push</span><span class="o">(</span><span class="kt">int</span> <span class="n">x</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">qu</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">x</span><span class="o">);</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">qu</span><span class="o">.</span><span class="na">size</span><span class="o">()-</span><span class="mi">1</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+            <span class="n">qu</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">qu</span><span class="o">.</span><span class="na">poll</span><span class="o">());</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">pop</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">qu</span><span class="o">.</span><span class="na">poll</span><span class="o">();</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">top</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">qu</span><span class="o">.</span><span class="na">peek</span><span class="o">();</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">empty</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">qu</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3 id="67-add-binary">67. Add Binary<a class="headerlink" href="#67-add-binary" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/add-binary/">Link</a></li>
+<li>Tags: Math, String</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="stringbuilder">StringBuilder<a class="headerlink" href="#stringbuilder" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">addBinary</span><span class="o">(</span><span class="n">String</span> <span class="n">a</span><span class="o">,</span> <span class="n">String</span> <span class="n">b</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">StringBuilder</span> <span class="n">sb</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="o">();</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span><span class="o">()-</span><span class="mi">1</span><span class="o">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="na">length</span><span class="o">()-</span><span class="mi">1</span><span class="o">,</span> <span class="n">carry</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">i</span><span class="o">&gt;=</span><span class="mi">0</span> <span class="o">||</span> <span class="n">j</span><span class="o">&gt;=</span><span class="mi">0</span><span class="o">){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">i</span><span class="o">&gt;=</span><span class="mi">0</span><span class="o">)</span> <span class="n">carry</span> <span class="o">+=</span> <span class="n">a</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">--)-</span><span class="sc">&#39;0&#39;</span><span class="o">;</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">j</span><span class="o">&gt;=</span><span class="mi">0</span><span class="o">)</span> <span class="n">carry</span> <span class="o">+=</span> <span class="n">b</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">j</span><span class="o">--)-</span><span class="sc">&#39;0&#39;</span><span class="o">;</span>
+            <span class="n">sb</span><span class="o">.</span><span class="na">insert</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">carry</span><span class="o">&amp;</span><span class="mi">1</span><span class="o">);</span>
+            <span class="n">carry</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">carry</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">sb</span><span class="o">.</span><span class="na">insert</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">carry</span><span class="o">&amp;</span><span class="mi">1</span><span class="o">);</span>
+            <span class="n">carry</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">sb</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3 id="112-path-sum">112. Path Sum<a class="headerlink" href="#112-path-sum" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/path-sum/">Link</a></li>
+<li>Tags: Tree, DFS</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="dfs_9">DFS<a class="headerlink" href="#dfs_9" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasPathSum</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root</span><span class="o">,</span> <span class="kt">int</span> <span class="n">sum</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">root</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">left</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">root</span><span class="o">.</span><span class="na">right</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">root</span><span class="o">.</span><span class="na">val</span> <span class="o">==</span> <span class="n">sum</span><span class="o">)</span> <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="n">sum</span> <span class="o">-=</span> <span class="n">root</span><span class="o">.</span><span class="na">val</span><span class="o">;</span>
+        <span class="k">return</span> <span class="n">hasPathSum</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">left</span><span class="o">,</span> <span class="n">sum</span><span class="o">)</span> <span class="o">||</span> <span class="n">hasPathSum</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">right</span><span class="o">,</span> <span class="n">sum</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
 <h1 id="topics">Topics<a class="headerlink" href="#topics" title="Permanent link"></a></h1>
 <h2 id="string">String<a class="headerlink" href="#string" title="Permanent link"></a></h2>
 <h3 id="557-reverse-words-in-a-string-iii">557. Reverse Words in a String III<a class="headerlink" href="#557-reverse-words-in-a-string-iii" title="Permanent link"></a></h3>
@@ -7700,7 +7847,7 @@ e.g. If both <code>[1,3,3]</code> and <code>[3,1,3]</code> are in the result and
 <li>Tags: DFS, BFS, Union Find</li>
 <li>Stars: 1</li>
 </ul>
-<h4 id="dfs_9">DFS<a class="headerlink" href="#dfs_9" title="Permanent link"></a></h4>
+<h4 id="dfs_10">DFS<a class="headerlink" href="#dfs_10" title="Permanent link"></a></h4>
 <div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="kt">int</span> <span class="nf">numIslands</span><span class="o">(</span><span class="kt">char</span><span class="o">[][]</span> <span class="n">grid</span><span class="o">)</span> <span class="o">{</span>
         <span class="k">if</span><span class="o">(</span><span class="n">grid</span><span class="o">.</span><span class="na">length</span><span class="o">==</span><span class="mi">0</span> <span class="o">||</span> <span class="n">grid</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">length</span><span class="o">==</span><span class="mi">0</span><span class="o">)</span> <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
@@ -8079,7 +8226,7 @@ e.g. If both <code>[1,3,3]</code> and <code>[3,1,3]</code> are in the result and
 <li>Tags: Stack</li>
 <li>Stars: 3</li>
 </ul>
-<h4 id="iterative_3">Iterative<a class="headerlink" href="#iterative_3" title="Permanent link"></a></h4>
+<h4 id="iterative_4">Iterative<a class="headerlink" href="#iterative_4" title="Permanent link"></a></h4>
 <div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="n">String</span> <span class="nf">decodeAtIndex</span><span class="o">(</span><span class="n">String</span> <span class="n">S</span><span class="o">,</span> <span class="kt">int</span> <span class="n">K</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">List</span><span class="o">&lt;</span><span class="n">Tuple</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="n">getTuples</span><span class="o">(</span><span class="n">S</span><span class="o">);</span>

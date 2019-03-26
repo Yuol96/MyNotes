@@ -5579,6 +5579,137 @@ class Solution {
 }
 ```
 
+### 38. Count and Say
+- [Link](https://leetcode.com/problems/count-and-say/)
+- Tags: String
+- Stars: 1
+
+#### iterative
+```java
+class Solution {
+    public String countAndSay(int n) {
+        String s = "1";
+        if(n == 1) return s;
+        for(int i=2; i<=n; i++)
+            s = getNextString(s);
+        return s;
+    }
+    private String getNextString(String s){
+        StringBuilder sb = new StringBuilder();
+        int i=0, j=0;
+        for(; j<s.length(); j++){
+            if(j == i || s.charAt(i) == s.charAt(j)) continue;
+            sb.append(j-i);
+            sb.append(s.charAt(i));
+            i = j;
+        }
+        sb.append(j-i);
+        sb.append(s.charAt(i));
+        return sb.toString();
+    }
+}
+```
+
+### 225. Implement Stack using Queues
+- [Link](https://leetcode.com/problems/implement-stack-using-queues/)
+- Tags: Stack, Design
+- Stars: 1
+
+#### one queue
+```java
+class MyStack {
+    Queue<Integer> qu;
+    public MyStack() {
+        qu = new LinkedList<>();
+    }
+    public void push(int x) {
+        qu.add(x);
+    }
+    public int pop() {
+        Queue<Integer> temp = new LinkedList<>();
+        while(qu.size() > 1) temp.add(qu.poll());
+        int result = qu.poll();
+        qu = temp;
+        return result;
+    }
+    public int top() {
+        int temp = pop();
+        qu.add(temp);
+        return temp;
+    }
+    public boolean empty() {
+        return qu.isEmpty();
+    }
+}
+```
+
+#### another one queue solution
+```java
+class MyStack {
+    Queue<Integer> qu;
+    public MyStack() {
+        qu = new LinkedList<>();
+    }
+    public void push(int x) {
+        qu.add(x);
+        for(int i=0; i<qu.size()-1; i++)
+            qu.add(qu.poll());
+    }
+    public int pop() {
+        return qu.poll();
+    }
+    public int top() {
+        return qu.peek();
+    }
+    public boolean empty() {
+        return qu.isEmpty();
+    }
+}
+```
+
+### 67. Add Binary
+- [Link](https://leetcode.com/problems/add-binary/)
+- Tags: Math, String
+- Stars: 1
+
+#### StringBuilder
+```java
+class Solution {
+    public String addBinary(String a, String b) {
+        StringBuilder sb = new StringBuilder();
+        int i = a.length()-1, j = b.length()-1, carry = 0;
+        while(i>=0 || j>=0){
+            if(i>=0) carry += a.charAt(i--)-'0';
+            if(j>=0) carry += b.charAt(j--)-'0';
+            sb.insert(0, carry&1);
+            carry >>= 1;
+        }
+        while(carry > 0) {
+            sb.insert(0, carry&1);
+            carry >>= 1;
+        }
+        return sb.toString();
+    }
+}
+```
+
+### 112. Path Sum
+- [Link](https://leetcode.com/problems/path-sum/)
+- Tags: Tree, DFS
+- Stars: 1
+
+#### DFS
+```java
+class Solution {
+    public boolean hasPathSum(TreeNode root, int sum) {
+        if(root == null) return false;
+        if(root.left == null && root.right == null && root.val == sum) return true;
+        sum -= root.val;
+        return hasPathSum(root.left, sum) || hasPathSum(root.right, sum);
+    }
+}
+```
+
 # Topics
 
 ## String

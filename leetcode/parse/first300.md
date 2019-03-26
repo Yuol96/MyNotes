@@ -96,15 +96,15 @@
 
 - [x] [26. Remove Duplicates from Sorted Array](https://leetcode.com/problems/remove-duplicates-from-sorted-array), 39.9%, Easy
 
-- [ ] [38. Count and Say](https://leetcode.com/problems/count-and-say), 39.7%, Easy
+- [x] [38. Count and Say](https://leetcode.com/problems/count-and-say), 39.7%, Easy
 
-- [ ] [225. Implement Stack using Queues](https://leetcode.com/problems/implement-stack-using-queues), 38.2%, Easy
+- [x] [225. Implement Stack using Queues](https://leetcode.com/problems/implement-stack-using-queues), 38.2%, Easy
 
-- [ ] [67. Add Binary](https://leetcode.com/problems/add-binary), 38.2%, Easy
+- [x] [67. Add Binary](https://leetcode.com/problems/add-binary), 38.2%, Easy
 
-- [ ] [172. Factorial Trailing Zeroes](https://leetcode.com/problems/factorial-trailing-zeroes), 37.3%, Easy
+- [x] [172. Factorial Trailing Zeroes](https://leetcode.com/problems/factorial-trailing-zeroes), 37.3%, Easy
 
-- [ ] [112. Path Sum](https://leetcode.com/problems/path-sum), 37.2%, Easy
+- [x] [112. Path Sum](https://leetcode.com/problems/path-sum), 37.2%, Easy
 
 - [ ] [205. Isomorphic Strings](https://leetcode.com/problems/isomorphic-strings), 36.8%, Easy
 
