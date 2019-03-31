@@ -106,7 +106,7 @@
 
 - [x] [112. Path Sum](https://leetcode.com/problems/path-sum), 37.2%, Easy
 
-- [ ] [205. Isomorphic Strings](https://leetcode.com/problems/isomorphic-strings), 36.8%, Easy
+- [x] [205. Isomorphic Strings](https://leetcode.com/problems/isomorphic-strings), 36.8%, Easy
 
 - [ ] [276. Paint Fence](https://leetcode.com/problems/paint-fence), 36.2%, Easy
 

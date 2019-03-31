@@ -1660,6 +1660,11 @@ body .markdown-body
 <li><a href="#dfs_9">DFS</a></li>
 </ul>
 </li>
+<li><a href="#205-isomorphic-strings">205. Isomorphic Strings</a><ul>
+<li><a href="#hashmap-only-beats-3692-in-time">HashMap, only beats 36.92% in time</a></li>
+<li><a href="#great-solution-beats-9669-in-time">Great solution! beats 96.69% in time</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -7345,6 +7350,64 @@ We can see that the answers repeated in a <code>t t t f</code> pattern. Actually
         <span class="k">if</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">left</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">root</span><span class="o">.</span><span class="na">right</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">root</span><span class="o">.</span><span class="na">val</span> <span class="o">==</span> <span class="n">sum</span><span class="o">)</span> <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
         <span class="n">sum</span> <span class="o">-=</span> <span class="n">root</span><span class="o">.</span><span class="na">val</span><span class="o">;</span>
         <span class="k">return</span> <span class="n">hasPathSum</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">left</span><span class="o">,</span> <span class="n">sum</span><span class="o">)</span> <span class="o">||</span> <span class="n">hasPathSum</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">right</span><span class="o">,</span> <span class="n">sum</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3 id="205-isomorphic-strings">205. Isomorphic Strings<a class="headerlink" href="#205-isomorphic-strings" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/isomorphic-strings/">Link</a></li>
+<li>Tags: Hash Table</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="hashmap-only-beats-3692-in-time">HashMap, only beats 36.92% in time<a class="headerlink" href="#hashmap-only-beats-3692-in-time" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isIsomorphic</span><span class="o">(</span><span class="n">String</span> <span class="n">s</span><span class="o">,</span> <span class="n">String</span> <span class="n">t</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Character</span><span class="o">,</span> <span class="n">Character</span><span class="o">&gt;</span> <span class="n">map1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;(),</span> <span class="n">map2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">s</span><span class="o">.</span><span class="na">length</span><span class="o">();</span> <span class="n">i</span><span class="o">++){</span>
+            <span class="kt">char</span> <span class="n">c1</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">),</span> <span class="n">c2</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">map1</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">c1</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="n">map2</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">c2</span><span class="o">)){</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">map1</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">c1</span><span class="o">)</span> <span class="o">!=</span> <span class="n">c2</span> <span class="o">||</span> <span class="n">map2</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">c2</span><span class="o">)</span> <span class="o">!=</span> <span class="n">c1</span><span class="o">)</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+                <span class="k">continue</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">map1</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">c1</span><span class="o">)</span> <span class="o">||</span> <span class="n">map2</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">c2</span><span class="o">))</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+            <span class="n">map1</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">c1</span><span class="o">,</span> <span class="n">c2</span><span class="o">);</span>
+            <span class="n">map2</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">c2</span><span class="o">,</span> <span class="n">c1</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="c1">// Similar Idea Using HashMap + HashSet</span>
+<span class="c1">// class Solution {</span>
+<span class="c1">//     public boolean isIsomorphic(String s, String t) {</span>
+<span class="c1">//         HashMap&lt;Character, Character&gt; map = new HashMap&lt;&gt;();</span>
+<span class="c1">//         HashSet&lt;Character&gt; set = new HashSet&lt;&gt;();</span>
+<span class="c1">//         for(int i=0; i&lt;s.length(); i++){</span>
+<span class="c1">//             char c1 = s.charAt(i), c2 = t.charAt(i);</span>
+<span class="c1">//             if(map.containsKey(c1)){</span>
+<span class="c1">//                 if(!set.contains(c2) || map.get(c1) != c2) return false;</span>
+<span class="c1">//                 continue;</span>
+<span class="c1">//             }</span>
+<span class="c1">//             if(set.contains(c2)) return false;</span>
+<span class="c1">//             map.put(c1, c2);</span>
+<span class="c1">//             set.add(c2);</span>
+<span class="c1">//         }</span>
+<span class="c1">//         return true;</span>
+<span class="c1">//     }</span>
+<span class="c1">// }</span>
+</pre></div>
+
+<h4 id="great-solution-beats-9669-in-time">Great solution! beats 96.69% in time<a class="headerlink" href="#great-solution-beats-9669-in-time" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isIsomorphic</span><span class="o">(</span><span class="n">String</span> <span class="n">s</span><span class="o">,</span> <span class="n">String</span> <span class="n">t</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">m</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="mi">256</span><span class="o">],</span> <span class="n">n</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="mi">256</span><span class="o">];</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">s</span><span class="o">.</span><span class="na">length</span><span class="o">();</span> <span class="n">i</span><span class="o">++){</span>
+            <span class="kt">char</span> <span class="n">c1</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">),</span> <span class="n">c2</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">m</span><span class="o">[</span><span class="n">c1</span><span class="o">]</span> <span class="o">!=</span> <span class="n">n</span><span class="o">[</span><span class="n">c2</span><span class="o">])</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+            <span class="n">m</span><span class="o">[</span><span class="n">c1</span><span class="o">]</span> <span class="o">=</span> <span class="n">n</span><span class="o">[</span><span class="n">c2</span><span class="o">]</span> <span class="o">=</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span>
 </pre></div>

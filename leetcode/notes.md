@@ -5710,6 +5710,65 @@ class Solution {
 }
 ```
 
+### 205. Isomorphic Strings
+- [Link](https://leetcode.com/problems/isomorphic-strings/)
+- Tags: Hash Table
+- Stars: 1
+
+#### HashMap, only beats 36.92% in time
+```java
+class Solution {
+    public boolean isIsomorphic(String s, String t) {
+        HashMap<Character, Character> map1 = new HashMap<>(), map2 = new HashMap<>();
+        for(int i=0; i<s.length(); i++){
+            char c1 = s.charAt(i), c2 = t.charAt(i);
+            if(map1.containsKey(c1) && map2.containsKey(c2)){
+                if(map1.get(c1) != c2 || map2.get(c2) != c1) return false;
+                continue;
+            }
+            if(map1.containsKey(c1) || map2.containsKey(c2)) return false;
+            map1.put(c1, c2);
+            map2.put(c2, c1);
+        }
+        return true;
+    }
+}
+
+// Similar Idea Using HashMap + HashSet
+// class Solution {
+//     public boolean isIsomorphic(String s, String t) {
+//         HashMap<Character, Character> map = new HashMap<>();
+//         HashSet<Character> set = new HashSet<>();
+//         for(int i=0; i<s.length(); i++){
+//             char c1 = s.charAt(i), c2 = t.charAt(i);
+//             if(map.containsKey(c1)){
+//                 if(!set.contains(c2) || map.get(c1) != c2) return false;
+//                 continue;
+//             }
+//             if(set.contains(c2)) return false;
+//             map.put(c1, c2);
+//             set.add(c2);
+//         }
+//         return true;
+//     }
+// }
+```
+
+#### Great solution! beats 96.69% in time
+```java
+class Solution {
+    public boolean isIsomorphic(String s, String t) {
+        int[] m = new int[256], n = new int[256];
+        for(int i=0; i<s.length(); i++){
+            char c1 = s.charAt(i), c2 = t.charAt(i);
+            if(m[c1] != n[c2]) return false;
+            m[c1] = n[c2] = i+1;
+        }
+        return true;
+    }
+}
+```
+
 # Topics
 
 ## String
