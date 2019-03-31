@@ -110,19 +110,19 @@
 
 - [ ] [276. Paint Fence](https://leetcode.com/problems/paint-fence), 36.2%, Easy
 
-- [ ] [20. Valid Parentheses](https://leetcode.com/problems/valid-parentheses), 36.0%, Easy
+- [x] [20. Valid Parentheses](https://leetcode.com/problems/valid-parentheses), 36.0%, Easy
 
-- [ ] [141. Linked List Cycle](https://leetcode.com/problems/linked-list-cycle), 36.0%, Easy
+- [x] [141. Linked List Cycle](https://leetcode.com/problems/linked-list-cycle), 36.0%, Easy
 
-- [ ] [155. Min Stack](https://leetcode.com/problems/min-stack), 35.9%, Easy
+- [x] [155. Min Stack](https://leetcode.com/problems/min-stack), 35.9%, Easy
 
-- [ ] [234. Palindrome Linked List](https://leetcode.com/problems/palindrome-linked-list), 35.5%, Easy
+- [x] [234. Palindrome Linked List](https://leetcode.com/problems/palindrome-linked-list), 35.5%, Easy
 
-- [ ] [203. Remove Linked List Elements](https://leetcode.com/problems/remove-linked-list-elements), 35.4%, Easy
+- [x] [203. Remove Linked List Elements](https://leetcode.com/problems/remove-linked-list-elements), 35.4%, Easy
 
-- [ ] [88. Merge Sorted Array](https://leetcode.com/problems/merge-sorted-array), 35.0%, Easy
+- [x] [88. Merge Sorted Array](https://leetcode.com/problems/merge-sorted-array), 35.0%, Easy
 
-- [ ] [111. Minimum Depth of Binary Tree](https://leetcode.com/problems/minimum-depth-of-binary-tree), 34.9%, Easy
+- [x] [111. Minimum Depth of Binary Tree](https://leetcode.com/problems/minimum-depth-of-binary-tree), 34.9%, Easy
 
 - [ ] [219. Contains Duplicate II](https://leetcode.com/problems/contains-duplicate-ii), 34.8%, Easy
 

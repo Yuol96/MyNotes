@@ -5769,6 +5769,94 @@ class Solution {
 }
 ```
 
+### 203. Remove Linked List Elements
+- [Link](https://leetcode.com/problems/remove-linked-list-elements/)
+- Tags: Linked List
+- Stars: 2
+
+#### partial recursive solution, beats 100% in time
+```java
+class Solution {
+    public ListNode removeElements(ListNode head, int val) {
+        if(head == null) return null;
+        if(head.val == val) return removeElements(head.next, val);
+        ListNode curr = head;
+        while(curr.next != null) {
+            ListNode next = curr.next;
+            if(next.val == val) curr.next = next.next;
+            else curr = curr.next;
+        }
+        return head;
+    }
+}
+```
+
+#### recursive solution, beats 99.94% in time
+```java
+class Solution {
+    public ListNode removeElements(ListNode head, int val) {
+        if(head == null) return null;
+        head.next = removeElements(head.next, val);
+        return head.val == val ? head.next : head;
+    }
+}
+```
+
+#### iterative solution, beats 99.94% in time
+```java
+class Solution {
+    public ListNode removeElements(ListNode head, int val) {
+        ListNode fakeHead = new ListNode(0);
+        fakeHead.next = head;
+        ListNode curr = fakeHead;
+        while(curr.next != null) {
+            ListNode next = curr.next;
+            if(next.val == val) curr.next = next.next;
+            else curr = curr.next;
+        }
+        return fakeHead.next;
+    }
+}
+```
+
+### 88. Merge Sorted Array
+- [Link](https://leetcode.com/problems/merge-sorted-array/)
+- Tags: Array, Two Pointers
+- Stars: 1
+
+#### two pointers
+```java
+class Solution {
+    public void merge(int[] nums1, int m, int[] nums2, int n) {
+        int i=m-1, j=n-1, k=m+n-1;
+        while(i>=0 && j>=0) {
+            if(nums2[j] > nums1[i]) nums1[k--] = nums2[j--];
+            else nums1[k--] = nums1[i--];
+        }
+        while(j >= 0) nums1[k--] = nums2[j--];
+    }
+}
+```
+
+### 111. Minimum Depth of Binary Tree
+- [Link](https://leetcode.com/problems/minimum-depth-of-binary-tree/)
+- Tags: Tree, BFS, DFS
+- Stars: 2
+
+#### DFS
+```java
+class Solution {
+    public int minDepth(TreeNode root) {
+        if(root == null) return 0;
+        if(root.left == null && root.right == null) return 1;
+        int result = Integer.MAX_VALUE;
+        if(root.left != null) result = minDepth(root.left);
+        if(root.right != null) result = Math.min(minDepth(root.right), result);
+        return result + 1;
+    }
+}
+```
+
 # Topics
 
 ## String
