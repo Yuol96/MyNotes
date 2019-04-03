@@ -124,23 +124,23 @@
 
 - [x] [111. Minimum Depth of Binary Tree](https://leetcode.com/problems/minimum-depth-of-binary-tree), 34.9%, Easy
 
-- [ ] [219. Contains Duplicate II](https://leetcode.com/problems/contains-duplicate-ii), 34.8%, Easy
+- [x] [219. Contains Duplicate II](https://leetcode.com/problems/contains-duplicate-ii), 34.8%, Easy
 
-- [ ] [290. Word Pattern](https://leetcode.com/problems/word-pattern), 34.6%, Easy
+- [x] [290. Word Pattern](https://leetcode.com/problems/word-pattern), 34.6%, Easy
 
-- [ ] [14. Longest Common Prefix](https://leetcode.com/problems/longest-common-prefix), 33.1%, Easy
+- [x] [14. Longest Common Prefix](https://leetcode.com/problems/longest-common-prefix), 33.1%, Easy
 
-- [ ] [160. Intersection of Two Linked Lists](https://leetcode.com/problems/intersection-of-two-linked-lists), 32.6%, Easy
+- [x] [160. Intersection of Two Linked Lists](https://leetcode.com/problems/intersection-of-two-linked-lists), 32.6%, Easy
 
-- [ ] [58. Length of Last Word](https://leetcode.com/problems/length-of-last-word), 32.2%, Easy
+- [x] [58. Length of Last Word](https://leetcode.com/problems/length-of-last-word), 32.2%, Easy
 
-- [ ] [28. Implement strStr()](https://leetcode.com/problems/implement-strstr), 31.4%, Easy
+- [ ] [28. Implement strStr()](https://leetcode.com/problems/implement-strstr), 31.4%, Easy, <span style="color: red;">skipped for later review</span>
 
-- [ ] [69. Sqrt(x)](https://leetcode.com/problems/sqrtx), 30.8%, Easy
+- [x] [69. Sqrt(x)](https://leetcode.com/problems/sqrtx), 30.8%, Easy
 
-- [ ] [190. Reverse Bits](https://leetcode.com/problems/reverse-bits), 30.4%, Easy
+- [x] [190. Reverse Bits](https://leetcode.com/problems/reverse-bits), 30.4%, Easy
 
-- [ ] [125. Valid Palindrome](https://leetcode.com/problems/valid-palindrome), 30.4%, Easy
+- [x] [125. Valid Palindrome](https://leetcode.com/problems/valid-palindrome), 30.4%, Easy
 
 - [ ] [170. Two Sum III - Data structure design](https://leetcode.com/problems/two-sum-iii-data-structure-design), 29.8%, Easy
 

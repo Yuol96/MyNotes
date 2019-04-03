@@ -998,16 +998,15 @@ class Solution {
 
 #### turning into a loop
 We don't need to know the length of each lists. We just want to ensure that two pointers reach the intersection point at the same time. 
+
+Notice that `a` and `b` will eventually be `null` if the two linked lists have no intersection. Therefore, we have no need to worry about infinite loop problem. 
 ```java
 public class Solution {
     public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
         ListNode a = headA, b = headB;
-        while(true){
-            if(a == b) break;
-            if(a != null) a = a.next;
-            else a = headB;
-            if(b != null) b = b.next;
-            else b = headA;
+        while(a != b) {
+            a = a == null ? headB : a.next;
+            b = b == null ? headA : b.next;
         }
         return a;
     }
@@ -3980,11 +3979,11 @@ class Solution {
 ```java
 class Solution {
     public int mySqrt(int x) {
-        int l=0, r=46340;
-        while(l+1 < r){
+        int l = 0, r = 46340;
+        while(l+1<r) {
             int mid = l + ((r-l)>>1);
             if(mid*mid == x) return mid;
-            else if (mid*mid > x) r = mid;
+            else if(mid*mid > x) r = mid-1;
             else l = mid;
         }
         if(r*r <= x) return r;
@@ -5853,6 +5852,87 @@ class Solution {
         if(root.left != null) result = minDepth(root.left);
         if(root.right != null) result = Math.min(minDepth(root.right), result);
         return result + 1;
+    }
+}
+```
+
+### 219. Contains Duplicate II
+- [Link](https://leetcode.com/problems/contains-duplicate-ii/)
+- Tags: Array, Hash Table
+- Stars: 1
+
+#### HashSet
+```java
+class Solution {
+    public boolean containsNearbyDuplicate(int[] nums, int k) {
+        HashSet<Integer> set = new HashSet<>();
+        for(int i=0; i<nums.length; i++) {
+            if(!set.add(nums[i])) return true;
+            if(set.size() > k) set.remove(nums[i-k]);
+        }
+        return false;
+    }
+}
+```
+
+### 290. Word Pattern
+- [Link](https://leetcode.com/problems/word-pattern/)
+- Tags: Hash Table
+- Stars: 1
+
+#### HashMap mapping
+```java
+class Solution {
+    public boolean wordPattern(String pattern, String str) {
+        String[] char2word = new String[26];
+        HashMap<String, Integer> word2char = new HashMap<>();
+        String[] words = str.split(" ");
+        if(pattern.length() != words.length) return false;
+        for(int i=0; i<words.length; i++) {
+            if(char2word[pattern.charAt(i)-'a'] == null && 
+               !word2char.containsKey(words[i])) {
+                char2word[pattern.charAt(i)-'a'] = words[i];
+                word2char.put(words[i], pattern.charAt(i)-'a');
+            }
+            else if(char2word[pattern.charAt(i)-'a'] == null || 
+                    !word2char.containsKey(words[i])) 
+                return false;
+            else if(!char2word[pattern.charAt(i)-'a'].equals(words[i]) ||
+                    word2char.get(words[i]) != pattern.charAt(i)-'a')
+                return false;
+        }
+        return true;
+    }
+}
+```
+
+### 58. Length of Last Word
+- [Link](https://leetcode.com/problems/length-of-last-word/)
+- Tags: String
+- Stars: 1
+
+#### beats 100% in time
+```java
+class Solution {
+    public int lengthOfLastWord(String s) {
+        int i = s.length() - 1;
+        while(i>=0 && s.charAt(i) == ' ') i--;
+        if(i<0) return 0;
+        int j = i-1;
+        while(j>=0 && s.charAt(j) != ' ') j--;
+        return i-j;
+    }
+}
+```
+
+#### String.split()
+```java
+class Solution {
+    public int lengthOfLastWord(String s) {
+        String[] list = s.split(" ");
+        for(int i=list.length-1; i>=0; i--) 
+            if(list[i].length() != 0) return list[i].length();
+        return 0;
     }
 }
 ```
