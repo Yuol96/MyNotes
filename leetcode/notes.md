@@ -5937,6 +5937,101 @@ class Solution {
 }
 ```
 
+### 168. Excel Sheet Column Title
+- [Link](https://leetcode.com/problems/excel-sheet-column-title/)
+- Tags: Math
+- Stars: 2
+
+#### shifted divide
+```java
+class Solution {
+    public String convertToTitle(int n) {
+        StringBuilder sb = new StringBuilder();
+        while(true) {
+            if(n == 0) break;
+            n--;
+            sb.insert(0, (char)(n%26 + 'A'));
+            n /= 26;
+        }
+        return sb.toString();
+    }
+}
+```
+
+#### recursive shifted divide
+```java
+class Solution {
+    public String convertToTitle(int n) {
+        return n == 0 ? "" : convertToTitle(--n/26) + (char)(n%26 + 'A');
+    }
+}
+```
+
+### 204. Count Primes
+- [Link](https://leetcode.com/problems/count-primes/)
+- Tags: Hash Table, Math
+- Stars: 1
+
+#### O(n) time
+```java
+class Solution {
+    public int countPrimes(int n) {
+        if(n<2) return 0;
+        boolean[] arr = new boolean[n];
+        Arrays.fill(arr, true);
+        int result = 0;
+        for(int i=2; i<arr.length; i++) {
+            if(arr[i]){
+                result++;
+                for(int j=i*2; j<arr.length; j+=i) arr[j] = false;
+            }
+        }
+        return result;
+    }
+}
+```
+
+### 7. Reverse Integer
+- [Link](https://leetcode.com/problems/reverse-integer/)
+- Tags: Math
+- Stars: 1
+
+#### convert to long integer
+```java
+class Solution {
+    public int reverse(int x) {
+        long result = 0, num = (long)x;
+        int sign = x < 0 ? -1 : 1;
+        num *= sign;
+        while(num > 0) {
+            result *= 10;
+            result += num%10;
+            num /= 10;
+        }
+        result *= sign;
+        if(result < Integer.MIN_VALUE || result > Integer.MAX_VALUE)
+            return 0;
+        return (int)result;
+    }
+}
+```
+
+#### Great Solution! no Long, no sign, check overflow in each iteration
+```java
+class Solution {
+    public int reverse(int x) {
+        int result = 0;
+        while(x != 0) {
+            int newResult = result*10 + x%10;
+            if((newResult - x%10)/10 != result) return 0;
+            result = newResult;
+            x /= 10;
+        }
+        return result;
+    }
+}
+```
+
 # Topics
 
 ## String

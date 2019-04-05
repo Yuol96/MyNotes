@@ -1692,6 +1692,20 @@ body .markdown-body
 <li><a href="#stringsplit">String.split()</a></li>
 </ul>
 </li>
+<li><a href="#168-excel-sheet-column-title">168. Excel Sheet Column Title</a><ul>
+<li><a href="#shifted-divide">shifted divide</a></li>
+<li><a href="#recursive-shifted-divide">recursive shifted divide</a></li>
+</ul>
+</li>
+<li><a href="#204-count-primes">204. Count Primes</a><ul>
+<li><a href="#on-time_2">O(n) time</a></li>
+</ul>
+</li>
+<li><a href="#7-reverse-integer">7. Reverse Integer</a><ul>
+<li><a href="#convert-to-long-integer">convert to long integer</a></li>
+<li><a href="#great-solution-no-long-no-sign-check-overflow-in-each-iteration">Great Solution! no Long, no sign, check overflow in each iteration</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -7599,6 +7613,99 @@ We can see that the answers repeated in a <code>t t t f</code> pattern. Actually
         <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">list</span><span class="o">.</span><span class="na">length</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span> <span class="n">i</span><span class="o">&gt;=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">--)</span> 
             <span class="k">if</span><span class="o">(</span><span class="n">list</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">length</span><span class="o">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">)</span> <span class="k">return</span> <span class="n">list</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">length</span><span class="o">();</span>
         <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3 id="168-excel-sheet-column-title">168. Excel Sheet Column Title<a class="headerlink" href="#168-excel-sheet-column-title" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/excel-sheet-column-title/">Link</a></li>
+<li>Tags: Math</li>
+<li>Stars: 2</li>
+</ul>
+<h4 id="shifted-divide">shifted divide<a class="headerlink" href="#shifted-divide" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">convertToTitle</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">StringBuilder</span> <span class="n">sb</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="o">();</span>
+        <span class="k">while</span><span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="k">break</span><span class="o">;</span>
+            <span class="n">n</span><span class="o">--;</span>
+            <span class="n">sb</span><span class="o">.</span><span class="na">insert</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="o">(</span><span class="kt">char</span><span class="o">)(</span><span class="n">n</span><span class="o">%</span><span class="mi">26</span> <span class="o">+</span> <span class="sc">&#39;A&#39;</span><span class="o">));</span>
+            <span class="n">n</span> <span class="o">/=</span> <span class="mi">26</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">sb</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h4 id="recursive-shifted-divide">recursive shifted divide<a class="headerlink" href="#recursive-shifted-divide" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">convertToTitle</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="s">&quot;&quot;</span> <span class="o">:</span> <span class="n">convertToTitle</span><span class="o">(--</span><span class="n">n</span><span class="o">/</span><span class="mi">26</span><span class="o">)</span> <span class="o">+</span> <span class="o">(</span><span class="kt">char</span><span class="o">)(</span><span class="n">n</span><span class="o">%</span><span class="mi">26</span> <span class="o">+</span> <span class="sc">&#39;A&#39;</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3 id="204-count-primes">204. Count Primes<a class="headerlink" href="#204-count-primes" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/count-primes/">Link</a></li>
+<li>Tags: Hash Table, Math</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="on-time_2">O(n) time<a class="headerlink" href="#on-time_2" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">countPrimes</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">n</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">)</span> <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="kt">boolean</span><span class="o">[]</span> <span class="n">arr</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">boolean</span><span class="o">[</span><span class="n">n</span><span class="o">];</span>
+        <span class="n">Arrays</span><span class="o">.</span><span class="na">fill</span><span class="o">(</span><span class="n">arr</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">2</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">arr</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]){</span>
+                <span class="n">result</span><span class="o">++;</span>
+                <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="o">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">arr</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">j</span><span class="o">+=</span><span class="n">i</span><span class="o">)</span> <span class="n">arr</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3 id="7-reverse-integer">7. Reverse Integer<a class="headerlink" href="#7-reverse-integer" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/reverse-integer/">Link</a></li>
+<li>Tags: Math</li>
+<li>Stars: 1</li>
+</ul>
+<h4 id="convert-to-long-integer">convert to long integer<a class="headerlink" href="#convert-to-long-integer" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">reverse</span><span class="o">(</span><span class="kt">int</span> <span class="n">x</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">long</span> <span class="n">result</span> <span class="o">=</span> <span class="mi">0</span><span class="o">,</span> <span class="n">num</span> <span class="o">=</span> <span class="o">(</span><span class="kt">long</span><span class="o">)</span><span class="n">x</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">sign</span> <span class="o">=</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="o">-</span><span class="mi">1</span> <span class="o">:</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="n">num</span> <span class="o">*=</span> <span class="n">sign</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">num</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">result</span> <span class="o">*=</span> <span class="mi">10</span><span class="o">;</span>
+            <span class="n">result</span> <span class="o">+=</span> <span class="n">num</span><span class="o">%</span><span class="mi">10</span><span class="o">;</span>
+            <span class="n">num</span> <span class="o">/=</span> <span class="mi">10</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">result</span> <span class="o">*=</span> <span class="n">sign</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">result</span> <span class="o">&lt;</span> <span class="n">Integer</span><span class="o">.</span><span class="na">MIN_VALUE</span> <span class="o">||</span> <span class="n">result</span> <span class="o">&gt;</span> <span class="n">Integer</span><span class="o">.</span><span class="na">MAX_VALUE</span><span class="o">)</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">return</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span><span class="n">result</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h4 id="great-solution-no-long-no-sign-check-overflow-in-each-iteration">Great Solution! no Long, no sign, check overflow in each iteration<a class="headerlink" href="#great-solution-no-long-no-sign-check-overflow-in-each-iteration" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">reverse</span><span class="o">(</span><span class="kt">int</span> <span class="n">x</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">x</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="kt">int</span> <span class="n">newResult</span> <span class="o">=</span> <span class="n">result</span><span class="o">*</span><span class="mi">10</span> <span class="o">+</span> <span class="n">x</span><span class="o">%</span><span class="mi">10</span><span class="o">;</span>
+            <span class="k">if</span><span class="o">((</span><span class="n">newResult</span> <span class="o">-</span> <span class="n">x</span><span class="o">%</span><span class="mi">10</span><span class="o">)/</span><span class="mi">10</span> <span class="o">!=</span> <span class="n">result</span><span class="o">)</span> <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">newResult</span><span class="o">;</span>
+            <span class="n">x</span> <span class="o">/=</span> <span class="mi">10</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span>
 </pre></div>

@@ -144,17 +144,17 @@
 
 - [ ] [170. Two Sum III - Data structure design](https://leetcode.com/problems/two-sum-iii-data-structure-design), 29.8%, Easy
 
-- [ ] [189. Rotate Array](https://leetcode.com/problems/rotate-array), 29.2%, Easy
+- [x] [189. Rotate Array](https://leetcode.com/problems/rotate-array), 29.2%, Easy
 
-- [ ] [278. First Bad Version](https://leetcode.com/problems/first-bad-version), 29.2%, Easy
+- [x] [278. First Bad Version](https://leetcode.com/problems/first-bad-version), 29.2%, Easy
 
 - [ ] [157. Read N Characters Given Read4](https://leetcode.com/problems/read-n-characters-given-read4), 28.7%, Easy
 
-- [ ] [168. Excel Sheet Column Title](https://leetcode.com/problems/excel-sheet-column-title), 28.6%, Easy
+- [x] [168. Excel Sheet Column Title](https://leetcode.com/problems/excel-sheet-column-title), 28.6%, Easy
 
-- [ ] [204. Count Primes](https://leetcode.com/problems/count-primes), 28.4%, Easy
+- [x] [204. Count Primes](https://leetcode.com/problems/count-primes), 28.4%, Easy
 
-- [ ] [7. Reverse Integer](https://leetcode.com/problems/reverse-integer), 25.2%, Easy
+- [x] [7. Reverse Integer](https://leetcode.com/problems/reverse-integer), 25.2%, Easy
 
 - [ ] [280. Wiggle Sort](https://leetcode.com/problems/wiggle-sort), 60.6%, Medium
 
