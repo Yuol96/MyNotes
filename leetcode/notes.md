@@ -6032,6 +6032,30 @@ class Solution {
 }
 ```
 
+### 260. Single Number III
+- [Link](https://leetcode.com/problems/single-number-iii/)
+- Tags: Bit Manipulation
+- Stars: 3
+
+#### XOR
+To find n one-appearance elements based on XOR result, divide nums into n groupd s.t. each group only contains one one-appearance element. 
+```java
+class Solution {
+    public int[] singleNumber(int[] nums) {
+        int res = 0;
+        for(int num: nums) res ^= num;
+        int diff = res&(-res);
+        int a = 0, b = 0;
+        for(int num: nums) {
+            if((num&diff) > 0) a ^= num;
+            else b ^= num;
+        }
+        int[] result = { a, b };
+        return result;
+    }
+}
+```
+
 # Topics
 
 ## String
