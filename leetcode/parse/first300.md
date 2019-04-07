@@ -166,17 +166,17 @@
 
 - [x] [238. Product of Array Except Self](https://leetcode.com/problems/product-of-array-except-self), 54.1%, Medium
 
-- [ ] [46. Permutations](https://leetcode.com/problems/permutations), 53.8%, Medium
+- [x] [46. Permutations](https://leetcode.com/problems/permutations), 53.8%, Medium
 
-- [ ] [22. Generate Parentheses](https://leetcode.com/problems/generate-parentheses), 53.5%, Medium
+- [x] [22. Generate Parentheses](https://leetcode.com/problems/generate-parentheses), 53.5%, Medium
 
 - [ ] [245. Shortest Word Distance III](https://leetcode.com/problems/shortest-word-distance-iii), 52.8%, Medium
 
-- [ ] [78. Subsets](https://leetcode.com/problems/subsets), 51.4%, Medium
+- [x] [78. Subsets](https://leetcode.com/problems/subsets), 51.4%, Medium
 
-- [ ] [216. Combination Sum III](https://leetcode.com/problems/combination-sum-iii), 50.7%, Medium
+- [x] [216. Combination Sum III](https://leetcode.com/problems/combination-sum-iii), 50.7%, Medium
 
-- [ ] [144. Binary Tree Preorder Traversal](https://leetcode.com/problems/binary-tree-preorder-traversal), 50.5%, Medium
+- [ ] [144. Binary Tree Preorder Traversal](https://leetcode.com/problems/binary-tree-preorder-traversal), 50.5%, Medium, <span style="color: red;">skipped for later review</span>
 
 - [ ] [230. Kth Smallest Element in a BST](https://leetcode.com/problems/kth-smallest-element-in-a-bst), 50.2%, Medium
 

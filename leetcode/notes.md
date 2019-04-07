@@ -6056,6 +6056,35 @@ class Solution {
 }
 ```
 
+### 216. Combination Sum III
+- [Link](https://leetcode.com/problems/combination-sum-iii/)
+- Tags: Array, Backtracking
+- Stars: 1
+
+#### backtrack
+Notice that the numbers from 1 to 9 cannot be selected twice
+```java
+class Solution {
+    List<List<Integer>> result = new ArrayList<>();
+    public List<List<Integer>> combinationSum3(int k, int n) {
+        backtrack(new ArrayList<>(), 0, 1, k, n);
+        return result;
+    }
+    private void backtrack(List<Integer> list, int curr, int start, int k, int n) {
+        if(k == 0) {
+            if(curr == n) result.add(new ArrayList<>(list));
+            return ;
+        }
+        for(int i=start; i<=9; i++) {
+            if(curr + i > n) break;
+            list.add(i);
+            backtrack(list, curr+i, i+1, k-1, n);
+            list.remove(list.size()-1);
+        }
+    }
+}
+```
+
 # Topics
 
 ## String
@@ -6373,30 +6402,26 @@ For each iteration, you only consider the additional permutations that the k-th 
 
 ```java
 class Solution {
-    List<List<Integer>> result;
+    List<List<Integer>> result = new ArrayList<>();
     public List<List<Integer>> permute(int[] nums) {
-        result = new ArrayList<>();
         if(nums.length == 0) return result;
-        List<Integer> firstList = new ArrayList<>();
-        firstList.add(nums[0]);
-        result.add(firstList);
-        backtrack(nums, 1);
+        result.add(new ArrayList<>());
+        for(int i=0; i<nums.length; i++)
+            backtrack(nums, i);
         return result;
     }
-    private void backtrack(int[] nums, int k){
-        if(k == nums.length)
-            return ;
-        int len = result.size();
-        for(int i=0; i<len; i++){
-            List<Integer> list = result.get(i);
-            for(int j=0; j<list.size(); j++){
-                List<Integer> temp = new ArrayList<>(list);
-                temp.add(j, nums[k]);
-                result.add(temp);
+    private void backtrack(int[] nums, int start) {
+        if(start == nums.length) return ;
+        int len = result.size(), num = nums[start];
+        for(int i=0; i<len; i++) {
+            List<Integer> row = result.get(i);
+            for(int j=0; j<row.size(); j++) {
+                List<Integer> newRow = new ArrayList<>(row);
+                newRow.add(j, num);
+                result.add(newRow);
             }
-            list.add(list.size(), nums[k]);
+            row.add(num);
         }
-        backtrack(nums, k+1);
     }
 }
 ```
@@ -7053,6 +7078,7 @@ class Solution {
 
 [101. Symmetric Tree](https://leetcode.com/problems/symmetric-tree/)  
 [94. Binary Tree Inorder Traversal](https://leetcode.com/problems/binary-tree-inorder-traversal/)  
+[144. Binary Tree Preorder Traversal](https://leetcode.com/problems/binary-tree-preorder-traversal/)
 [148. Sort List](https://leetcode.com/problems/sort-list/)  
 [104. Maximum Depth of Binary Tree](https://leetcode.com/problems/maximum-depth-of-binary-tree/)  
 [226. Invert Binary Tree](https://leetcode.com/problems/invert-binary-tree/)  
