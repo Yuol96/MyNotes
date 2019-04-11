@@ -178,7 +178,7 @@
 
 - [ ] [144. Binary Tree Preorder Traversal](https://leetcode.com/problems/binary-tree-preorder-traversal), 50.5%, Medium, <span style="color: red;">skipped for later review</span>
 
-- [ ] [230. Kth Smallest Element in a BST](https://leetcode.com/problems/kth-smallest-element-in-a-bst), 50.2%, Medium
+- [x] [230. Kth Smallest Element in a BST](https://leetcode.com/problems/kth-smallest-element-in-a-bst), 50.2%, Medium
 
 - [ ] [12. Integer to Roman](https://leetcode.com/problems/integer-to-roman), 50.0%, Medium
 

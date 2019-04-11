@@ -6085,6 +6085,54 @@ class Solution {
 }
 ```
 
+### 230. Kth Smallest Element in a BST
+- [Link](https://leetcode.com/problems/kth-smallest-element-in-a-bst/)
+- Tags: Binary Search, Tree
+- Stars: 1
+
+#### recursive DFS
+```java
+class Solution {
+    TreeNode result = null;
+    int count;
+    public int kthSmallest(TreeNode root, int k) {
+        count = k;
+        inOrderTraversal(root);
+        return result.val;
+    }
+    public void inOrderTraversal(TreeNode root) {
+        if(root == null) return ;
+        inOrderTraversal(root.left);
+        count--;
+        if(count == 0) result = root;
+        else inOrderTraversal(root.right);
+    }
+}
+```
+
+#### non-recursive DFS
+```java
+class Solution {
+    public int kthSmallest(TreeNode root, int k) {
+        Stack<TreeNode> st = new Stack<>();
+        while(root.left != null) {
+            st.add(root);
+            root = root.left;
+        }
+        while(true) {
+            k--;
+            if(k == 0) return root.val;
+            root = root.right;
+            while(root != null) {
+                st.add(root);
+                root = root.left;
+            }
+            root = st.pop();
+        }
+    }
+}
+```
+
 # Topics
 
 ## String
@@ -7073,6 +7121,7 @@ class Solution {
 - 435 Non-overlapping Intervals (已经有###了)
 - explore more solutions of 43. Multiply Strings
 - explore more solutions of 673. Number of Longest Increasing Subsequence
+- 440 K-th Smallest in Lexicographical Order
 
 ## recursive to non-recursive
 
@@ -7082,6 +7131,7 @@ class Solution {
 [148. Sort List](https://leetcode.com/problems/sort-list/)  
 [104. Maximum Depth of Binary Tree](https://leetcode.com/problems/maximum-depth-of-binary-tree/)  
 [226. Invert Binary Tree](https://leetcode.com/problems/invert-binary-tree/)  
+[230. Kth Smallest Element in a BST](https://leetcode.com/problems/kth-smallest-element-in-a-bst/)
 
 
 - [tree questions](https://leetcode.com/problems/validate-binary-search-tree/discuss/32112/Learn-one-iterative-inorder-traversal-apply-it-to-multiple-tree-questions-(Java-Solution))
