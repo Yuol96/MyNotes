@@ -1719,6 +1719,12 @@ body .markdown-body
 <li><a href="#non-recursive-dfs">non-recursive DFS</a></li>
 </ul>
 </li>
+<li><a href="#12-integer-to-roman">12. Integer to Roman</a><ul>
+<li><a href="#divide-from-high-digit-to-low">divide from high digit to low</a></li>
+<li><a href="#map-every-digit-into-a-string-with-direct-concat">map every digit into a string with direct concat</a></li>
+<li><a href="#interview-solution-simple-and-clear-beats-100-and-100">interview solution!! Simple and clear!! beats 100% and 100%!!</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -7817,6 +7823,86 @@ We can see that the answers repeated in a <code>t t t f</code> pattern. Actually
             <span class="o">}</span>
             <span class="n">root</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
         <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3 id="12-integer-to-roman">12. Integer to Roman<a class="headerlink" href="#12-integer-to-roman" title="Permanent link"></a></h3>
+<ul>
+<li><a href="https://leetcode.com/problems/integer-to-roman/">Link</a></li>
+<li>Tags: Math, String</li>
+<li>Stars: 2</li>
+</ul>
+<h4 id="divide-from-high-digit-to-low">divide from high digit to low<a class="headerlink" href="#divide-from-high-digit-to-low" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">intToRoman</span><span class="o">(</span><span class="kt">int</span> <span class="n">num</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">Character</span><span class="o">&gt;</span> <span class="n">map</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+        <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="sc">&#39;I&#39;</span><span class="o">);</span>
+        <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span> <span class="sc">&#39;V&#39;</span><span class="o">);</span>
+        <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="mi">10</span><span class="o">,</span> <span class="sc">&#39;X&#39;</span><span class="o">);</span>
+        <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="mi">50</span><span class="o">,</span> <span class="sc">&#39;L&#39;</span><span class="o">);</span>
+        <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="mi">100</span><span class="o">,</span> <span class="sc">&#39;C&#39;</span><span class="o">);</span>
+        <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="mi">500</span><span class="o">,</span> <span class="sc">&#39;D&#39;</span><span class="o">);</span>
+        <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="mi">1000</span><span class="o">,</span> <span class="sc">&#39;M&#39;</span><span class="o">);</span>
+        <span class="n">StringBuilder</span> <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="o">();</span>
+        <span class="kt">int</span> <span class="n">base</span> <span class="o">=</span> <span class="mi">1000</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">num</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="kt">int</span> <span class="n">div</span> <span class="o">=</span> <span class="n">num</span> <span class="o">/</span> <span class="n">base</span><span class="o">;</span>
+            <span class="n">num</span> <span class="o">%=</span> <span class="n">base</span><span class="o">;</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">div</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">base</span> <span class="o">/=</span> <span class="mi">10</span><span class="o">;</span>
+                <span class="k">continue</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">div</span> <span class="o">==</span> <span class="mi">4</span> <span class="o">||</span> <span class="n">div</span> <span class="o">==</span> <span class="mi">9</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">result</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">base</span><span class="o">));</span>
+                <span class="n">result</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">((</span><span class="n">div</span><span class="o">+</span><span class="mi">1</span><span class="o">)*</span><span class="n">base</span><span class="o">));</span>
+                <span class="k">continue</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">div</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">result</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">5</span><span class="o">*</span><span class="n">base</span><span class="o">));</span>
+                <span class="n">div</span> <span class="o">-=</span> <span class="mi">5</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">div</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="n">result</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">base</span><span class="o">));</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h4 id="map-every-digit-into-a-string-with-direct-concat">map every digit into a string with direct concat<a class="headerlink" href="#map-every-digit-into-a-string-with-direct-concat" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">intToRoman</span><span class="o">(</span><span class="kt">int</span> <span class="n">num</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">String</span><span class="o">[][]</span> <span class="n">table</span> <span class="o">=</span> <span class="o">{</span>
+            <span class="o">{</span><span class="s">&quot;&quot;</span><span class="o">,</span> <span class="s">&quot;I&quot;</span><span class="o">,</span> <span class="s">&quot;II&quot;</span><span class="o">,</span> <span class="s">&quot;III&quot;</span><span class="o">,</span> <span class="s">&quot;IV&quot;</span><span class="o">,</span> <span class="s">&quot;V&quot;</span><span class="o">,</span> <span class="s">&quot;VI&quot;</span><span class="o">,</span> <span class="s">&quot;VII&quot;</span><span class="o">,</span> <span class="s">&quot;VIII&quot;</span><span class="o">,</span> <span class="s">&quot;IX&quot;</span><span class="o">},</span>
+            <span class="o">{</span><span class="s">&quot;&quot;</span><span class="o">,</span> <span class="s">&quot;X&quot;</span><span class="o">,</span> <span class="s">&quot;XX&quot;</span><span class="o">,</span> <span class="s">&quot;XXX&quot;</span><span class="o">,</span> <span class="s">&quot;XL&quot;</span><span class="o">,</span> <span class="s">&quot;L&quot;</span><span class="o">,</span> <span class="s">&quot;LX&quot;</span><span class="o">,</span> <span class="s">&quot;LXX&quot;</span><span class="o">,</span> <span class="s">&quot;LXXX&quot;</span><span class="o">,</span> <span class="s">&quot;XC&quot;</span><span class="o">},</span>
+            <span class="o">{</span><span class="s">&quot;&quot;</span><span class="o">,</span> <span class="s">&quot;C&quot;</span><span class="o">,</span> <span class="s">&quot;CC&quot;</span><span class="o">,</span> <span class="s">&quot;CCC&quot;</span><span class="o">,</span> <span class="s">&quot;CD&quot;</span><span class="o">,</span> <span class="s">&quot;D&quot;</span><span class="o">,</span> <span class="s">&quot;DC&quot;</span><span class="o">,</span> <span class="s">&quot;DCC&quot;</span><span class="o">,</span> <span class="s">&quot;DCCC&quot;</span><span class="o">,</span> <span class="s">&quot;CM&quot;</span><span class="o">},</span>
+            <span class="o">{</span><span class="s">&quot;&quot;</span><span class="o">,</span> <span class="s">&quot;M&quot;</span><span class="o">,</span> <span class="s">&quot;MM&quot;</span><span class="o">,</span> <span class="s">&quot;MMM&quot;</span><span class="o">},</span>
+        <span class="o">};</span>
+        <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="n">StringBuilder</span> <span class="n">sb</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="o">();</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">num</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="kt">int</span> <span class="n">digit</span> <span class="o">=</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">10</span><span class="o">;</span>
+            <span class="n">num</span> <span class="o">/=</span> <span class="mi">10</span><span class="o">;</span>
+            <span class="n">sb</span><span class="o">.</span><span class="na">insert</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">table</span><span class="o">[</span><span class="n">count</span><span class="o">++][</span><span class="n">digit</span><span class="o">]);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">sb</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h4 id="interview-solution-simple-and-clear-beats-100-and-100">interview solution!! Simple and clear!! beats 100% and 100%!!<a class="headerlink" href="#interview-solution-simple-and-clear-beats-100-and-100" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">intToRoman</span><span class="o">(</span><span class="kt">int</span> <span class="n">num</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">values</span> <span class="o">=</span> <span class="o">{</span> <span class="mi">1000</span><span class="o">,</span> <span class="mi">900</span><span class="o">,</span> <span class="mi">500</span><span class="o">,</span> <span class="mi">400</span><span class="o">,</span> <span class="mi">100</span><span class="o">,</span> <span class="mi">90</span><span class="o">,</span> <span class="mi">50</span><span class="o">,</span> <span class="mi">40</span><span class="o">,</span> <span class="mi">10</span><span class="o">,</span> <span class="mi">9</span><span class="o">,</span> <span class="mi">5</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">1</span> <span class="o">};</span>
+        <span class="n">String</span><span class="o">[]</span> <span class="n">strs</span> <span class="o">=</span> <span class="o">{</span> <span class="s">&quot;M&quot;</span><span class="o">,</span> <span class="s">&quot;CM&quot;</span><span class="o">,</span> <span class="s">&quot;D&quot;</span><span class="o">,</span> <span class="s">&quot;CD&quot;</span><span class="o">,</span> <span class="s">&quot;C&quot;</span><span class="o">,</span> <span class="s">&quot;XC&quot;</span><span class="o">,</span> <span class="s">&quot;L&quot;</span><span class="o">,</span> <span class="s">&quot;XL&quot;</span><span class="o">,</span> <span class="s">&quot;X&quot;</span><span class="o">,</span> <span class="s">&quot;IX&quot;</span><span class="o">,</span> <span class="s">&quot;V&quot;</span><span class="o">,</span> <span class="s">&quot;IV&quot;</span><span class="o">,</span> <span class="s">&quot;I&quot;</span> <span class="o">};</span>
+        <span class="n">StringBuilder</span> <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="o">();</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">values</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="k">while</span><span class="o">(</span><span class="n">num</span> <span class="o">&gt;=</span> <span class="n">values</span><span class="o">[</span><span class="n">i</span><span class="o">])</span> <span class="o">{</span>
+                <span class="n">result</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">strs</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+                <span class="n">num</span> <span class="o">-=</span> <span class="n">values</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
     <span class="o">}</span>
 <span class="o">}</span>
 </pre></div>

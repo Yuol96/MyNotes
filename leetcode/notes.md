@@ -6133,6 +6133,88 @@ class Solution {
 }
 ```
 
+### 12. Integer to Roman
+- [Link](https://leetcode.com/problems/integer-to-roman/)
+- Tags: Math, String
+- Stars: 2
+
+#### divide from high digit to low
+```java
+class Solution {
+    public String intToRoman(int num) {
+        HashMap<Integer, Character> map = new HashMap<>();
+        map.put(1, 'I');
+        map.put(5, 'V');
+        map.put(10, 'X');
+        map.put(50, 'L');
+        map.put(100, 'C');
+        map.put(500, 'D');
+        map.put(1000, 'M');
+        StringBuilder result = new StringBuilder();
+        int base = 1000;
+        while(num > 0) {
+            int div = num / base;
+            num %= base;
+            if(div == 0) {
+                base /= 10;
+                continue;
+            }
+            if(div == 4 || div == 9) {
+                result.append(map.get(base));
+                result.append(map.get((div+1)*base));
+                continue;
+            }
+            if(div >= 5) {
+                result.append(map.get(5*base));
+                div -= 5;
+            }
+            for(int i=0; i<div; i++) result.append(map.get(base));
+        }
+        return result.toString();
+    }
+}
+```
+
+#### map every digit into a string with direct concat
+```java
+class Solution {
+    public String intToRoman(int num) {
+        String[][] table = {
+            {"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"},
+            {"", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"},
+            {"", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"},
+            {"", "M", "MM", "MMM"},
+        };
+        int count = 0;
+        StringBuilder sb = new StringBuilder();
+        while(num > 0) {
+            int digit = num % 10;
+            num /= 10;
+            sb.insert(0, table[count++][digit]);
+        }
+        return sb.toString();
+    }
+}
+```
+
+#### interview solution!! Simple and clear!! beats 100% and 100%!!
+```java
+class Solution {
+    public String intToRoman(int num) {
+        int[] values = { 1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1 };
+        String[] strs = { "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I" };
+        StringBuilder result = new StringBuilder();
+        for(int i=0; i<values.length; i++) {
+            while(num >= values[i]) {
+                result.append(strs[i]);
+                num -= values[i];
+            }
+        }
+        return result.toString();
+    }
+}
+```
+
 # Topics
 
 ## String
