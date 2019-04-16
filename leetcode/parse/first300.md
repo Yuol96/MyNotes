@@ -180,15 +180,15 @@
 
 - [x] [230. Kth Smallest Element in a BST](https://leetcode.com/problems/kth-smallest-element-in-a-bst), 50.2%, Medium
 
-- [ ] [12. Integer to Roman](https://leetcode.com/problems/integer-to-roman), 50.0%, Medium
+- [x] [12. Integer to Roman](https://leetcode.com/problems/integer-to-roman), 50.0%, Medium
 
 - [ ] [156. Binary Tree Upside Down](https://leetcode.com/problems/binary-tree-upside-down), 49.7%, Medium
 
-- [ ] [241. Different Ways to Add Parentheses](https://leetcode.com/problems/different-ways-to-add-parentheses), 49.1%, Medium
+- [x] [241. Different Ways to Add Parentheses](https://leetcode.com/problems/different-ways-to-add-parentheses), 49.1%, Medium
 
 - [ ] [286. Walls and Gates](https://leetcode.com/problems/walls-and-gates), 48.7%, Medium
 
-- [ ] [287. Find the Duplicate Number](https://leetcode.com/problems/find-the-duplicate-number), 48.6%, Medium
+- [x] [287. Find the Duplicate Number](https://leetcode.com/problems/find-the-duplicate-number), 48.6%, Medium
 
 - [ ] [249. Group Shifted Strings](https://leetcode.com/problems/group-shifted-strings), 48.2%, Medium
 
@@ -196,9 +196,9 @@
 
 - [ ] [294. Flip Game II](https://leetcode.com/problems/flip-game-ii), 47.8%, Medium
 
-- [ ] [173. Binary Search Tree Iterator](https://leetcode.com/problems/binary-search-tree-iterator), 47.4%, Medium
+- [x] [173. Binary Search Tree Iterator](https://leetcode.com/problems/binary-search-tree-iterator), 47.4%, Medium
 
-- [ ] [102. Binary Tree Level Order Traversal](https://leetcode.com/problems/binary-tree-level-order-traversal), 47.3%, Medium
+- [x] [102. Binary Tree Level Order Traversal](https://leetcode.com/problems/binary-tree-level-order-traversal), 47.3%, Medium
 
 - [ ] [48. Rotate Image](https://leetcode.com/problems/rotate-image), 47.2%, Medium
 

@@ -6215,6 +6215,70 @@ class Solution {
 }
 ```
 
+### 241. Different Ways to Add Parentheses
+- [Link](https://leetcode.com/problems/different-ways-to-add-parentheses/)
+- Tags: Divide and Conquer
+- Stars: 2
+
+#### recursive divide and conquer, beats 80% in time
+```java
+class Solution {
+    public List<Integer> diffWaysToCompute(String input) {
+        return diffWaysToCompute(input, 0, input.length()-1);
+    }
+    public List<Integer> diffWaysToCompute(String input, int l, int r) {
+        List<Integer> result = new ArrayList<>();
+        if(l > r) return result;
+        for(int i=l; i<=r; i++) {
+            char c = input.charAt(i);
+            if(Character.isDigit(c)) continue;
+            List<Integer> leftList = diffWaysToCompute(input, l, i-1);
+            List<Integer> rightList = diffWaysToCompute(input, i+1, r);
+            for(int a : leftList)
+                for(int b : rightList)
+                    result.add(compute(a, b, c));
+        }
+        if(result.size() == 0)
+            result.add(Integer.parseInt(input.substring(l, r+1)));
+        return result;
+    }
+    private int compute(int a, int b, char op) {
+        if(op == '+') return a+b;
+        if(op == '-') return a-b;
+        return a*b;
+    }
+}
+```
+
+### 173. Binary Search Tree Iterator
+- [Link](https://leetcode.com/problems/binary-search-tree-iterator/)
+- Tags: Stack, Tree, Design
+- Stars: 1
+
+#### non-recursive DFS
+```java
+class BSTIterator {
+    Stack<TreeNode> st = new Stack<>();
+    public BSTIterator(TreeNode root) {
+        pushUntilLeftMost(root);
+    }
+    public int next() {
+        TreeNode temp = st.pop();
+        pushUntilLeftMost(temp.right);
+        return temp.val;
+    }
+    public boolean hasNext() {
+        return !st.isEmpty();
+    }
+    private void pushUntilLeftMost(TreeNode node) {
+        while(node != null) {
+            st.add(node);
+            node = node.left;
+        }
+    }
+}
+```
+
 # Topics
 
 ## String
@@ -7209,11 +7273,12 @@ class Solution {
 
 [101. Symmetric Tree](https://leetcode.com/problems/symmetric-tree/)  
 [94. Binary Tree Inorder Traversal](https://leetcode.com/problems/binary-tree-inorder-traversal/)  
-[144. Binary Tree Preorder Traversal](https://leetcode.com/problems/binary-tree-preorder-traversal/)
+[144. Binary Tree Preorder Traversal](https://leetcode.com/problems/binary-tree-preorder-traversal/)  
 [148. Sort List](https://leetcode.com/problems/sort-list/)  
 [104. Maximum Depth of Binary Tree](https://leetcode.com/problems/maximum-depth-of-binary-tree/)  
 [226. Invert Binary Tree](https://leetcode.com/problems/invert-binary-tree/)  
-[230. Kth Smallest Element in a BST](https://leetcode.com/problems/kth-smallest-element-in-a-bst/)
+[230. Kth Smallest Element in a BST](https://leetcode.com/problems/kth-smallest-element-in-a-bst/)  
+[173. Binary Search Tree Iterator](https://leetcode.com/problems/binary-search-tree-iterator/)  
 
 
 - [tree questions](https://leetcode.com/problems/validate-binary-search-tree/discuss/32112/Learn-one-iterative-inorder-traversal-apply-it-to-multiple-tree-questions-(Java-Solution))
