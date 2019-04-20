@@ -206,17 +206,17 @@
 
 - [x] [199. Binary Tree Right Side View](https://leetcode.com/problems/binary-tree-right-side-view), 46.9%, Medium
 
-- [ ] [62. Unique Paths](https://leetcode.com/problems/unique-paths), 46.6%, Medium
+- [x] [62. Unique Paths](https://leetcode.com/problems/unique-paths), 46.6%, Medium
 
-- [ ] [215. Kth Largest Element in an Array](https://leetcode.com/problems/kth-largest-element-in-an-array), 46.4%, Medium
+- [x] [215. Kth Largest Element in an Array](https://leetcode.com/problems/kth-largest-element-in-an-array), 46.4%, Medium
 
-- [ ] [77. Combinations](https://leetcode.com/problems/combinations), 46.3%, Medium
+- [x] [77. Combinations](https://leetcode.com/problems/combinations), 46.3%, Medium
 
 - [ ] [244. Shortest Word Distance II](https://leetcode.com/problems/shortest-word-distance-ii), 46.3%, Medium
 
-- [ ] [64. Minimum Path Sum](https://leetcode.com/problems/minimum-path-sum), 45.8%, Medium
+- [x] [64. Minimum Path Sum](https://leetcode.com/problems/minimum-path-sum), 45.8%, Medium
 
-- [ ] [59. Spiral Matrix II](https://leetcode.com/problems/spiral-matrix-ii), 45.6%, Medium
+- [x] [59. Spiral Matrix II](https://leetcode.com/problems/spiral-matrix-ii), 45.6%, Medium
 
 - [ ] [96. Unique Binary Search Trees](https://leetcode.com/problems/unique-binary-search-trees), 45.3%, Medium
 

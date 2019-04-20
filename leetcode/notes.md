@@ -1657,15 +1657,12 @@ This is a space-optimized DP solution. `dp[i][j] = dp[i-1][j] + dp[i][j-1]`
 ```java
 class Solution {
     public int uniquePaths(int m, int n) {
-        if(m==1 || n==1) return 1;
-        int min = Math.min(m, n), max = Math.max(m, n);
-        int[] dp = new int[min];
-        for(int i=0; i<min; i++)
-            dp[i] = 1;
-        for(int i=0; i<max-1; i++)
-            for(int j=1; j<min; j++)
+        int[] dp = new int[m];
+        Arrays.fill(dp, 1);
+        for(int i=1; i<n; i++)
+            for(int j=1; j<m; j++) 
                 dp[j] += dp[j-1];
-        return dp[min-1];
+        return dp[dp.length-1];
     }
 }
 ```
@@ -6297,6 +6294,84 @@ class Solution {
         if(h > result.size()) result.add(root.val);
         DFS(root.right, h+1);
         DFS(root.left, h+1);
+    }
+}
+```
+
+### 77. Combinations
+- [Link](https://leetcode.com/problems/combinations/)
+- Tags: Backtracking
+- Stars: 1
+
+#### backtrack, double 100%
+```java
+class Solution {
+    List<List<Integer>> result = new ArrayList<>();
+    public List<List<Integer>> combine(int n, int k) {
+        backtrack(new ArrayList<>(), 1, n, k);
+        return result;
+    }
+    private void backtrack(List<Integer> currList, int start, int n, int k) {
+        if(k == 0) {
+            result.add(new ArrayList<>(currList));
+            return ;
+        }
+        for(int i=start; i<=n-k+1; i++) {
+            currList.add(i);
+            backtrack(currList, i+1, n, k-1);
+            currList.remove(currList.size()-1);
+        }
+    }
+}
+```
+
+### 64. Minimum Path Sum
+- [Link](https://leetcode.com/problems/minimum-path-sum/)
+- Tags: Array, Dynamic Programming
+- Stars: 1
+
+#### DP
+```java
+class Solution {
+    public int minPathSum(int[][] grid) {
+        if(grid.length == 0 || grid[0].length == 0) return 0;
+        int m = grid.length, n = grid[0].length;
+        int[] dp = grid[0];
+        for(int i=1; i<n; i++) dp[i] += dp[i-1];
+        for(int i=1; i<m; i++) {
+            dp[0] += grid[i][0];
+            for(int j=1; j<n; j++) 
+                dp[j] = Math.min(dp[j-1], dp[j]) + grid[i][j];
+        }
+        return dp[dp.length-1];
+    }
+}
+```
+
+### 59. Spiral Matrix II
+- [Link](https://leetcode.com/problems/spiral-matrix-ii/)
+- Tags: Array
+- Stars: 2
+
+#### recursive onion, double 100%
+```java
+class Solution {
+    int[][] result;
+    int n;
+    public int[][] generateMatrix(int n) {
+        this.n = n;
+        result = new int[n][n];
+        onion(0, 1);
+        if(n%2 == 1) result[n/2][n/2] = n*n;
+        return result;
+    }
+    private void onion(int k, int start) {
+        if(2*k >= n) return ;
+        for(int j=k; j<n-k-1; j++) result[k][j] = start++;
+        for(int i=k; i<n-k-1; i++) result[i][n-k-1] = start++;
+        for(int j=n-k-1; j>k; j--) result[n-k-1][j] = start++;
+        for(int i=n-k-1; i>k; i--) result[i][k] = start++;
+        onion(k+1, start);
     }
 }
 ```
