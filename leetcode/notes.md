@@ -6279,6 +6279,28 @@ class BSTIterator {
 }
 ```
 
+### 199. Binary Tree Right Side View
+- [Link](https://leetcode.com/problems/binary-tree-right-side-view/)
+- Tags: Tree, DFS, BFS
+- Stars: 1
+
+#### DFS
+```java
+class Solution {
+    List<Integer> result = new ArrayList<>();
+    public List<Integer> rightSideView(TreeNode root) {
+        DFS(root, 1);
+        return result;
+    }
+    private void DFS(TreeNode root, int h) {
+        if(root == null) return ;
+        if(h > result.size()) result.add(root.val);
+        DFS(root.right, h+1);
+        DFS(root.left, h+1);
+    }
+}
+```
+
 # Topics
 
 ## String
@@ -6917,23 +6939,25 @@ class Solution {
 #### general backtracking solution
 ```java
 class Solution {
+    int[] candidates;
     List<List<Integer>> result = new ArrayList<>();
     public List<List<Integer>> combinationSum(int[] candidates, int target) {
         Arrays.sort(candidates);
-        backtrack(candidates, 0, target, new ArrayList<>());
+        this.candidates = candidates;
+        backtrack(new ArrayList<>(), 0, target);
         return result;
     }
-    private void backtrack(int[] candidates, int start, int target, List<Integer> currList){
-        if(target == 0){
+    private void backtrack(List<Integer> currList, int start, int target) {
+        if(target == 0) {
             result.add(new ArrayList<>(currList));
             return ;
         }
-        if(start == candidates.length || target < candidates[start]) return ;
-        int num = candidates[start];
-        currList.add(num);
-        backtrack(candidates, start, target-num, currList);
-        currList.remove(currList.size()-1);
-        backtrack(candidates, start+1, target, currList);
+        for(int i=start; i<candidates.length; i++) {
+            if(candidates[i] > target) return ;
+            currList.add(candidates[i]);
+            backtrack(currList, i, target-candidates[i]);
+            currList.remove(currList.size()-1);
+        }
     }
 }
 ```

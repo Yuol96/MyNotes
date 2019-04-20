@@ -200,11 +200,11 @@
 
 - [x] [102. Binary Tree Level Order Traversal](https://leetcode.com/problems/binary-tree-level-order-traversal), 47.3%, Medium
 
-- [ ] [48. Rotate Image](https://leetcode.com/problems/rotate-image), 47.2%, Medium
+- [x] [48. Rotate Image](https://leetcode.com/problems/rotate-image), 47.2%, Medium
 
-- [ ] [39. Combination Sum](https://leetcode.com/problems/combination-sum), 47.1%, Medium
+- [x] [39. Combination Sum](https://leetcode.com/problems/combination-sum), 47.1%, Medium
 
-- [ ] [199. Binary Tree Right Side View](https://leetcode.com/problems/binary-tree-right-side-view), 46.9%, Medium
+- [x] [199. Binary Tree Right Side View](https://leetcode.com/problems/binary-tree-right-side-view), 46.9%, Medium
 
 - [ ] [62. Unique Paths](https://leetcode.com/problems/unique-paths), 46.6%, Medium
 
