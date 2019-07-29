@@ -218,109 +218,109 @@
 
 - [x] [59. Spiral Matrix II](https://leetcode.com/problems/spiral-matrix-ii), 45.6%, Medium
 
-- [ ] [96. Unique Binary Search Trees](https://leetcode.com/problems/unique-binary-search-trees), 45.3%, Medium
+- [x] [96. Unique Binary Search Trees](https://leetcode.com/problems/unique-binary-search-trees), 45.3%, Medium
 
-- [ ] [137. Single Number II](https://leetcode.com/problems/single-number-ii), 45.3%, Medium
+- [x] [137. Single Number II](https://leetcode.com/problems/single-number-ii), 45.3%, Medium
 
-- [ ] [49. Group Anagrams](https://leetcode.com/problems/group-anagrams), 45.2%, Medium
+- [x] [49. Group Anagrams](https://leetcode.com/problems/group-anagrams), 45.2%, Medium
 
-- [ ] [89. Gray Code](https://leetcode.com/problems/gray-code), 45.1%, Medium
+- [x] [89. Gray Code](https://leetcode.com/problems/gray-code), 45.1%, Medium
 
 - [ ] [259. 3Sum Smaller](https://leetcode.com/problems/3sum-smaller), 44.4%, Medium
 
 - [ ] [254. Factor Combinations](https://leetcode.com/problems/factor-combinations), 44.0%, Medium
 
-- [ ] [289. Game of Life](https://leetcode.com/problems/game-of-life), 43.8%, Medium
+- [x] [289. Game of Life](https://leetcode.com/problems/game-of-life), 43.8%, Medium
 
 - [ ] [247. Strobogrammatic Number II](https://leetcode.com/problems/strobogrammatic-number-ii), 43.7%, Medium
 
 - [ ] [298. Binary Tree Longest Consecutive Sequence](https://leetcode.com/problems/binary-tree-longest-consecutive-sequence), 43.6%, Medium
 
-- [ ] [24. Swap Nodes in Pairs](https://leetcode.com/problems/swap-nodes-in-pairs), 43.5%, Medium
+- [x] [24. Swap Nodes in Pairs](https://leetcode.com/problems/swap-nodes-in-pairs), 43.5%, Medium
 
 - [ ] [251. Flatten 2D Vector](https://leetcode.com/problems/flatten-2d-vector), 43.4%, Medium
 
-- [ ] [11. Container With Most Water](https://leetcode.com/problems/container-with-most-water), 43.0%, Medium
+- [x] [11. Container With Most Water](https://leetcode.com/problems/container-with-most-water), 43.0%, Medium
 
 - [ ] [255. Verify Preorder Sequence in Binary Search Tree](https://leetcode.com/problems/verify-preorder-sequence-in-binary-search-tree), 43.0%, Medium
 
-- [ ] [153. Find Minimum in Rotated Sorted Array](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array), 42.6%, Medium
+- [x] [153. Find Minimum in Rotated Sorted Array](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array), 42.6%, Medium
 
 - [ ] [253. Meeting Rooms II](https://leetcode.com/problems/meeting-rooms-ii), 42.4%, Medium
 
-- [ ] [36. Valid Sudoku](https://leetcode.com/problems/valid-sudoku), 42.1%, Medium
+- [x] [36. Valid Sudoku](https://leetcode.com/problems/valid-sudoku), 42.1%, Medium
 
-- [ ] [129. Sum Root to Leaf Numbers](https://leetcode.com/problems/sum-root-to-leaf-numbers), 41.6%, Medium
+- [x] [129. Sum Root to Leaf Numbers](https://leetcode.com/problems/sum-root-to-leaf-numbers), 41.6%, Medium
 
-- [ ] [90. Subsets II](https://leetcode.com/problems/subsets-ii), 41.6%, Medium
+- [x] [90. Subsets II](https://leetcode.com/problems/subsets-ii), 41.6%, Medium
 
-- [ ] [16. 3Sum Closest](https://leetcode.com/problems/3sum-closest), 41.6%, Medium
+- [x] [16. 3Sum Closest](https://leetcode.com/problems/3sum-closest), 41.6%, Medium
 
-- [ ] [75. Sort Colors](https://leetcode.com/problems/sort-colors), 41.5%, Medium
+- [x] [75. Sort Colors](https://leetcode.com/problems/sort-colors), 41.5%, Medium
 
-- [ ] [114. Flatten Binary Tree to Linked List](https://leetcode.com/problems/flatten-binary-tree-to-linked-list), 41.3%, Medium
+- [x] [114. Flatten Binary Tree to Linked List](https://leetcode.com/problems/flatten-binary-tree-to-linked-list), 41.3%, Medium
 
-- [ ] [279. Perfect Squares](https://leetcode.com/problems/perfect-squares), 41.1%, Medium
+- [x] [279. Perfect Squares](https://leetcode.com/problems/perfect-squares), 41.1%, Medium
 
-- [ ] [162. Find Peak Element](https://leetcode.com/problems/find-peak-element), 40.8%, Medium
+- [x] [162. Find Peak Element](https://leetcode.com/problems/find-peak-element), 40.8%, Medium
 
-- [ ] [103. Binary Tree Zigzag Level Order Traversal](https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal), 40.7%, Medium
+- [x] [103. Binary Tree Zigzag Level Order Traversal](https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal), 40.7%, Medium
 
-- [ ] [17. Letter Combinations of a Phone Number](https://leetcode.com/problems/letter-combinations-of-a-phone-number), 40.7%, Medium
+- [x] [17. Letter Combinations of a Phone Number](https://leetcode.com/problems/letter-combinations-of-a-phone-number), 40.7%, Medium
 
-- [ ] [200. Number of Islands](https://leetcode.com/problems/number-of-islands), 40.5%, Medium
+- [x] [200. Number of Islands](https://leetcode.com/problems/number-of-islands), 40.5%, Medium
 
-- [ ] [40. Combination Sum II](https://leetcode.com/problems/combination-sum-ii), 40.5%, Medium
+- [x] [40. Combination Sum II](https://leetcode.com/problems/combination-sum-ii), 40.5%, Medium
 
-- [ ] [240. Search a 2D Matrix II](https://leetcode.com/problems/search-a-2d-matrix-ii), 40.3%, Medium
+- [x] [240. Search a 2D Matrix II](https://leetcode.com/problems/search-a-2d-matrix-ii), 40.3%, Medium
 
 - [ ] [300. Longest Increasing Subsequence](https://leetcode.com/problems/longest-increasing-subsequence), 40.3%, Medium
 
 - [ ] [131. Palindrome Partitioning](https://leetcode.com/problems/palindrome-partitioning), 39.8%, Medium
 
-- [ ] [109. Convert Sorted List to Binary Search Tree](https://leetcode.com/problems/convert-sorted-list-to-binary-search-tree), 39.8%, Medium
+- [x] [109. Convert Sorted List to Binary Search Tree](https://leetcode.com/problems/convert-sorted-list-to-binary-search-tree), 39.8%, Medium
 
-- [ ] [105. Construct Binary Tree from Preorder and Inorder Traversal](https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal), 39.8%, Medium
+- [x] [105. Construct Binary Tree from Preorder and Inorder Traversal](https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal), 39.8%, Medium
 
-- [ ] [284. Peeking Iterator](https://leetcode.com/problems/peeking-iterator), 39.7%, Medium
+- [x] [284. Peeking Iterator](https://leetcode.com/problems/peeking-iterator), 39.7%, Medium
 
-- [ ] [113. Path Sum II](https://leetcode.com/problems/path-sum-ii), 39.7%, Medium
+- [x] [113. Path Sum II](https://leetcode.com/problems/path-sum-ii), 39.7%, Medium
 
-- [ ] [80. Remove Duplicates from Sorted Array II](https://leetcode.com/problems/remove-duplicates-from-sorted-array-ii), 39.7%, Medium
+- [x] [80. Remove Duplicates from Sorted Array II](https://leetcode.com/problems/remove-duplicates-from-sorted-array-ii), 39.7%, Medium
 
 - [ ] [261. Graph Valid Tree](https://leetcode.com/problems/graph-valid-tree), 39.5%, Medium
 
-- [ ] [47. Permutations II](https://leetcode.com/problems/permutations-ii), 39.4%, Medium
+- [x] [47. Permutations II](https://leetcode.com/problems/permutations-ii), 39.4%, Medium
 
-- [ ] [73. Set Matrix Zeroes](https://leetcode.com/problems/set-matrix-zeroes), 39.1%, Medium
+- [x] [73. Set Matrix Zeroes](https://leetcode.com/problems/set-matrix-zeroes), 39.1%, Medium
 
-- [ ] [299. Bulls and Cows](https://leetcode.com/problems/bulls-and-cows), 38.8%, Medium
+- [x] [299. Bulls and Cows](https://leetcode.com/problems/bulls-and-cows), 38.8%, Medium
 
-- [ ] [120. Triangle](https://leetcode.com/problems/triangle), 38.5%, Medium
+- [x] [120. Triangle](https://leetcode.com/problems/triangle), 38.5%, Medium
 
-- [ ] [106. Construct Binary Tree from Inorder and Postorder Traversal](https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal), 38.2%, Medium
+- [x] [106. Construct Binary Tree from Inorder and Postorder Traversal](https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal), 38.2%, Medium
 
 - [ ] [208. Implement Trie (Prefix Tree)](https://leetcode.com/problems/implement-trie-prefix-tree), 37.1%, Medium
 
-- [ ] [116. Populating Next Right Pointers in Each Node](https://leetcode.com/problems/populating-next-right-pointers-in-each-node), 37.0%, Medium
+- [x] [116. Populating Next Right Pointers in Each Node](https://leetcode.com/problems/populating-next-right-pointers-in-each-node), 37.0%, Medium
 
 - [ ] [207. Course Schedule](https://leetcode.com/problems/course-schedule), 36.9%, Medium
 
-- [ ] [147. Insertion Sort List](https://leetcode.com/problems/insertion-sort-list), 36.6%, Medium
+- [x] [147. Insertion Sort List](https://leetcode.com/problems/insertion-sort-list), 36.6%, Medium
 
 - [ ] [186. Reverse Words in a String II](https://leetcode.com/problems/reverse-words-in-a-string-ii), 36.5%, Medium
 
-- [ ] [86. Partition List](https://leetcode.com/problems/partition-list), 36.5%, Medium
+- [x] [86. Partition List](https://leetcode.com/problems/partition-list), 36.5%, Medium
 
-- [ ] [236. Lowest Common Ancestor of a Binary Tree](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree), 35.8%, Medium
+- [x] [236. Lowest Common Ancestor of a Binary Tree](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree), 35.8%, Medium
 
 - [ ] [277. Find the Celebrity](https://leetcode.com/problems/find-the-celebrity), 35.8%, Medium
 
 - [ ] [264. Ugly Number II](https://leetcode.com/problems/ugly-number-ii), 35.7%, Medium
 
-- [ ] [201. Bitwise AND of Numbers Range](https://leetcode.com/problems/bitwise-and-of-numbers-range), 35.6%, Medium
+- [x] [201. Bitwise AND of Numbers Range](https://leetcode.com/problems/bitwise-and-of-numbers-range), 35.6%, Medium
 
-- [ ] [223. Rectangle Area](https://leetcode.com/problems/rectangle-area), 35.6%, Medium
+- [x] [223. Rectangle Area](https://leetcode.com/problems/rectangle-area), 35.6%, Medium
 
 - [ ] [187. Repeated DNA Sequences](https://leetcode.com/problems/repeated-dna-sequences), 35.5%, Medium
 

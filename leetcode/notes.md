@@ -1742,6 +1742,9 @@ class Solution {
 - Stars: 1
 
 #### Encoding String into Integer by primes
+- time: 11.32%
+- space: 98.39%
+
 ```java
 class Solution {
     public List<List<String>> groupAnagrams(String[] strs) {
@@ -1818,6 +1821,44 @@ class HashArray {
 }
 ```
 
+#### Encode Anagrams into a String
+```java
+class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        HashMap<String, List<String>> map = new HashMap<>();
+        for(String str: strs) {
+            String code = encode(str);
+            map.computeIfAbsent(code, key -> new ArrayList<>()).add(str);
+        }
+        List<List<String>> result = new ArrayList<>();
+        for(List<String> list: map.values()) {
+            result.add(list);
+        }
+        return result;
+    }
+    
+    private String encode(String str) {
+        StringBuilder sb = new StringBuilder();
+        int[] arr = countChars(str);
+        for(int i=0; i<arr.length; i++){
+            if(arr[i] == 0) continue;
+            char c = (char)('a' + i);
+            sb.append(c);
+            sb.append(arr[i]);
+        }
+        return sb.toString();
+    }
+    
+    private int[] countChars(String str) {
+        int[] result = new int[26];
+        for(char c: str.toCharArray()) {
+            result[c-'a']++;
+        }
+        return result;
+    }
+}
+```
+
 ### 289. Game of Life
 - [Link](https://leetcode.com/problems/game-of-life/)
 - Tags: Array
@@ -1864,10 +1905,54 @@ class Solution {
 }
 ```
 
+#### Encoding by the right most two bits
+- time: 100%
+- space: 100%
+
+```java
+class Solution {
+    public void gameOfLife(int[][] board) {
+        if (board.length == 0 || board[0].length == 0) return ;
+        for(int i=0; i<board.length; i++)
+            for(int j=0; j<board[0].length; j++) {
+                int numNb = countLiveNeighbors(board, i, j);
+                if((board[i][j]&1) == 0) {
+                    // dead cell
+                    if(numNb == 3) board[i][j] |= 2;
+                    else board[i][j] &= ~2;
+                }
+                else {
+                    // live cell
+                    if(numNb < 2 || numNb > 3) board[i][j] &= ~2;
+                    else board[i][j] |= 2;
+                }
+            }
+        for(int i=0; i<board.length; i++)
+            for(int j=0; j<board[0].length; j++) {
+                board[i][j] &= 2;
+                board[i][j] >>= 1;
+            }
+    }
+    
+    private int countLiveNeighbors(int[][] board, int x, int y) {
+        int count = 0;
+        for(int i=x-1; i<=x+1; i++) {
+            if (i<0 || i>board.length-1) continue;
+            for(int j=y-1; j<=y+1; j++) {
+                if (j<0 || j>board[0].length - 1) continue;
+                if(i==x && j==y) continue;
+                if((board[i][j] & 1) == 1) count++;
+            }
+        }
+        return count;
+    }
+}
+```
+
 ### 11. Container With Most Water
 - [Link](https://leetcode.com/problems/container-with-most-water/)
 - Tags: Array, Two Pointers
-- Stars: 3
+- Stars: 2
 
 #### Not My Solution
 [Here is an awesome explanation!](https://leetcode.com/problems/container-with-most-water/discuss/6099/Yet-another-way-to-see-what-happens-in-the-O(n)-algorithm)
@@ -1882,6 +1967,29 @@ class Solution {
             else r--;
         }
         return area;
+    }
+}
+```
+
+#### two pointers
+- time: 94.18%
+- space: 97.90%
+
+```java
+class Solution {
+    public int maxArea(int[] height) {
+        if(height.length < 2) return 0;
+        int maxVolume = 0;
+        int i=0, j=height.length - 1;
+        while(i < j) {
+            maxVolume = Math.max(maxVolume, (j-i) * Math.min(height[i], height[j]));
+            if(height[i] > height[j]) j--;
+            else if (height[i] < height[j]) i++;
+            else {
+                i++; j--;
+            }
+        }
+        return maxVolume;
     }
 }
 ```
@@ -2037,9 +2145,13 @@ class Tuple {
 ```
 
 #### Encoding by native String
+- time: 49.15%
+- space: 89.64%
+
 "r%d%c" --> row  
 "c%d%c" --> col  
 "b%d%d%c" --> 3x3 block  
+
 ```java
 class Solution {
     public boolean isValidSudoku(char[][] board) {
@@ -2145,6 +2257,25 @@ class Solution {
             // else r = mid-1;
             if(nums[mid]>nums[mid+1]) r = mid;
             else l = mid+1;
+        }
+        return l;
+    }
+}
+```
+
+#### simple binary search
+- time: 100%
+- space: 99.09%
+- interviewLevel
+
+```java
+class Solution {
+    public int findPeakElement(int[] nums) {
+        int l = 0, r = nums.length - 1;
+        while(l<r) {
+            int mid = l + ((r-l)>>1);
+            if(nums[mid] < nums[mid+1]) l = mid + 1;
+            else r = mid;
         }
         return l;
     }
@@ -4913,16 +5044,14 @@ Therefore, the DP formula is `f(n) = sum([f(i) * f(n-1-i) for i in range(0, n)])
 ```java
 class Solution {
     public int numTrees(int n) {
-        HashMap<Integer, Integer> map = new HashMap<>();
-        map.put(0,1);
-        for(int i=1; i<=n; i++){
-            int temp = 0;
-            for(int j=0; j<i; j++){
-                temp += map.get(j) * map.get(i-1-j);
+        int[] dp = new int[n+1];
+        dp[0] = 1;
+        for(int i=0; i<n; i++) {
+            for(int j=0; j<=i; j++) {
+                dp[i+1] += dp[j] * dp[i-j];
             }
-            map.put(i, temp);
         }
-        return map.get(n);
+        return dp[n];
     }
 }
 ```
@@ -5056,6 +5185,801 @@ class Solution {
             if(currMin < nums[nums.length-i-1]) start = nums.length-i-1;
         }
         return end-start+1;
+    }
+}
+```
+
+### 137. Single Number II
+- [Link](https://leetcode.com/problems/single-number-ii/)
+- Tags: Bit Manipulation
+- Stars: 3
+
+#### 3n+1 bit manipulation
+- time: 100.00%
+- space: 99.33%
+
+For **Bit manipulation** problems, think **bitwisely**!!
+
+In *Single number I*, each bit of the answer encounters one for `2n+1` times. Therefore, when iterating through the `nums` array, we can use XOR operations to eliminate `2n` occurances for each bit, remaining the only `1` from `2n+1` to be the right value of that bit.
+
+However, this case has a `3n+1` pattern, which demands for a 2-bit counter to deal with `3n`. The main idea is as follows. We iterate through `nums` and record the number of occurances of 1 for each bit. Only three values for each counter are allowed: not occured yet (two-bit code is 00), occured for once (two-bit code is 01), occured for twice (two-bit code is 10). Whenever a bit has encountered with 3 ones (two-bit code is 11), we artifically add another one for that particular bit to convert the counter of that bit into 0 (11 + 1 --> 00). Following this logic, we eliminate `3n` from `3n+1` and only the `1` from `3n+1` remains. 
+
+```java
+class Solution {
+    public int singleNumber(int[] nums) {
+        if(nums.length == 0) return 0;
+        int a = 0, carry = 0;
+        for(int num: nums) {
+            carry |= a & num;
+            a ^= num;
+            int bitsOccurred3times = carry & a;
+            a ^= bitsOccurred3times;
+            carry ^= bitsOccurred3times;
+        }
+        return a;
+    }
+}
+```
+
+### 89. Gray Code
+- [Link](https://leetcode.com/problems/gray-code/)
+- Tags: Backtracking
+- Stars: 1
+
+#### reverse order of last iteration
+- time: 100.00%
+- space: 7.27%
+
+```java
+class Solution {
+    public List<Integer> grayCode(int n) {
+        if(n == 0) return Arrays.asList(0);
+        List<Integer> result = new ArrayList<>();
+        result.add(0);
+        result.add(1);
+        for(int i=1; i<n; i++) {
+            int j = result.size() - 1;
+            for(; j>=0; j--) {
+                result.add((1<<i) | (result.get(j)));
+            }
+        }
+        return result;
+    }
+}
+```
+
+### 24. Swap Nodes in Pairs
+- [Link](https://leetcode.com/problems/swap-nodes-in-pairs/)
+- Tags: Linked List
+- Stars: 1
+
+#### recursive
+- time: 100%
+- space: 100%
+- interviewLevel
+
+```java
+class Solution {
+    public ListNode swapPairs(ListNode head) {
+        if (head == null || head.next == null) return head;
+        ListNode curr = head, next = head.next;
+        head = swapPairs(next.next);
+        next.next = curr;
+        curr.next = head;
+        return next;
+    }
+}
+```
+
+#### recursive
+- time: 100%
+- space: 100%
+
+```java
+class Solution {
+    public ListNode swapPairs(ListNode head) {
+        if(head == null || head.next == null) return head;
+        ListNode newHead = head.next;
+        do {
+            ListNode curr = head, next = head.next;
+            head = next.next;
+            next.next = curr;
+            curr.next = (head == null || head.next == null) ? head : head.next;
+        } while (head != null && head.next != null);
+        return newHead;
+    }
+}
+```
+
+### 153. Find Minimum in Rotated Sorted Array
+- [Link](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/)
+- Tags: Array, Binary Search
+- Stars: 3
+
+#### binary search
+- time: 100%
+- space: 98.62%
+- interviewLevel
+
+Attention: in this line `nums[mid] >= nums[0]`, it must be `>=`, not `>`. That's what a sorted array means!
+
+```java
+class Solution {
+    public int findMin(int[] nums) {
+        int l = 0, r = nums.length-1;
+        while(l < r) {
+            int mid = l + (r-l)/2;
+            if(nums[mid] >= nums[0]) l = mid + 1;
+            else r = mid;
+        }
+        return Math.min(nums[0], nums[l]);
+    }
+}
+```
+
+### 16. 3Sum Closest
+- [Link](https://leetcode.com/problems/3sum-closest/)
+- Tags: Array, Two Pointers
+- Stars: 2
+
+#### two pointers
+- time: 44.28%
+- space: 100%
+- interviewLevel
+
+```java
+class Solution {
+    public int threeSumClosest(int[] nums, int target) {
+        int result = nums[0] + nums[1] + nums[2];
+        Arrays.sort(nums);
+        for(int i=0; i<nums.length - 2; i++) {
+            int l = i+1, r = nums.length - 1;
+            while(l<r) {
+                int curr = nums[i] + nums[l] + nums[r];
+                if (Math.abs(curr - target) < Math.abs(result - target))
+                    result = curr;
+                if (curr > target) r--;
+                else if (curr < target) l++;
+                else {
+                    r--; l++;
+                }
+            }
+        }
+        return result;
+    }
+}
+```
+
+### 114. Flatten Binary Tree to Linked List
+- [Link](https://leetcode.com/problems/flatten-binary-tree-to-linked-list/)
+- Tags: Tree, DFS
+- Stars: 2
+
+#### DFS
+- time: 48.17%
+- space: 68.05%
+
+```java
+class Solution {
+    public void flatten(TreeNode root) {
+        if(root == null) return;
+        helper(root);
+    }
+    
+    public TreeNode helper(TreeNode root) {
+        // root should not be a null value
+        if (root.left == null && root.right == null) return root;
+        if (root.left == null) return helper(root.right);
+        TreeNode left = root.left, right = root.right;
+        root.left = null;
+        root.right = left;
+        TreeNode leftLastNode = helper(left);
+        if (right != null) {
+            leftLastNode.right = right;
+            return helper(right);
+        }
+        return leftLastNode;
+    }
+}
+```
+
+#### reverse post order traversal
+- time: 48.17%
+- space: 100%
+- interviewLevel
+
+```java
+class Solution {
+    TreeNode suffix = null;
+    public void flatten(TreeNode root) {
+        if (root == null) return;
+        flatten(root.right);
+        flatten(root.left);
+        root.left = null;
+        root.right = suffix;
+        suffix = root;
+    }
+}
+```
+
+#### non-recursive, O(1) space
+- time: 48.17%
+- space: 57.97%
+- interviewLevel
+
+```java
+class Solution {
+    public void flatten(TreeNode root) {
+        TreeNode curr = root;
+        while(curr != null) {
+            if (curr.left != null) {
+                TreeNode leftMax = curr.left;
+                while(leftMax.right != null) leftMax = leftMax.right;
+                leftMax.right = curr.right;
+                curr.right = curr.left;
+                curr.left = null;
+            }
+            curr = curr.right;
+        }
+    }
+}
+```
+
+### 109. Convert Sorted List to Binary Search Tree
+- [Link](https://leetcode.com/problems/convert-sorted-list-to-binary-search-tree/)
+- Tags: Linked List, DFS
+- Stars: 2
+
+#### DFS on linked list
+- time: 100%
+- space: 100%
+
+```java
+class Solution {
+    public TreeNode sortedListToBST(ListNode head) {
+        if(head == null) return null;
+        ListNode midNode = getMidNode(head);
+        TreeNode root = new TreeNode(midNode.val);
+        
+        ListNode right = midNode.next;
+        midNode.next = null;
+        root.right = sortedListToBST(right);
+        
+        if (head != midNode) {
+            ListNode leftMax = getPreNode(head, midNode);
+            leftMax.next = null;
+            root.left = sortedListToBST(head);
+        }
+        return root;
+    }
+    public ListNode getMidNode(ListNode head) {
+        if (head == null || head.next == null) return head;
+        ListNode slow = head, fast = head;
+        do {
+            slow = slow.next;
+            fast = fast.next.next;
+        } while (fast != null && fast.next != null);
+        return slow;
+    }
+    public ListNode getPreNode(ListNode head, ListNode target) {
+        if(head == target) return null;
+        ListNode curr = head;
+        while(curr != null && curr.next != target) curr = curr.next;
+        return curr;
+    }
+}
+```
+
+#### DFS on linked list, 2nd version
+- time: 100%
+- space: 100%
+- interviewLevel
+
+```java
+class Solution {
+    public TreeNode sortedListToBST(ListNode head) {
+        if (head == null) return null;
+        return sortedListToBST(head, null);
+    }
+    public TreeNode sortedListToBST(ListNode head, ListNode tail) {
+        if (head == null || head == tail) return null;
+        ListNode midNode = getMidListNode(head, tail);
+        TreeNode root = new TreeNode(midNode.val);
+        root.left = sortedListToBST(head, midNode);
+        root.right = sortedListToBST(midNode.next, tail);
+        return root;
+    }
+    public ListNode getMidListNode(ListNode head, ListNode tail) {
+        if (head.next == tail) return head;
+        ListNode slow = head, fast = head;
+        do {
+            slow = slow.next;
+            fast = fast.next.next;
+        } while(fast != tail && fast.next != tail);
+        return slow;
+    }
+}
+```
+
+### 284. Peeking Iterator
+- [Link](https://leetcode.com/problems/peeking-iterator/)
+- Tags: Design
+- Stars: 2
+
+#### 20190728
+- time: 80.94%
+- space: 100%
+
+```java
+class PeekingIterator implements Iterator<Integer> {
+    Integer peekVal;
+    Iterator<Integer> iterator;
+	public PeekingIterator(Iterator<Integer> iterator) {
+	    this.iterator = iterator;
+        if(iterator.hasNext()) peekVal = iterator.next();
+	}
+	public Integer peek() {
+        return peekVal;
+	}
+	@Override
+	public Integer next() {
+        Integer ret = peekVal;
+        peekVal = iterator.hasNext() ? iterator.next() : null;
+        return ret;
+	}
+	@Override
+	public boolean hasNext() {
+	    return peekVal != null || iterator.hasNext();
+	}
+}
+```
+
+### 113. Path Sum II
+- [Link](https://leetcode.com/problems/path-sum-ii/)
+- Tags: Tree, DFS
+- Stars: 2
+
+#### DFS
+- time: 100%
+- space: 100%
+- interviewLevel
+
+```java
+class Solution {
+    List<List<Integer>> result = new ArrayList<>();
+    public List<List<Integer>> pathSum(TreeNode root, int sum) {
+        if (root == null) return result;
+        backtrack(root, new ArrayList<>(), sum);
+        return result;
+    }
+    public void backtrack(TreeNode root, List<Integer> currList, int target) {
+        currList.add(root.val);
+        if (root.left != null) backtrack(root.left, currList, target - root.val);
+        if (root.right != null) backtrack(root.right, currList, target - root.val);
+        if (root.left == null && root.right == null && target == root.val) result.add(new ArrayList<>(currList));
+        currList.remove(currList.size() - 1);
+    }
+}
+```
+
+### 80. Remove Duplicates from Sorted Array II
+- [Link](https://leetcode.com/problems/remove-duplicates-from-sorted-array-ii/)
+- Tags: Array, Two Pointers
+- Stars: 4
+
+#### stupid solution
+- time: 78.56%
+- space: 100%
+
+```java
+class Solution {
+    public int removeDuplicates(int[] nums) {
+        if (nums.length == 0) return 0;
+        int len = 0, count = 0, i = 0;
+        while (i<nums.length) {
+            if (i == 0 || nums[i] == nums[i-1]) {
+                count++;
+                if (count > 2) {
+                    i++;
+                    continue;
+                }
+                nums[len++] = nums[i++];
+            } else {
+                count = 1;
+                nums[len++] = nums[i++];
+            }
+        }
+        return len;
+    }
+}
+```
+
+#### two pointers, clean and grace
+- time: 100%
+- space: 100%
+- interviewLevel
+
+```java
+class Solution {
+    public int removeDuplicates(int[] nums) {
+        int len = 0;
+        for(int num : nums) 
+            if (len < 2 || num > nums[len-2]) 
+                nums[len++] = num;
+        return len;
+    }
+}
+```
+
+### 299. Bulls and Cows
+- [Link](https://leetcode.com/problems/bulls-and-cows/)
+- Tags: Hash Table
+- Stars: 3
+
+#### 2019.7.28
+- time: 57.24%
+- space: 100%
+
+```java
+class Solution {
+    public String getHint(String secret, String guess) {
+        int[] stat = new int[10], stat2 = new int[10];
+        int bull = 0, cow = 0;
+        for(char c: secret.toCharArray()) stat[c-'0'] += 1;
+        for(char c: guess.toCharArray()) stat2[c-'0'] += 1;
+        for(int i=0; i<guess.length(); i++) {
+            char c = guess.charAt(i);
+            if (guess.charAt(i) == secret.charAt(i)) {
+                bull++;
+                stat[c-'0']--;
+                stat2[c-'0']--;
+            }
+        }
+        for(int i=0; i<guess.length(); i++) {
+            char c = guess.charAt(i);
+            if (stat[c-'0'] > 0 && stat2[c-'0'] > 0) {
+                cow++;
+                stat[c-'0']--;
+                stat2[c-'0']--;
+            }
+        }
+        return bull + "A" + cow + "B";
+    }
+}
+```
+
+#### one stat
+- time: 100%
+- space: 61.31%
+- interviewLevel
+
+```java
+class Solution {
+    public String getHint(String secret, String guess) {
+        int[] stat = new int[10];
+        int bulls = 0, cows = 0;
+        for(int i=0; i<guess.length(); i++) {
+            int s = secret.charAt(i) - '0';
+            int g = guess.charAt(i) - '0';
+            if (s == g) bulls++;
+            else {
+                if (stat[s] < 0) cows++;
+                if (stat[g] > 0) cows++;
+                stat[s]++;
+                stat[g]--;
+            }
+        }
+        return bulls + "A" + cows + "B";
+    }
+}
+```
+
+### 120. Triangle
+- [Link](https://leetcode.com/problems/triangle/)
+- Tags: Array, Dynamic Programming
+- Stars: 3
+
+#### DP top-down
+- time: 84.85%
+- space: 99.16%
+
+```java
+class Solution {
+    public int minimumTotal(List<List<Integer>> triangle) {
+        if (triangle.size() == 0 || triangle.get(0).size() == 0) return 0;
+        int[] nums = new int[triangle.get(triangle.size() - 1).size()];
+        for(int i=0; i<triangle.size(); i++) {
+            List<Integer> row = triangle.get(i);
+            for(int j=row.size()-1; j>=0; j--) {
+                if (j == 0) nums[j] = row.get(j) + nums[j];
+                else if (j == row.size() - 1) nums[j] = row.get(j) + nums[j-1];
+                else nums[j] = row.get(j) + Math.min(nums[j-1], nums[j]);
+            }
+        }
+        int result = Integer.MAX_VALUE;
+        for(int num: nums) result = Math.min(result, num);
+        return result;
+    }
+}
+```
+
+#### DP bottom-up
+- time: 99.83%
+- space: 99.00%
+- interviewLevel
+
+[This post](https://leetcode.com/problems/triangle/discuss/38730/DP-Solution-for-Triangle) can be helpful.
+
+```java
+class Solution {
+    public int minimumTotal(List<List<Integer>> triangle) {
+        if (triangle.size() == 0 || triangle.get(0).size() == 0) return 0;
+        int[] dp = new int[triangle.size() + 1];
+        for (int i=triangle.size()-1; i>=0; i--) {
+            List<Integer> row = triangle.get(i);
+            for(int j=0; j<row.size(); j++) dp[j] = row.get(j) + Math.min(dp[j], dp[j+1]);
+        }
+        return dp[0];
+    }
+}
+```
+
+### 106. Construct Binary Tree from Inorder and Postorder Traversal
+- [Link](https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/)
+- Tags: Array, Tree, DFS
+- Stars: 1
+
+#### recursive
+- time: 15.94%
+- space: 10.03%
+
+```java
+class Solution {
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+        return buildTree(inorder, 0, postorder, 0, inorder.length);
+    }
+    public TreeNode buildTree(int[] inorder, int iIdx, int[] postorder, int pIdx, int len) {
+        if (len == 0) return null;
+        TreeNode root = new TreeNode(postorder[pIdx + len - 1]);
+        int mid = findIdx(inorder, root.val, iIdx);
+        int leftLen = mid - iIdx, rightLen = len - 1 - leftLen;
+        root.left = buildTree(inorder, iIdx, postorder, pIdx, leftLen);
+        root.right = buildTree(inorder, iIdx+leftLen+1, postorder, pIdx+leftLen, rightLen);
+        return root;
+    }
+    public int findIdx(int[] nums, int target, int start) {
+        for(int i=start; i<nums.length; i++)
+            if (nums[i] == target) return i;
+        return -1;
+    }
+}
+```
+
+### 208. Implement Trie (Prefix Tree)
+- [Link](https://leetcode.com/problems/implement-trie-prefix-tree/)
+- Tags: Design, Trie
+- Stars: 4
+
+#### Naive
+- time: 33.84%
+- space: 99.88%
+
+```java
+class Trie {
+    boolean[] marked;
+    Trie[] letters;
+    public Trie() {}
+    public void insert(String word) {
+        if (word.length() == 0) return ;
+        int w = word.charAt(0) - 'a';
+        if (letters == null) {
+            letters = new Trie[26];
+            marked = new boolean[26];
+        }
+        if (letters[w] == null) letters[w] = new Trie();
+        if (word.length() == 1) marked[w] = true;
+        else letters[w].insert(word.substring(1, word.length()));
+    }
+    public boolean search(String word) {
+        if (word == null || word.length() == 0) return true;
+        if (letters == null) return false;
+        int w = word.charAt(0) - 'a';
+        if (word.length() == 1) return marked[w];
+        return letters[w] != null && letters[w].search(word.substring(1, word.length()));
+    }
+    public boolean startsWith(String prefix) {
+        if (prefix == null || prefix.length() == 0) return true;
+        if (letters == null) return false;
+        int w = prefix.charAt(0) - 'a';
+        if (letters[w] == null) return false;
+        return letters[w].startsWith(prefix.substring(1, prefix.length()));
+    }
+}
+```
+
+### 116. Populating Next Right Pointers in Each Node
+- [Link](https://leetcode.com/problems/populating-next-right-pointers-in-each-node/)
+- Tags: Tree, DFS
+- Stars: 3
+
+#### DFS
+- time: 100%
+- space: 99.31%
+- interviewLevel
+
+```java
+class Solution {
+    public Node connect(Node root) {
+        if (root == null) return null;
+        Node childPre = null;
+        if (root.left != null) {
+            root.left.next = root.right;
+            childPre = root.left;
+        }
+        if (root.right != null) childPre = root.right;
+        if (root.next != null && childPre != null) childPre.next = root.next.left;
+        connect(root.left);
+        connect(root.right);
+        return root;
+    }
+}
+```
+
+### 147. Insertion Sort List
+- [Link](https://leetcode.com/problems/insertion-sort-list/)
+- Tags: Linked List, Sort
+- Stars: 2
+
+#### 2019.7.29
+- time: 67.41%
+- space: 100%
+
+```java
+class Solution {
+    public ListNode insertionSortList(ListNode head) {
+        if (head == null) return head;
+        ListNode curr = head.next;
+        head.next = null;
+        while (curr != null) {
+            ListNode next = curr.next;
+            head = insertNode(head, curr);
+            curr = next;
+        }
+        return head;
+    }
+    public ListNode insertNode(ListNode head, ListNode curr) {
+        if (curr.val < head.val) {
+            curr.next = head;
+            return curr;
+        }
+        ListNode p = head, last = null;
+        while (p != null && p.val <= curr.val) {
+            last = p;
+            p = p.next;
+        }
+        curr.next = last.next;
+        last.next = curr;
+        return head;
+    }
+}
+```
+
+### 86. Partition List
+- [Link](https://leetcode.com/problems/partition-list/)
+- Tags: Linked List, Two Pointers
+- Stars: 2
+
+#### 2019.7.29
+- time: 100%
+- space: 100%
+
+```java
+class Solution {
+    public ListNode partition(ListNode head, int x) {
+        if (head == null) return null;
+        ListNode left = new ListNode(0), right = new ListNode(0), leftHead = left, rightHead = right, curr = head;
+        while(curr != null) {
+            ListNode next = curr.next;
+            curr.next = null;
+            if (curr.val < x) left = append(left, curr);
+            else right = append(right, curr);
+            curr = next;
+        }
+        left.next = rightHead.next;
+        return leftHead.next;
+    }
+    public ListNode append(ListNode tail, ListNode node) {
+        tail.next = node;
+        return node;
+    }
+}
+```
+
+### 264. Ugly Number II
+- [Link](https://leetcode.com/problems/ugly-number-ii/)
+- Tags: Math, Dynamic Programming, Heap
+- Stars: 4
+
+#### min heap
+- time: 6.79%
+- space: 5.25%
+
+```java
+class Solution {
+    public int nthUglyNumber(int n) {
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+        HashSet<Integer> set = new HashSet<>();
+        int count = 1;
+        minHeap.add(1);
+        while(count < n) {
+            int curr = minHeap.poll();
+            count++;
+            safeInsertHeap(minHeap, set, curr, 2);
+            safeInsertHeap(minHeap, set, curr, 3);
+            safeInsertHeap(minHeap, set, curr, 5);
+        }
+        return minHeap.poll();
+    }
+    public void safeInsertHeap(PriorityQueue<Integer> heap, HashSet<Integer> set, int num, int k) {
+        if (num > Integer.MAX_VALUE/k) return;
+        num *= k;
+        if(!set.contains(num) && num > 0) {
+            heap.add(num);
+            set.add(num);
+        }
+    }
+}
+```
+
+### 201. Bitwise AND of Numbers Range
+- [Link](https://leetcode.com/problems/bitwise-and-of-numbers-range/)
+- Tags: Bit Manipulation
+- Stars: 2
+
+#### 2019.7.29
+- time: 100%
+- space: 5.59%
+- interviewLevel
+
+```java
+class Solution {
+    public int rangeBitwiseAnd(int m, int n) {
+        int count = 0;
+        while(m!=n) {
+            m>>=1; n>>=1;
+            count++;
+        }
+        return m<<count;
+    }
+}
+```
+
+### 223. Rectangle Area
+- [Link](https://leetcode.com/problems/rectangle-area/)
+- Tags: Math
+- Stars: 3
+
+#### 2019.7.29
+- time: 100%
+- space: 5.21%
+- interviewLevel
+
+```java
+class Solution {
+    public int computeArea(int A, int B, int C, int D, int E, int F, int G, int H) {
+        int area1 = getArea(A, B, C, D);
+        int area2 = getArea(E, F, G, H);
+        int x = getOverlap(A, C, E, G);
+        int y = getOverlap(B, D, F, H);
+        int area3 = (x < 0 || y < 0) ? 0 : x*y;
+        return area1 + area2 - area3;
+    }
+    public int getOverlap(int x1, int x2, int x3, int x4) {
+        if (x2 < x3 || x1 > x4) return 0;
+        return Math.min(x2, x4) - Math.max(x1, x3);
+    }
+    public int getArea(int x1, int y1, int x2, int y2) {
+        return (x2-x1) * (y2 - y1);
     }
 }
 ```
@@ -5552,6 +6476,19 @@ class Solution {
         while(num != 0 && num % 3 == 0) num /= 3;
         while(num != 0 && num % 5 == 0) num /= 5;
         return num == 1 || num == 0;
+    }
+}
+```
+
+updated 2019.7.29
+```java
+class Solution {
+    public boolean isUgly(int num) {
+        if (num <= 0) return false;
+        while(num%2 == 0) num /= 2;
+        while(num%3 == 0) num /= 3;
+        while(num%5 == 0) num /= 5;
+        return num == 1;
     }
 }
 ```
@@ -6681,6 +7618,35 @@ class Solution {
 }
 ```
 
+#### 20190708 backtrack
+- time: 100%
+- space: 99.36%
+
+```java
+class Solution {
+    List<List<Integer>> result = new ArrayList<>();
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        Arrays.sort(nums);
+        backtrack(nums, new ArrayList<>(), 0);
+        return result;
+    }
+    private void backtrack(int[] nums, List<Integer> curr, int start) {
+        if (start >= nums.length) {
+            result.add(new ArrayList<>(curr));
+            return ;
+        }
+        // Case 1: not take `nums[start]` element
+        int next = start;
+        while(++next < nums.length && nums[next] == nums[start]); // Find the next different element
+        backtrack(nums, curr, next);
+        // Case 2: take `nums[start]` element
+        curr.add(nums[start]);
+        backtrack(nums, curr, start+1);
+        curr.remove(curr.size()-1);
+    }
+}
+```
+
 ### 46. Permutations
 - [Link](https://leetcode.com/problems/permutations/)
 - Tags: Backtracking
@@ -6743,6 +7709,31 @@ class Solution {
 }
 ```
 
+Updated 2019.7.28
+```java
+class Solution {
+    List<List<Integer>> result = new ArrayList<>();
+    public List<List<Integer>> permute(int[] nums) {
+        backtrack(nums, new boolean[nums.length], new ArrayList<>());
+        return result;
+    }
+    public void backtrack(int[] nums, boolean[] used, List<Integer> currList) {
+        if (currList.size() == nums.length) {
+            result.add(new ArrayList<>(currList));
+            return ;
+        }
+        for (int i=0; i<used.length; i++) {
+            if (used[i]) continue;
+            currList.add(nums[i]);
+            used[i] = true;
+            backtrack(nums, used, currList);
+            used[i] = false;
+            currList.remove(currList.size() - 1);
+        }
+    }
+}
+```
+
 ### 47. Permutations II
 - [Link](https://leetcode.com/problems/permutations-ii/)
 - Tags: Backtracking
@@ -6778,6 +7769,39 @@ class Solution {
                 map.put(num, map.get(num)+1);
             }
         }
+    }
+}
+```
+
+updated 2019.7.28
+```java
+class Solution {
+    List<List<Integer>> result = new ArrayList<>();
+    int len;
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        HashMap<Integer, Integer> stat = getStat(nums);
+        len = nums.length;
+        backtrack(stat, new ArrayList<>());
+        return result;
+    }
+    public void backtrack(HashMap<Integer, Integer> stat, List<Integer> currList) {
+        if (currList.size() == len) {
+            result.add(new ArrayList<>(currList));
+            return ;
+        }
+        for (int key: stat.keySet()) {
+            if (stat.get(key) <= 0) continue;
+            stat.put(key, stat.get(key) - 1);
+            currList.add(key);
+            backtrack(stat, currList);
+            currList.remove(currList.size() - 1);
+            stat.put(key, stat.get(key) + 1);
+        }
+    }
+    public HashMap<Integer, Integer> getStat(int[] nums) {
+        HashMap<Integer, Integer> stat = new HashMap<>();
+        for(int num: nums) stat.put(num, stat.getOrDefault(num, 0) + 1);
+        return stat;
     }
 }
 ```
