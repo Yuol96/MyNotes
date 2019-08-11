@@ -322,79 +322,79 @@
 
 - [x] [223. Rectangle Area](https://leetcode.com/problems/rectangle-area), 35.6%, Medium
 
-- [ ] [187. Repeated DNA Sequences](https://leetcode.com/problems/repeated-dna-sequences), 35.5%, Medium
+- [x] [187. Repeated DNA Sequences](https://leetcode.com/problems/repeated-dna-sequences), 35.5%, Medium
 
-- [ ] [228. Summary Ranges](https://leetcode.com/problems/summary-ranges), 35.4%, Medium
+- [x] [228. Summary Ranges](https://leetcode.com/problems/summary-ranges), 35.4%, Medium
 
-- [ ] [275. H-Index II](https://leetcode.com/problems/h-index-ii), 35.2%, Medium
+- [x] [275. H-Index II](https://leetcode.com/problems/h-index-ii), 35.2%, Medium
 
-- [ ] [213. House Robber II](https://leetcode.com/problems/house-robber-ii), 35.1%, Medium
+- [x] [213. House Robber II](https://leetcode.com/problems/house-robber-ii), 35.1%, Medium
 
-- [ ] [56. Merge Intervals](https://leetcode.com/problems/merge-intervals), 35.0%, Medium
+- [x] [56. Merge Intervals](https://leetcode.com/problems/merge-intervals), 35.0%, Medium
 
-- [ ] [95. Unique Binary Search Trees II](https://leetcode.com/problems/unique-binary-search-trees-ii), 35.0%, Medium
+- [x] [95. Unique Binary Search Trees II](https://leetcode.com/problems/unique-binary-search-trees-ii), 35.0%, Medium
 
-- [ ] [74. Search a 2D Matrix](https://leetcode.com/problems/search-a-2d-matrix), 34.7%, Medium
+- [x] [74. Search a 2D Matrix](https://leetcode.com/problems/search-a-2d-matrix), 34.7%, Medium
 
-- [ ] [139. Word Break](https://leetcode.com/problems/word-break), 34.5%, Medium
+- [x] [139. Word Break](https://leetcode.com/problems/word-break), 34.5%, Medium
 
-- [ ] [274. H-Index](https://leetcode.com/problems/h-index), 34.4%, Medium
+- [x] [274. H-Index](https://leetcode.com/problems/h-index), 34.4%, Medium
 
-- [ ] [209. Minimum Size Subarray Sum](https://leetcode.com/problems/minimum-size-subarray-sum), 34.4%, Medium
+- [x] [209. Minimum Size Subarray Sum](https://leetcode.com/problems/minimum-size-subarray-sum), 34.4%, Medium
 
-- [ ] [92. Reverse Linked List II](https://leetcode.com/problems/reverse-linked-list-ii), 34.2%, Medium
+- [x] [92. Reverse Linked List II](https://leetcode.com/problems/reverse-linked-list-ii), 34.2%, Medium
 
 - [ ] [148. Sort List](https://leetcode.com/problems/sort-list), 34.2%, Medium
 
-- [ ] [19. Remove Nth Node From End of List](https://leetcode.com/problems/remove-nth-node-from-end-of-list), 34.0%, Medium
+- [x] [19. Remove Nth Node From End of List](https://leetcode.com/problems/remove-nth-node-from-end-of-list), 34.0%, Medium
 
 - [ ] [210. Course Schedule II](https://leetcode.com/problems/course-schedule-ii), 33.9%, Medium
 
 - [ ] [285. Inorder Successor in BST](https://leetcode.com/problems/inorder-successor-in-bst), 33.7%, Medium
 
-- [ ] [117. Populating Next Right Pointers in Each Node II](https://leetcode.com/problems/populating-next-right-pointers-in-each-node-ii), 33.7%, Medium
+- [x] [117. Populating Next Right Pointers in Each Node II](https://leetcode.com/problems/populating-next-right-pointers-in-each-node-ii), 33.7%, Medium
 
 - [ ] [267. Palindrome Permutation II](https://leetcode.com/problems/palindrome-permutation-ii), 33.3%, Medium
 
-- [ ] [63. Unique Paths II](https://leetcode.com/problems/unique-paths-ii), 33.2%, Medium
+- [x] [63. Unique Paths II](https://leetcode.com/problems/unique-paths-ii), 33.2%, Medium
 
-- [ ] [34. Find First and Last Position of Element in Sorted Array](https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array), 33.1%, Medium
+- [x] [34. Find First and Last Position of Element in Sorted Array](https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array), 33.1%, Medium
 
-- [ ] [134. Gas Station](https://leetcode.com/problems/gas-station), 33.1%, Medium
+- [x] [134. Gas Station](https://leetcode.com/problems/gas-station), 33.1%, Medium
 
 - [ ] [227. Basic Calculator II](https://leetcode.com/problems/basic-calculator-ii), 32.8%, Medium
 
-- [ ] [33. Search in Rotated Sorted Array](https://leetcode.com/problems/search-in-rotated-sorted-array), 32.7%, Medium
+- [x] [33. Search in Rotated Sorted Array](https://leetcode.com/problems/search-in-rotated-sorted-array), 32.7%, Medium
 
 - [ ] [81. Search in Rotated Sorted Array II](https://leetcode.com/problems/search-in-rotated-sorted-array-ii), 32.5%, Medium
 
-- [ ] [60. Permutation Sequence](https://leetcode.com/problems/permutation-sequence), 32.5%, Medium
+- [x] [60. Permutation Sequence](https://leetcode.com/problems/permutation-sequence), 32.5%, Medium
 
 - [ ] [221. Maximal Square](https://leetcode.com/problems/maximal-square), 32.4%, Medium
 
 - [ ] [82. Remove Duplicates from Sorted List II](https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii), 32.3%, Medium
 
-- [ ] [222. Count Complete Tree Nodes](https://leetcode.com/problems/count-complete-tree-nodes), 31.8%, Medium
+- [x] [222. Count Complete Tree Nodes](https://leetcode.com/problems/count-complete-tree-nodes), 31.8%, Medium
 
-- [ ] [150. Evaluate Reverse Polish Notation](https://leetcode.com/problems/evaluate-reverse-polish-notation), 31.5%, Medium
+- [x] [150. Evaluate Reverse Polish Notation](https://leetcode.com/problems/evaluate-reverse-polish-notation), 31.5%, Medium
 
 - [ ] [161. One Edit Distance](https://leetcode.com/problems/one-edit-distance), 31.5%, Medium
 
-- [ ] [55. Jump Game](https://leetcode.com/problems/jump-game), 31.4%, Medium
+- [x] [55. Jump Game](https://leetcode.com/problems/jump-game), 31.4%, Medium
 
-- [ ] [229. Majority Element II](https://leetcode.com/problems/majority-element-ii), 31.4%, Medium
+- [x] [229. Majority Element II](https://leetcode.com/problems/majority-element-ii), 31.4%, Medium
 
-- [ ] [142. Linked List Cycle II](https://leetcode.com/problems/linked-list-cycle-ii), 31.1%, Medium
+- [x] [142. Linked List Cycle II](https://leetcode.com/problems/linked-list-cycle-ii), 31.1%, Medium
 
-- [ ] [6. ZigZag Conversion](https://leetcode.com/problems/zigzag-conversion), 30.9%, Medium
+- [x] [6. ZigZag Conversion](https://leetcode.com/problems/zigzag-conversion), 30.9%, Medium
 
-- [ ] [93. Restore IP Addresses](https://leetcode.com/problems/restore-ip-addresses), 30.9%, Medium
+- [x] [93. Restore IP Addresses](https://leetcode.com/problems/restore-ip-addresses), 30.9%, Medium
 
-- [ ] [2. Add Two Numbers](https://leetcode.com/problems/add-two-numbers), 30.7%, Medium
+- [x] [2. Add Two Numbers](https://leetcode.com/problems/add-two-numbers), 30.7%, Medium
 
-- [ ] [79. Word Search](https://leetcode.com/problems/word-search), 30.6%, Medium
+- [x] [79. Word Search](https://leetcode.com/problems/word-search), 30.6%, Medium
 
-- [ ] [31. Next Permutation](https://leetcode.com/problems/next-permutation), 30.1%, Medium
+- [x] [31. Next Permutation](https://leetcode.com/problems/next-permutation), 30.1%, Medium
 
 - [ ] [43. Multiply Strings](https://leetcode.com/problems/multiply-strings), 30.1%, Medium
 
@@ -416,7 +416,7 @@
 
 - [ ] [5. Longest Palindromic Substring](https://leetcode.com/problems/longest-palindromic-substring), 26.8%, Medium
 
-- [ ] [61. Rotate List](https://leetcode.com/problems/rotate-list), 26.6%, Medium
+- [x] [61. Rotate List](https://leetcode.com/problems/rotate-list), 26.6%, Medium
 
 - [ ] [138. Copy List with Random Pointer](https://leetcode.com/problems/copy-list-with-random-pointer), 26.0%, Medium
 
@@ -426,11 +426,11 @@
 
 - [ ] [179. Largest Number](https://leetcode.com/problems/largest-number), 25.3%, Medium
 
-- [ ] [98. Validate Binary Search Tree](https://leetcode.com/problems/validate-binary-search-tree), 25.3%, Medium
+- [x] [98. Validate Binary Search Tree](https://leetcode.com/problems/validate-binary-search-tree), 25.3%, Medium
 
-- [ ] [15. 3Sum](https://leetcode.com/problems/3sum), 23.6%, Medium
+- [x] [15. 3Sum](https://leetcode.com/problems/3sum), 23.6%, Medium
 
-- [ ] [127. Word Ladder](https://leetcode.com/problems/word-ladder), 23.2%, Medium
+- [x] [127. Word ](https://leetcode.com/problems/word-ladder), 23.2%, Medium
 
 - [ ] [163. Missing Ranges](https://leetcode.com/problems/missing-ranges), 23.0%, Medium
 
@@ -446,11 +446,11 @@
 
 - [ ] [166. Fraction to Recurring Decimal](https://leetcode.com/problems/fraction-to-recurring-decimal), 19.2%, Medium
 
-- [ ] [29. Divide Two Integers](https://leetcode.com/problems/divide-two-integers), 16.1%, Medium
+- [x] [29. Divide Two Integers](https://leetcode.com/problems/divide-two-integers), 16.1%, Medium
 
-- [ ] [151. Reverse Words in a String](https://leetcode.com/problems/reverse-words-in-a-string), 16.1%, Medium
+- [x] [151. Reverse Words in a String](https://leetcode.com/problems/reverse-words-in-a-string), 16.1%, Medium
 
-- [ ] [8. String to Integer (atoi)](https://leetcode.com/problems/string-to-integer-atoi), 14.5%, Medium
+- [x] [8. String to Integer (atoi)](https://leetcode.com/problems/string-to-integer-atoi), 14.5%, Medium
 
 - [ ] [296. Best Meeting Point](https://leetcode.com/problems/best-meeting-point), 54.3%, Hard
 

@@ -147,7 +147,7 @@ class Solution {
 - Tags: Array, Divide and Conquer, Bit Manipulation
 - Stars: 2
 
-#### Heavy Guardian (Moore Voting)
+#### Heavy Guardian (Boyer-Moore Majority Vote Algorithm)
 ```java
 class Solution {
     public int majorityElement(int[] nums) {
@@ -163,6 +163,27 @@ class Solution {
             }
         }
         return result;
+    }
+}
+```
+
+Updated 2019.8.10
+
+```java
+class Solution {
+    public int majorityElement(int[] nums) {
+        int candidate = nums[0], count = 1;
+        for(int i=1; i<nums.length; i++) {
+            if (nums[i] == candidate) count++;
+            else {
+                count--;
+                if (count == 0) {
+                    count = 1;
+                    candidate = nums[i];
+                }
+            }
+        }
+        return candidate;
     }
 }
 ```
@@ -647,24 +668,29 @@ class Solution {
 - Stars: 1
 
 #### 2 pass House Robber I
+- time: 100%
+- space: 100%
+- interviewLevel
+
+Attention! It needs to be taken care of when `nums` only has one element.
+
 ```java
 class Solution {
     public int rob(int[] nums) {
-        if(nums.length == 0) return 0;
-        if(nums.length == 1) return nums[0];
-        return Math.max(rob(nums, 0, nums.length-1), rob(nums, 1, nums.length));
+        if (nums.length == 0) return 0;
+        if (nums.length == 1) return nums[0];
+        return Math.max(rob(nums, 0, nums.length-2), rob(nums, 1, nums.length-1));
     }
-    public int rob(int[] nums, int start, int end){
-        if(start >= end) return 0;
-        int[] dp = new int[end-start];
-        dp[0] = nums[start];
-        for(int i=start+1; i<end; i++){
-            dp[i-start] = nums[i];
-            if(i-2>=start) dp[i-start]+=dp[i-2-start];
-            if(i-3>=start) dp[i-start] = Math.max(dp[i-start], dp[i-3-start]+nums[i]);
+    public int rob(int[] nums, int l, int r) {
+        if (l > r) return 0;
+        int[] dp = new int[nums.length];
+        int result = 0;
+        for(int i=l; i<=r; i++) {
+            if (i < l+2) dp[i] = nums[i];
+            else if (i == l+2) dp[i] = nums[i-2] + nums[i];
+            else dp[i] = Math.max(dp[i-2], dp[i-3]) + nums[i];
+            result = Math.max(result, dp[i]);
         }
-        int result = dp[end-1-start];
-        if(end-2>=start) result = Math.max(result, dp[end-2-start]);
         return result;
     }
 }
@@ -1429,7 +1455,7 @@ class Solution {
 ### 142. Linked List Cycle II
 - [Link](https://leetcode.com/problems/linked-list-cycle-ii/)
 - Tags: Linked List, Two Pointers
-- Stars: 2
+- Stars: 3
 
 
 #### slow-fast two pointers
@@ -1449,6 +1475,29 @@ public class Solution {
         while(slow != fast);
         fast = head;
         while(slow != fast){
+            slow = slow.next;
+            fast = fast.next;
+        }
+        return slow;
+    }
+}
+```
+
+Updated 2019.8.10
+
+```java
+public class Solution {
+    public ListNode detectCycle(ListNode head) {
+        if (head == null || head.next == null) return null;
+        ListNode slow = head, fast = head.next;
+        while(fast != null && fast.next != null && slow != fast) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        if (fast == null || fast.next == null) return null;
+        slow = slow.next;
+        fast = head;
+        while (slow != fast) {
             slow = slow.next;
             fast = fast.next;
         }
@@ -2827,6 +2876,42 @@ class Solution {
 }
 ```
 
+Updated 2019.7.31
+
+Here we define `lowerBound` function to find the minimal element in `nums` that is greater than or equal to the target.
+
+```java
+class Solution {
+    public int[] searchRange(int[] nums, int target) {
+        int[] result = new int[2];
+        result[0] = result[1] = -1;
+        // Binary search boundary check
+        if (nums.length == 0 || target < nums[0] || target > nums[nums.length - 1]) return result;
+        int l = 0, r = nums.length - 1;
+        int start = lowerBound(nums, target);
+        if (nums[start] != target) return result;
+        result[0] = start;
+        // Binary search boundary check
+        if (target + 1 > nums[nums.length - 1]) {
+            result[1] = nums.length - 1;
+            return result;
+        }
+        int end = lowerBound(nums, target + 1);
+        result[1] = end - 1;
+        return result;
+    }
+    public int lowerBound(int[] nums, int target) {
+        int l = 0, r = nums.length - 1;
+        while (l < r) {
+            int mid = l + ((r-l)>>1);
+            if (nums[mid] < target) l = mid + 1;
+            else if (nums[mid] >= target) r = mid;
+        }
+        return l;
+    }
+}
+```
+
 ### 236. Lowest Common Ancestor of a Binary Tree
 - [Link](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/)
 - Tags: Tree
@@ -2914,12 +2999,70 @@ class Solution {
 }
 ```
 
+#### DP with memorization
+- time: 100%
+- space: 99.93%
+- interviewLevel
+
+```java
+class Solution {
+    boolean[] marked;
+    public boolean wordBreak(String s, List<String> wordDict) {
+        marked = new boolean[s.length()];
+        return wordBreak(s, wordDict, 0);
+    }
+    public boolean wordBreak(String s, List<String> wordDict, int start) {
+        if (start >= s.length()) return true;
+        if (marked[start]) return false;
+        for (String word: wordDict) {
+            if (s.startsWith(word, start)) {
+                if (wordBreak(s, wordDict, start + word.length())) return true;
+                marked[start] = true;
+            }
+        }
+        return false;
+    }
+}
+```
+
+
 ### 19. Remove Nth Node From End of List
 - [Link](https://leetcode.com/problems/remove-nth-node-from-end-of-list/)
 - Tags: Linked List, Two Pointers
 - Stars: 3
 
+#### two pass solution
+- time: 100%
+- space: 100%
+
+```java
+class Solution {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        if (head == null) return null;
+        ListNode curr = head;
+        int count = 0;
+        while(curr != null) {
+            count++;
+            curr = curr.next;
+        }
+        if (count == n) return head.next;
+        curr = moveForward(head, count - n - 1);
+        curr.next = curr.next.next;
+        return head;
+    }
+    public ListNode moveForward(ListNode head, int n) {
+        for(int i=0; i<n; i++)
+            head = head.next;
+        return head;
+    }
+}
+```
+
 #### one pass solution
+- time: 100%
+- space: 100%
+- interviewLevel
+
 ```java
 class Solution {
     public ListNode removeNthFromEnd(ListNode head, int n) {
@@ -2940,9 +3083,12 @@ class Solution {
 ### 56. Merge Intervals
 - [Link](https://leetcode.com/problems/merge-intervals/)
 - Tags: Array, Sort
-- Stars: 3
+- Stars: 2
 
 #### sort
+- time: 52.24%
+- space: 73.13%
+
 The way of writting a sort function can be simplified to `intervals.sort((o1, o2)->o1.start-o2.start);`.
 
 Take a look at [435. Non-overlapping Intervals](#435. Non-overlapping Intervals) 
@@ -2970,6 +3116,42 @@ class Solution {
         }
         result.add(new Interval(start, end));
         return result;
+    }
+}
+```
+
+Updated 2019.7.30
+```java
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        if (intervals.length < 2) return intervals;
+        List<int[]> list = new ArrayList<>();
+        Arrays.sort(intervals, (int[] r1, int[] r2) -> r1[0] - r2[0]);
+        int start = intervals[0][0], end = intervals[0][1];
+        for(int i=1; i<intervals.length; i++) {
+            int[] range = intervals[i];
+            if (range[0] <= end) {
+                end = Math.max(end, range[1]);
+            }
+            else {
+                insert(list, start, end);
+                start = range[0];
+                end = range[1];
+            }
+        }
+        insert(list, start, end);
+        int[][] result = new int[list.size()][2];
+        for(int i=0; i<list.size(); i++) {
+            int[] range = list.get(i);
+            result[i] = range;
+        }
+        return result;
+    }
+    public void insert(List<int[]> list, int start, int end) {
+        int[] range = new int[2];
+        range[0] = start;
+        range[1] = end;
+        list.add(range);
     }
 }
 ```
@@ -3016,6 +3198,30 @@ class Solution {
             }
             if(fast == slow) return slow;
         }
+    }
+}
+```
+
+Updated 2019.7.31
+```java
+class Solution {
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int[] delta = new int[gas.length];
+        int n = delta.length;
+        for(int i=0; i<n; i++) delta[i] = gas[i] - cost[i];
+        int start = 0, balance = 0, curr = 0;
+        while(start < n) {
+            balance += delta[curr];
+            if (balance < 0) {
+                if (curr < start) return -1;
+                start = ++curr;
+                balance = 0;
+                continue;
+            }
+            curr = (curr + 1) % n;
+            if (curr == start) return start;
+        }
+        return -1;
     }
 }
 ```
@@ -3089,7 +3295,7 @@ class Solution {
 }
 ```
 
-#### Method 3: use binary search for 3 times
+#### Method 3: direct binary search
 `nums` is almost in a sorted order, and we can take advantage of it! 
 
 we can divide this problem into two cases:  
@@ -3135,6 +3341,31 @@ class Solution {
 }
 ```
 
+Updated 2019.7.31
+```java
+class Solution {
+    public int search(int[] nums, int target) {
+        if (nums.length == 0) return -1;
+        if (nums[0] < nums[nums.length - 1]) 
+            return Math.max(-1, Arrays.binarySearch(nums, 0, nums.length, target));
+        int l = 0, r = nums.length - 1;
+        while (l+1 < r) {
+            int mid = l + ((r-l)>>1);
+            if(nums[mid] > target) {
+                if (target < nums[0] && nums[mid] >= nums[0]) l = mid+1;
+                else r = mid;
+            } else if (nums[mid] < target) {
+                if (target >= nums[0] && nums[mid] < nums[0]) r = mid-1;
+                else l = mid;
+            } else return mid;
+        }
+        if (nums[l] == target) return l;
+        else if (nums[r] == target) return r;
+        return -1;
+    }
+}
+```
+
 ### 150. Evaluate Reverse Polish Notation
 - [Link](https://leetcode.com/problems/evaluate-reverse-polish-notation/)
 - Tags: Stack
@@ -3169,6 +3400,28 @@ class Solution {
 }
 ```
 
+Updated 2019.8.4
+
+```java
+class Solution {
+    public int evalRPN(String[] tokens) {
+        Stack<Integer> st = new Stack<>();
+        for (String token: tokens) {
+            if (Character.isDigit(token.charAt(token.length()-1))) st.add(Integer.parseInt(token));
+            else {
+                int b = st.pop(), a = st.pop();
+                char c = token.charAt(0);
+                if (c == '+') st.add(a+b);
+                else if (c == '-') st.add(a-b);
+                else if (c == '*') st.add(a*b);
+                else if (c == '/') st.add(a/b);
+            }
+        }
+        return st.pop();
+    }
+}
+```
+
 ### 55. Jump Game
 - [Link](https://leetcode.com/problems/jump-game/)
 - Tags: Array, Greedy
@@ -3191,9 +3444,11 @@ class Solution {
 ### 2. Add Two Numbers
 - [Link](https://leetcode.com/problems/add-two-numbers/)
 - Tags: Linked List, Math
-- Stars: 1
+- Stars: 2
 
 #### simple solution beats 91.83% in time and 96.99% in space
+- attention: there is one more step/iteration after the while loop.
+
 ```java
 class Solution {
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
@@ -3513,7 +3768,7 @@ class Solution {
 ### 98. Validate Binary Search Tree
 - [Link](https://leetcode.com/problems/validate-binary-search-tree/)
 - Tags: Tree, BFS
-- Stars: 1
+- Stars: 4
 
 #### recursive
 Attention that you need to take care of cases like `root.val == Integer.MIN_VALUE` and `root.val == Integer.MAX_VALUE`, because under these circumstances, the boundaries might overflow.
@@ -3771,6 +4026,40 @@ class Solution {
 }
 ```
 
+#### Same algorithm from the computer architecture course
+- time: 100%
+- space: 5.28%
+
+```java
+class Solution {
+    public int divide(int dividend, int divisor) {
+        long quot = 0L, div = 0L, sign = 1L,
+            dividendL = (long)dividend, divisorL = (long)divisor;
+        if (dividendL < 0) {
+            sign *= -1L;
+            dividendL *= -1L;
+        }
+        if (divisorL < 0) {
+            sign *= -1L;
+            divisorL *= -1L;
+        }
+        for (int i=31; i>=0; i--) {
+            div <<= 1;
+            div |= (1L&(dividendL>>i));
+            quot <<= 1;
+            if (div >= divisorL) {
+                div -= divisorL;
+                quot |= 1L;
+            }
+        }
+        quot *= sign;
+        if (quot < Integer.MIN_VALUE || quot > Integer.MAX_VALUE)
+            quot = Integer.MAX_VALUE;
+        return (int)quot;
+    }
+}
+```
+
 ### 8. String to Integer (atoi)
 - [Link](https://leetcode.com/problems/string-to-integer-atoi/)
 - Tags: Math, String
@@ -3802,6 +4091,35 @@ class Solution {
         if(result < Integer.MIN_VALUE) return Integer.MIN_VALUE;
         else if (result > Integer.MAX_VALUE) return Integer.MAX_VALUE;
         return (int)result;
+    }
+}
+```
+
+Updated 2019.7.31
+```java
+class Solution {
+    public int myAtoi(String str) {
+        int i = 0;
+        long result = 0;
+        // prefix whitespaces
+        while (i < str.length() && str.charAt(i) == ' ') i++;
+        if (i >= str.length()) return 0;
+        // optional plus and minus sign
+        int sign = 1;
+        if (str.charAt(i) == '-') {
+            sign = -1; i++;
+        } else if (str.charAt(i) == '+') i++;
+        else if (!Character.isDigit(str.charAt(i))) return 0;
+        // numerical digits
+        if (i >= str.length()) return 0;
+        while (i<str.length() && Character.isDigit(str.charAt(i))) {
+            result *= 10;
+            result += str.charAt(i++) - '0';
+            // deal with the overflow problem
+            if (result < Integer.MIN_VALUE || result > Integer.MAX_VALUE) break;
+        }
+        // clip the result
+        return (int)(Math.max(Math.min(sign*result, Integer.MAX_VALUE), Integer.MIN_VALUE));
     }
 }
 ```
@@ -3860,6 +4178,77 @@ class Solution {
     }
 }
 ```
+
+#### 2019.8.3 recursive
+- time: 100%
+- space: 100%
+- interviewLevel
+
+```java
+class Solution {
+    public int countNodes(TreeNode root) {
+        if (root == null) return 0;
+        int leftHeight = getLeftHeight(root);
+        int rightHeight = getRightHeight(root);
+        if (leftHeight == rightHeight) return (int)(Math.pow(2, leftHeight)) - 1;
+        return countNodes(root.left) + 1 + countNodes(root.right);
+    }
+    public int getLeftHeight(TreeNode root) {
+        if (root == null) return 0;
+        int count = 0;
+        while (root != null) {
+            count++;
+            root = root.left;
+        }
+        return count;
+    }
+    public int getRightHeight(TreeNode root) {
+        if (root == null) return 0;
+        int count = 0;
+        while (root != null) {
+            count++;
+            root = root.right;
+        }
+        return count;
+    }
+}
+```
+
+Updated
+
+```java
+class Solution {
+    public int countNodes(TreeNode root) {
+        return countNodes(root, -1, -1);
+    }
+    public int countNodes(TreeNode root, int leftHeight, int rightHeight) {
+        if (root == null) return 0;
+        if (leftHeight == -1) leftHeight = getLeftHeight(root);
+        if (rightHeight == -1) rightHeight = getRightHeight(root);
+        if (leftHeight == rightHeight) return (int)(Math.pow(2, leftHeight)) - 1;
+        return countNodes(root.left, leftHeight-1, -1) + 1 + countNodes(root.right, -1, rightHeight-1);
+    }
+    public int getLeftHeight(TreeNode root) {
+        if (root == null) return 0;
+        int count = 0;
+        while (root != null) {
+            count++;
+            root = root.left;
+        }
+        return count;
+    }
+    public int getRightHeight(TreeNode root) {
+        if (root == null) return 0;
+        int count = 0;
+        while (root != null) {
+            count++;
+            root = root.right;
+        }
+        return count;
+    }
+}
+```
+
 
 ### 53. Maximum Subarray
 - [Link](https://leetcode.com/problems/maximum-subarray/)
@@ -5983,6 +6372,927 @@ class Solution {
     }
 }
 ```
+
+### 187. Repeated DNA Sequences
+- [Link](https://leetcode.com/problems/repeated-dna-sequences/)
+- Tags: Hash Table, Bit Manipulation
+- Stars: 2
+
+#### bit encoding
+- time: 29.88%
+- space: 98.85%
+
+```java
+class Solution {
+    public List<String> findRepeatedDnaSequences(String s) {
+        List<String> result = new ArrayList<>();
+        int num = 0, mask = (1<<20) - 1;
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int i=0; i<s.length(); i++) {
+            char c = s.charAt(i);
+            num <<= 2;
+            if (c == 'A') num += 1;
+            else if (c == 'C') num += 2;
+            else if (c == 'G') num += 3;
+            num &= mask;
+            if (i >= 9) {
+                map.put(num, map.getOrDefault(num, 0) + 1);
+                if (map.get(num) == 2) result.add(s.substring(i-9, i+1));
+            }
+        }
+        return result;
+    }
+}
+```
+
+#### bit encoding 2
+- time: 78.66%
+- space: 99.42%
+- interviewLevel
+
+Using two HashSet instead of a HashMap
+```java
+class Solution {
+    public List<String> findRepeatedDnaSequences(String s) {
+        List<String> result = new ArrayList<>();
+        int num = 0, mask = (1<<20) - 1;
+        HashSet<Integer> seen = new HashSet<>(), repeated = new HashSet<>();
+        for(int i=0; i<s.length(); i++) {
+            char c = s.charAt(i);
+            num <<= 2;
+            if (c == 'A') num += 1;
+            else if (c == 'C') num += 2;
+            else if (c == 'G') num += 3;
+            num &= mask;
+            if (i >= 9 && !seen.add(num) && repeated.add(num))
+                result.add(s.substring(i-9, i+1));
+        }
+        return result;
+    }
+}
+```
+
+### 228. Summary Ranges
+- [Link](https://leetcode.com/problems/summary-ranges/)
+- Tags: Array
+- Stars: 1
+
+#### two pointers
+- time: 100%
+- space: 100%
+- interviewLevel
+
+```java
+class Solution {
+    public List<String> summaryRanges(int[] nums) {
+        List<String> result = new ArrayList<>();
+        if (nums.length == 0) return result;
+        int start = nums[0], end = nums[0];
+        for(int i=1; i<nums.length; i++) {
+            if (nums[i] == nums[i-1] + 1) end++;
+            else {
+                result.add(getRange(start, end));
+                start = end = nums[i];
+            }
+        }
+        result.add(getRange(start, end));
+        return result;
+    }
+    public String getRange(int start, int end) {
+        if (start == end) return Integer.toString(start);
+        return start + "->" + end;
+    }
+}
+```
+
+### 275. H-Index II
+- [Link](https://leetcode.com/problems/h-index-ii/)
+- Tags: Binary Search
+- Stars: 2
+
+#### binary search with out of array check!
+- time: 100%
+- space: 100%
+- interviewLevel
+
+Attention! `h` might be 0, which means `mid` might be `citations.length`.  
+That's why we need this line:  
+`if (citations[citations.length - 1] == 0) return 0;`
+
+```java
+class Solution {
+    public int hIndex(int[] citations) {
+        if (citations.length == 0) return 0;
+        if (citations[citations.length - 1] == 0) return 0;
+        int l = 0, r = citations.length - 1;
+        while(l < r) {
+            int mid = l + ((r-l)>>1);
+            int h = citations.length - mid;
+            if (citations[mid] < h) l = mid + 1;
+            else if (citations[mid] > h) r = mid;
+            else return h;
+        }
+        return citations.length - l;
+    }
+}
+```
+
+### 95. Unique Binary Search Trees II
+- [Link](https://leetcode.com/problems/unique-binary-search-trees-ii/)
+- Tags: Dynamic Programming, Tree
+- Stars: 3
+
+#### backtrack-like solution
+- time: 100%
+- space: 99.33%
+- interviewLevel
+
+```java
+class Solution {
+    List<TreeNode> result = new ArrayList<>();
+    public List<TreeNode> generateTrees(int n) {
+        if(n == 0) return result;
+        result.add(new TreeNode(1));
+        for(int i=2; i<=n; i++) {
+            int len = result.size();
+            for(int j=0; j<len; j++) {
+                TreeNode root = result.get(j);
+                TreeNode node = new TreeNode(i);
+                node.left = root;
+                result.set(j, node);
+                DFS(root, i, root);
+            }
+        }
+        return result;
+    }
+    public void DFS(TreeNode root, int val, TreeNode curr) {
+        if (curr == null) return;
+        TreeNode right = curr.right;
+        curr.right = new TreeNode(val);
+        curr.right.left = right;
+        result.add(copy(root));
+        curr.right = right;
+        if (right != null) DFS(root, val, right);
+    }
+    public TreeNode copy(TreeNode root) {
+        if (root == null) return null;
+        TreeNode newRoot = new TreeNode(root.val);
+        newRoot.left = copy(root.left);
+        newRoot.right = copy(root.right);
+        return newRoot;
+    }
+}
+```
+
+#### recursive
+- time: 71.55%
+- space: 21.93%
+
+```java
+class Solution {
+    public List<TreeNode> generateTrees(int n) {
+        if (n == 0) return new ArrayList<>();
+        return generateTrees(1, n);
+    }
+    public List<TreeNode> generateTrees(int l, int r) {
+        List<TreeNode> result = new ArrayList<>();
+        if (l > r) return result;
+        for(int i=l; i<=r; i++) {
+            TreeNode root = new TreeNode(i);
+            List<TreeNode> leftList = generateTrees(l, i-1);
+            List<TreeNode> rightList = generateTrees(i+1, r);
+            if (leftList.size() == 0) leftList.add(null);
+            if (rightList.size() == 0) rightList.add(null);
+            for (TreeNode left: leftList)
+                for (TreeNode right: rightList) {
+                    root.left = left;
+                    root.right = right;
+                    result.add(copy(root));
+                }
+        }
+        return result;
+    }
+    public TreeNode copy(TreeNode root) {
+        if (root == null) return null;
+        TreeNode newRoot = new TreeNode(root.val);
+        newRoot.left = copy(root.left);
+        newRoot.right = copy(root.right);
+        return newRoot;
+    }
+}
+```
+
+### 74. Search a 2D Matrix
+- [Link](https://leetcode.com/problems/search-a-2d-matrix/)
+- Tags: Array, Binary Search
+- Stars: 2
+
+#### 2-dimensional binary search
+- time: 100%
+- space: 7.69%
+
+**FOR BINARY SEARCH PROBLEMS, PAY MUCH ATTENTION TO THE OUT-OF-BOUND CHECK!!!**
+
+```java
+class Solution {
+    public boolean searchMatrix(int[][] matrix, int target) {
+        if (matrix.length == 0 || matrix[0].length == 0) return false;
+        int l = 0, r = matrix.length - 1;
+        while(l < r) {
+            int mid = l + ((r-l)>>1);
+            if (matrix[mid][0] > target) r = mid - 1;
+            else if (matrix[mid][0] < target) l = mid + 1;
+            else l = r = mid;
+        }
+        int i = matrix[l][0] > target ? l-1 : l;
+        if (i < 0) return false;
+        int j = Arrays.binarySearch(matrix[i], 0, matrix[i].length, target);
+        return j>=0;
+    }
+}
+```
+
+#### turning to ordinary 1-d binary search
+- time: 100%
+- space: 7.53%
+- interviewLevel
+
+```java
+class Solution {
+    public boolean searchMatrix(int[][] matrix, int target) {
+        if (matrix.length == 0 || matrix[0].length == 0) return false;
+        int m = matrix.length, n = matrix[0].length;
+        if (target < matrix[0][0] || target > matrix[m-1][n-1]) return false;
+        int l = 0, r = m*n - 1;
+        while (l < r) {
+            int mid = l + ((r-l)>>1);
+            int i=mid/n, j=mid%n;
+            if (matrix[i][j] > target) r = mid-1;
+            else if (matrix[i][j] < target) l = mid+1;
+            else l = r = mid;
+        }
+        int i=l/n, j=l%n;
+        return matrix[i][j] == target;
+    }
+}
+```
+
+### 274. H-Index
+- [Link](https://leetcode.com/problems/h-index/)
+- Tags: Hash Table, Sort
+- Stars: 4
+
+#### binary search by value
+- time: 60.53%
+- space: 100%
+
+**FOR BINARY SEARCH PROBLEMS, PAY MUCH ATTENTION TO THE OUT-OF-BOUND CHECK!!!**  
+**DEAL WITH THE BOUNDARY CASE INDIVIDUALY!!!**
+
+Similar to **H-Index II**
+
+```java
+class Solution {
+    public int hIndex(int[] citations) {
+        if (citations.length == 0) return 0;
+        int max = citations[0];
+        for(int citation: citations) max = Math.max(max, citation);
+        if (max == 0) return 0;
+        int l = 1, r = citations.length;
+        while (l < r) {
+            int mid = l + ((r-l)>>1);
+            int count = countgte(citations, mid);
+            if (mid < count) l = mid + 1;
+            else if (mid > count) r = mid - 1;
+            else l = r = mid;
+        }
+        int count = countgte(citations, l);
+        if (count < l) return l - 1;
+        return l;
+    }
+    public int countgte(int[] nums, int target) {
+        int count = 0;
+        for(int num: nums)
+            if (num >= target) count++;
+        return count;
+    }
+}
+```
+
+#### sort and count
+- time: 60.53%
+- space: 100%
+
+sort: O(nlogn)
+count: O(n)
+
+Not applicable to **H-Index II**
+
+```java
+class Solution {
+    public int hIndex(int[] citations) {
+        if (citations.length == 0) return 0;
+        Arrays.sort(citations);
+        if (citations[citations.length - 1] == 0) return 0;
+        for (int i=1; i<=citations.length; i++) {
+            if (citations[citations.length - i] < i) return i-1;
+        }
+        return citations.length;
+    }
+}
+```
+
+#### Bucket sort
+- time: 100%
+- space: 100%
+- interviewLevel
+
+O(n) time
+
+```java
+class Solution {
+    public int hIndex(int[] citations) {
+        int[] buckets = new int[citations.length + 1];
+        for (int c: citations) buckets[Math.min(c, citations.length)]++;
+        int accumulate = 0;
+        for (int i=buckets.length-1; i>=0; i--) {
+            accumulate += buckets[i];
+            if (accumulate >= i) return i;
+        }
+        return 0;
+    }
+}
+```
+
+### 209. Minimum Size Subarray Sum
+- [Link](https://leetcode.com/problems/minimum-size-subarray-sum/)
+- Tags: Array, Two Pointers, Binary Search
+- Stars: 2
+
+#### Two Pointers / Sliding Window
+- time: 99.95%
+- space: 34.71%
+- interviewLevel
+
+```java
+class Solution {
+    public int minSubArrayLen(int s, int[] nums) {
+        if (nums.length == 0) return 0;
+        int l = 0, r = 1, curr = nums[0], result = Integer.MAX_VALUE;
+        while(l < nums.length) {
+            if (curr >= s) {
+                result = Math.min(result, r-l);
+                curr -= nums[l++];
+            }
+            else {
+                if (r >= nums.length) break;
+                curr += nums[r++];
+            }
+        }
+        if (result == Integer.MAX_VALUE) result = 0;
+        return result;
+    }
+}
+```
+
+### 92. Reverse Linked List II
+- [Link](https://leetcode.com/problems/reverse-linked-list-ii/)
+- Tags: Linked List
+- Stars: 3
+
+#### 2019.7.30
+- time: 100%
+- space: 100%
+- interviewLevel
+
+```java
+class Solution {
+    public ListNode reverseBetween(ListNode head, int m, int n) {
+        if (head == null) return null;
+        ListNode handle = new ListNode(0);
+        handle.next = head;
+        ListNode prefixTail = moveForward(handle, m-1),
+                start = prefixTail.next,
+                end = moveForward(start, n-m),
+                tail = end.next;
+        end.next = null;
+        prefixTail.next = null;
+        reverse(start);
+        prefixTail.next = end;
+        start.next = tail;
+        return handle.next;      
+    }
+    public ListNode moveForward(ListNode handle, int n) {
+        for(int i=0; i<n; i++)
+            handle = handle.next;
+        return handle;
+    }
+    public ListNode reverse(ListNode head) {
+        if (head == null || head.next == null) return head;
+        ListNode handle = new ListNode(0);
+        while (head != null) {
+            ListNode next = head.next;
+            head.next = handle.next;
+            handle.next = head;
+            head = next;
+        }
+        return handle.next;
+    }
+}
+```
+
+### 117. Populating Next Right Pointers in Each Node II
+- [Link](https://leetcode.com/problems/populating-next-right-pointers-in-each-node-ii/)
+- Tags: Tree, DFS
+- Stars: 4
+
+#### DFS
+- time: 100%
+- space: 96.76%
+- interviewLevel
+
+Attention! A tree like below:
+```
+        a
+    b       c
+  d  e        f
+g               h
+```
+g.next should be h, but their parent nodes are not adjacent!
+
+Thus, when running DFS, we need to `connect(root.right)` before `connect(root.left)`. 
+Also, the `getLeftChild` method should recursively get the most left child on the same level!
+
+
+```java
+class Solution {
+    public Node connect(Node root) {
+        if (root == null) return null;
+        if (root.left != null) root.left.next = root.right;
+        Node child = getRightChild(root);
+        if (root.next != null && child != null) child.next = getLeftChild(root.next);
+        connect(root.right);
+        connect(root.left);
+        return root;
+    }
+    public Node getRightChild(Node root) {
+        return root.right == null ? root.left : root.right;
+    }
+    public Node getLeftChild(Node root) {
+        if (root == null) return null;
+        if (root.left != null) return root.left;
+        if (root.right != null) return root.right;
+        return getLeftChild(root.next);
+    }
+}
+```
+
+### 63. Unique Paths II
+- [Link](https://leetcode.com/problems/unique-paths-ii/)
+- Tags: Array, Dynamic Programming
+- Stars: 1
+
+#### DP
+- time: 100%
+- space: 88.51%
+
+```java
+class Solution {
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        if (obstacleGrid.length == 0 || obstacleGrid[0].length == 0) return 0;
+        int m = obstacleGrid.length, n = obstacleGrid[0].length;
+        int[][] dp = new int[m][n];
+        dp[0][0] = obstacleGrid[0][0] == 1 ? 0 : 1;
+        for(int j=1; j<n; j++)
+            dp[0][j] = obstacleGrid[0][j] == 1 ? 0 : dp[0][j-1];
+        for(int i=1; i<m; i++)
+            dp[i][0] = obstacleGrid[i][0] == 1 ? 0 : dp[i-1][0];
+        for(int i=1; i<m; i++)
+            for(int j=1; j<n; j++)
+                dp[i][j] = obstacleGrid[i][j] == 1 ? 0 : dp[i-1][j] + dp[i][j-1];
+        return dp[m-1][n-1];
+    }
+}
+```
+
+#### DP with space optimization
+- time: 100%
+- space: 62.23%
+
+```java
+class Solution {
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        if (obstacleGrid.length == 0 || obstacleGrid[0].length == 0) return 0;
+        int m = obstacleGrid.length, n = obstacleGrid[0].length;
+        int[] dp = new int[n];
+        dp[0] = obstacleGrid[0][0] == 1 ? 0 : 1;
+        for(int j=1; j<n; j++) dp[j] = obstacleGrid[0][j] == 1 ? 0 : dp[j-1];
+        for(int i=1; i<m; i++) {
+            dp[0] = obstacleGrid[i][0] == 1 ? 0 : dp[0];
+            for(int j=1; j<n; j++) 
+                dp[j] = obstacleGrid[i][j] == 1 ? 0 : dp[j-1] + dp[j];
+        }
+        return dp[n-1];
+    }
+}
+```
+
+### 60. Permutation Sequence
+- [Link](https://leetcode.com/problems/permutation-sequence/)
+- Tags: Math, Backtracking
+- Stars: 3
+
+#### compute digit by digit
+- time: 99.49%
+- space: 100%
+
+```java
+class Solution {
+    public String getPermutation(int n, int k) {
+        k--;
+        StringBuilder sb = new StringBuilder();
+        List<Integer> list = new ArrayList<>();
+        for(int i=1; i<=9; i++) list.add(i);
+        for(int i=n-1; i>=1; i--) {
+            int idx = k / factor(i);
+            int val = popIndexAndSort(list, idx);
+            sb.append(val);
+            k %= factor(i);
+        }
+        sb.append(list.get(0));
+        return sb.toString();
+    }
+    public int factor(int n) {
+        if (n == 0) return 1;
+        return n * factor(n-1);
+    }
+    public int popIndexAndSort(List<Integer> list, int idx) {
+        int ret = list.get(idx);
+        list.remove(idx);
+        return ret;
+    }
+}
+```
+
+### 151. Reverse Words in a String
+- [Link](https://leetcode.com/problems/reverse-words-in-a-string/)
+- Tags: String
+- Stars: 1
+
+#### 2019.7.31
+- time: 72.51%
+- space: 84.49%
+
+```java
+class Solution {
+    public String reverseWords(String s) {
+        int l = skipWhitespaces(s, 0);
+        if (l == s.length()) return "";
+        int r = l+1;
+        List<String> list = new ArrayList<>();
+        while(r < s.length()) {
+            if (s.charAt(r) == ' ') {
+                list.add(s.substring(l, r));
+                l = skipWhitespaces(s, r+1);
+                r = l+1;
+            } else r++;
+        }
+        if (l < s.length()) list.add(s.substring(l, s.length()));
+        StringBuilder sb = new StringBuilder();
+        for(int i=list.size()-1; i>=0; i--) {
+            sb.append(list.get(i));
+            if (i > 0) sb.append(' ');
+        }
+        return sb.toString();
+    }
+    public int skipWhitespaces(String s, int start) {
+        if (start >= s.length()) return s.length();
+        while(start < s.length() && s.charAt(start) == ' ') start++;
+        return start;
+    }
+}
+```
+
+### 61. Rotate List
+- [Link](https://leetcode.com/problems/rotate-list/)
+- Tags: Linked List, Two Pointers
+- Stars: 2
+
+#### 2019.8.4
+- time: 29.76%
+- space: 68.73%
+
+```java
+class Solution {
+    public ListNode rotateRight(ListNode head, int k) {
+        if (head == null) return null;
+        int len = countLen(head);
+        k %= len;
+        if (k == 0) return head;
+        ListNode curr = head;
+        for(int i=0; i<len-k-1; i++) curr = curr.next;
+        ListNode newHead = curr.next, tail = moveToTail(newHead);
+        curr.next = null;
+        tail.next = head;
+        return newHead;
+    }
+    public int countLen(ListNode head) {
+        int count = 0;
+        while (head != null) {
+            head = head.next;
+            count++;
+        }
+        return count;
+    }
+    public ListNode moveToTail(ListNode head) {
+        if (head == null) return null;
+        while (head.next != null) head = head.next;
+        return head;
+    }
+}
+```
+
+Updated (Concise Version)
+
+```java
+class Solution {
+    public ListNode rotateRight(ListNode head, int k) {
+        if (head == null) return null;
+        int count = 1;
+        ListNode tail = head;
+        while (tail.next != null) {
+            count++;
+            tail = tail.next;
+        }
+        tail.next = head;
+        k %= count;
+        for(int i=0; i<count-k; i++) tail = tail.next;
+        ListNode newHead = tail.next;
+        tail.next = null;
+        return newHead;
+    }
+}
+```
+
+### 229. Majority Element II
+- [Link](https://leetcode.com/problems/majority-element-ii/)
+- Tags: Array
+- Stars: 5
+
+#### Boyer-Moore Majority Vote Algorithm
+- time: 74.98%
+- space: 100%
+
+Reference:
+https://gregable.com/2013/10/majority-vote-algorithm-find-majority.html  
+https://leetcode.com/problems/majority-element-ii/discuss/63537/My-understanding-of-Boyer-Moore-Majority-Vote  
+
+```java
+class Solution {
+    public List<Integer> majorityElement(int[] nums) {
+        List<Integer> result = new ArrayList<>();
+        if (nums.length == 0) return result;
+        int cand1 = nums[0], cand2 = 0, count1 = 1, count2 = 0;
+        for(int num: nums) {
+            if (count1 == 0) {
+                cand1 = num;
+                count1++;
+            } else if (num == cand1) {
+                count1++;
+            } else if (count2 == 0) {
+                cand2 = num;
+                count2++;
+            } else if (num == cand2) {
+                count2++;
+            } else {
+                count1--;
+                count2--;
+            }
+        }
+        count1 = count2 = 0;
+        for(int num: nums) {
+            if (num == cand1) count1++;
+            if (num == cand2) count2++;
+        }
+        if (count1 > nums.length/3) result.add(cand1);
+        if (count2 > nums.length/3 && cand1 != cand2) result.add(cand2);
+        return result;
+    }
+}
+```
+
+### 6. ZigZag Conversion
+- [Link](https://leetcode.com/problems/zigzag-conversion/)
+- Tags: String
+- Stars: 2
+
+#### 2019.8.11
+- time: 31.06%
+- space: 89.36%
+
+```java
+class Solution {
+    public String convert(String s, int numRows) {
+        if (s.length() == 0 || numRows == 1) return s;
+        int[] rows = new int[s.length()];
+        int incre = 1, i = 1;
+        while(i < rows.length) {
+            rows[i] = rows[i-1] + incre;
+            if (rows[i] == numRows-1) incre = -1;
+            else if (rows[i] == 0) incre = 1;
+            i++;
+        }
+        StringBuilder sb = new StringBuilder();
+        for(i=0; i<numRows; i++) 
+            for (int j=0; j<rows.length; j++) if (rows[j] == i) sb.append(s.charAt(j));
+        return sb.toString();
+    }
+}
+```
+
+Updated
+
+```java
+class Solution {
+    public String convert(String s, int numRows) {
+        if (s.length() == 0 || numRows == 1) return s;
+        StringBuilder[] sbs = new StringBuilder[numRows];
+        sbs[0] = new StringBuilder();
+        sbs[0].append(s.charAt(0));
+        int incre = 1, i = 1, currRow = 0;
+        while(i<s.length()) {
+            currRow += incre;
+            if (sbs[currRow] == null) sbs[currRow] = new StringBuilder();
+            sbs[currRow].append(s.charAt(i));
+            i++;
+            if (currRow == 0) incre = 1;
+            else if (currRow == numRows-1) incre = -1;
+        }
+        for(int k=1; k<numRows; k++) {
+            if (sbs[k] == null) break;
+            sbs[0].append(sbs[k]);
+        }
+        return sbs[0].toString();
+    }
+}
+```
+
+### 93. Restore IP Addresses
+- [Link](https://leetcode.com/problems/restore-ip-addresses/)
+- Tags: String, Backtracking
+- Stars: 3
+
+#### 2019.8.11 backtrack
+- time: 27.03%
+- space: 100%
+
+```java
+class Solution {
+    List<String> result = new ArrayList<>();
+    public List<String> restoreIpAddresses(String s) {
+        if (s.length() == 0) return result;
+        backtrack(s, 0, new ArrayList<>());
+        return result;
+    }
+    public void backtrack(String s, int start, List<String> currList) {
+        if (currList.size() == 4) {
+            if (start < s.length()) return;
+            result.add(String.join(".", currList));
+            return;
+        }
+        if (start >= s.length()) return;
+        if (s.charAt(start) == '0') {
+            currList.add("0");
+            backtrack(s, start+1, currList);
+            currList.remove(currList.size() - 1);
+            return;
+        }
+        int end = start+1;
+        while(end<=s.length() && 
+              (end-start<3 || Integer.parseInt(s.substring(start, end))<256)) {
+            currList.add(s.substring(start, end));
+            backtrack(s, end, currList);
+            currList.remove(currList.size() - 1);
+            end++;
+        }
+    }
+}
+```
+
+#### 2019.8.11 
+- time: 90.49%
+- space: 100%
+
+```java
+class Solution {
+    List<String> result = new ArrayList<>();
+    public List<String> restoreIpAddresses(String s) {
+        if (s.length() == 0) return result;
+        for(int a=1; a<=3; a++)
+            for(int b=1; b<=3; b++)
+                for(int c=1; c<=3; c++)
+                    for(int d=1; d<=3; d++){
+                        if (a+b+c+d != s.length()) continue;
+                        int A=Integer.parseInt(s.substring(0, a));
+                        int B=Integer.parseInt(s.substring(a, a+b));
+                        int C=Integer.parseInt(s.substring(a+b, a+b+c));
+                        int D=Integer.parseInt(s.substring(a+b+c, a+b+c+d));
+                        if (A<256 && B<256 && C<256 && D<256) {
+                            String ans = A+"."+B+"."+C+"."+D;
+                            if (ans.length() == s.length() + 3) 
+                                result.add(ans);
+                        }
+                    }
+        return result;
+    }
+}
+```
+
+### 31. Next Permutation
+- [Link](https://leetcode.com/problems/next-permutation/)
+- Tags: Array
+- Stars: 4
+
+#### 2019.8.11
+- time: 90.57%
+- space: 34%
+
+The function `getNextEleIdx` is to find the smallest element in the subarray `nums[start:]` that is greater than `target`.
+
+```java
+class Solution {
+    public void nextPermutation(int[] nums) {
+        if (nums.length == 0) return;
+        for(int i=nums.length-2; i>=0; i--) {
+            if (nums[i] < nums[i+1]) {
+                int idx = getNextEleIdx(nums, i+1, nums[i]);
+                swap(nums, i, idx);
+                Arrays.sort(nums, i+1, nums.length);
+                return;
+            }
+        }
+        Arrays.sort(nums);
+    }
+    public int getNextEleIdx(int[] nums, int start, int target) {
+        int idx = start, val = nums[start];
+        for(int i=start; i<nums.length; i++) 
+            if (nums[i] > target && nums[i] < val) {
+                idx = i;
+                val = nums[i];
+            }
+        return idx;
+    }
+    public void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
+```
+
+#### 2019.8.11 Narayana Pandita's algorithm
+- time: 90.57%
+- space: 30%
+
+Reference: https://leetcode.com/problems/next-permutation/discuss/13867/C%2B%2B-from-Wikipedia
+
+Similar to the solution above. 
+The difference is: when calling `getNextEleIdx` function, the subarray `nums[start:]` is a decreasing array.
+Therefore, we can simplify the function by just iterate the subarray from the last element to `start`.
+Also, we no longer need to `Arrays.sort(nums, i+1, nums.length)`. 
+Instead, we can simply reverse the subarray, since it's a decreasing array even after `swap(nums, i, idx)`.
+
+```java
+class Solution {
+    public void nextPermutation(int[] nums) {
+        if (nums.length == 0) return;
+        for(int i=nums.length-2; i>=0; i--) {
+            if (nums[i] < nums[i+1]) {
+                int idx = getNextEleIdx(nums, i+1, nums[i]);
+                swap(nums, i, idx);
+                reverse(nums, i+1, nums.length);
+                return;
+            }
+        }
+        Arrays.sort(nums);
+    }
+    public int getNextEleIdx(int[] nums, int start, int target) {
+        int i=nums.length-1;
+        for(; i>=start; i--) if (nums[i] > target) return i;
+        return i;
+    }
+    public void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+    public void reverse(int[] nums, int l, int r) {
+        r--;
+        while(l < r) swap(nums, l++, r--);
+    }
+}
+```
+
 
 ## Others
 
@@ -8124,7 +9434,7 @@ class Solution {
 ### 79. Word Search
 - [Link](https://leetcode.com/problems/word-search/)
 - Tags: Array, Backtracking
-- Stars: 1
+- Stars: 2
 
 #### simple backtracking solution beats 99.56% in time and 75.11% in space
 ```java
@@ -8150,6 +9460,35 @@ class Solution {
         if(recurr(i+1, j, start+1) || recurr(i-1, j, start+1) || recurr(i, j+1, start+1) || recurr(i, j-1, start+1)) return true;
         used[i][j] = false;
         return false;
+    }
+}
+```
+
+#### 2019.8.11 backtrack
+- time: 99.90%
+- space: 97.96%
+
+```java
+class Solution {
+    public boolean exist(char[][] board, String word) {
+        if (board.length == 0 || board[0].length == 0) return false;
+        for(int i=0; i<board.length; i++) 
+            for(int j=0; j<board[0].length; j++) 
+                if (search(board, word, i, j, 0)) return true;
+        return false;
+    }
+    public boolean search(char[][] board, String word, int i, int j, int start) {
+        if (start == word.length()) return true;
+        if (i<0 || i>=board.length || j<0 || j>=board[0].length) return false;
+        char c = board[i][j];
+        if (c == ' ' || c != word.charAt(start)) return false;
+        board[i][j] = ' ';
+        boolean ans = search(board, word, i-1, j, start+1) || 
+            search(board, word, i+1, j, start+1) || 
+            search(board, word, i, j-1, start+1) || 
+            search(board, word, i, j+1, start+1);
+        board[i][j] = c;
+        return ans;
     }
 }
 ```
@@ -8253,6 +9592,41 @@ class Solution {
             }
         }
         return result;
+    }
+}
+```
+
+Updated 2019.8.4
+```java
+class Solution {
+    List<List<Integer>> result = new ArrayList<>();
+    public List<List<Integer>> threeSum(int[] nums) {
+        if (nums.length == 0) return result;
+        Arrays.sort(nums);
+        int i=0;
+        while (i<nums.length - 2) {
+            int l = i+1, r = nums.length - 1;
+            while (l < r) {
+                int sum = nums[i] + nums[l] + nums[r];
+                if (sum < 0) l++;
+                else if (sum > 0) r--;
+                else {
+                    result.add(Arrays.asList(nums[i], nums[l], nums[r]));
+                    l = moveToNext(nums, l, +1);
+                    r = moveToNext(nums, r, -1);
+                }
+            }
+            i = moveToNext(nums, i, +1);
+        }
+        return result;
+    }
+    public int moveToNext(int[] nums, int i, int incre) {
+        if (i >= nums.length || i<0) return i;
+        int num = nums[i];
+        do {
+            i += incre;
+        } while (i>=0 && i<nums.length && nums[i] == num);
+        return i;
     }
 }
 ```
