@@ -219,7 +219,8 @@ class Solution {
 ```
 
 #### binary search
-Attention that you `r-l` might overflow, so you have to use long integer.
+- attention that you `r-l` might overflow, so you have to use long integer.
+
 ```java
 class Solution {
     public int majorityElement(int[] nums) {
@@ -671,8 +672,7 @@ class Solution {
 - time: 100%
 - space: 100%
 - interviewLevel
-
-Attention! It needs to be taken care of when `nums` only has one element.
+- attention:! It needs to be taken care of when `nums` only has one element.
 
 ```java
 class Solution {
@@ -1202,7 +1202,7 @@ class Solution {
 ### 347. Top K Frequent Elements
 - [Link](https://leetcode.com/problems/top-k-frequent-elements/)
 - Tags: Hash Table, Heap
-- Stars: 1
+- Stars: 3
 
 #### HashMap
 ```java
@@ -3510,10 +3510,38 @@ class Solution {
 }
 ```
 
+#### 2019.8.11 
+- time: 100%
+- space: 100%
+- interviewLevel
+
+```java
+class Solution {
+    List<Integer> result = new ArrayList<>();
+    public List<Integer> spiralOrder(int[][] matrix) {
+        if (matrix.length == 0 || matrix[0].length == 0) return result;
+        DFS(matrix, 0, 0, matrix.length, matrix[0].length);
+        return result;
+    }
+    public void DFS(int[][] matrix, int a, int b, int nRows, int nCols) {
+        if (nRows <= 0 || nCols <= 0) return;
+        if (nRows == 1) for(int j=b; j<b+nCols; j++) result.add(matrix[a][j]);
+        else if (nCols == 1) for(int i=a; i<a+nRows; i++) result.add(matrix[i][b]);
+        else {
+            for(int j=b; j<b+nCols-1; j++) result.add(matrix[a][j]);
+            for(int i=a; i<a+nRows-1; i++) result.add(matrix[i][b+nCols-1]);
+            for(int j=b+nCols-1; j>b; j--) result.add(matrix[a+nRows-1][j]);
+            for(int i=a+nRows-1; i>a; i--) result.add(matrix[i][b]);
+        }
+        DFS(matrix, a+1, b+1, nRows-2, nCols-2);
+    }
+}
+```
+
 ### 152. Maximum Product Subarray
 - [Link](https://leetcode.com/problems/maximum-product-subarray/)
 - Tags: Array, Dynamic Programming
-- Stars: 3
+- Stars: 2
 
 #### DP, space-optimized
 `dp[i]` means the largest product of the subarray ended up with nums[i]  
@@ -3548,6 +3576,31 @@ class Solution {
         //     if(result < res) result = res;
         // return result;
         return dp;
+    }
+}
+```
+
+Updated 2019.8.12
+- time: 99.15%
+- space: 8.54%
+- attention: a temporary variable `temp` is needed for the case of `nums[i]<0`.
+
+```java
+class Solution {
+    public int maxProduct(int[] nums) {
+        int max = nums[0], min = nums[0], result = nums[0];
+        for(int i=1; i<nums.length; i++) {
+            if (nums[i]>0) {
+                max = Math.max(max*nums[i], nums[i]);
+                min = Math.min(min*nums[i], nums[i]);
+            } else if (nums[i] < 0) {
+                int temp = Math.max(min*nums[i], nums[i]);
+                min = Math.min(max*nums[i], nums[i]);
+                max = temp;
+            } else max = min = 0;
+            result = Math.max(result, max);
+        }
+        return result;
     }
 }
 ```
@@ -3591,6 +3644,10 @@ class Solution {
 ```
 
 #### recursive
+- time: 100%
+- space: 5.88%
+- interviewLevel
+
 ```java
 class Solution {
     public double myPow(double x, int n) {
@@ -3603,6 +3660,23 @@ class Solution {
             x = 1/x;
         }
         return (n%2) == 0 ? myPow(x*x, n>>1) : x * myPow(x*x, n>>1);
+    }
+}
+```
+
+2019.8.12 Similar idea
+- time: 100%
+- space: 5.88%
+
+```java
+class Solution {
+    public double myPow(double x, int n) {
+        if (x == 0) return 0;
+        if (n == Integer.MIN_VALUE) return myPow(x, n+1) / x;
+        if (n == 0) return 1;
+        if (n%2 != 0) return n < 0 ? myPow(x, n+1) / x : myPow(x, n-1) * x;
+        double temp = myPow(x, n/2);
+        return temp * temp;
     }
 }
 ```
@@ -3630,6 +3704,28 @@ class Solution {
             }
             alphabet[s.charAt(tail++)] = true;
             if(result < tail-head) result = tail-head;
+        }
+        return result;
+    }
+}
+```
+
+Updated 2019.8.12
+- time: 91.66%
+- space: 99.76%
+- interviewLevel
+
+```java
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        if (s.length() == 0) return 0;
+        int i=0, j=1, result = 1;
+        boolean[] stat = new boolean[256];
+        stat[s.charAt(0)] = true;
+        while(j<s.length()) {
+            while (stat[s.charAt(j)]) stat[s.charAt(i++)] = false;
+            stat[s.charAt(j++)] = true;
+            result = Math.max(result, j-i);
         }
         return result;
     }
@@ -3704,10 +3800,48 @@ class Solution {
 }
 ```
 
+Updated 2019.8.12
+- time: 100%
+- space: 99.07%
+- interviewLevel
+- attention: step2 and step3 cannot be combined with each other.
+- attention: when returning the new linked list in step3, we cannot return `head.next`.
+
+```java
+class Solution {
+    public Node copyRandomList(Node head) {
+        if (head == null) return null;
+        // step1: copy all the nodes, and inserts the cloned nodes just after the corresponding node. 
+        Node curr = head;
+        while(curr != null) {
+            curr.next = new Node(curr.val, curr.next, curr.random);
+            curr = curr.next.next;
+        }
+        // step2: ajust random pointers for the copied nodes.
+        curr = head;
+        while(curr != null) {
+            Node newNode = curr.next, next = curr.next.next;
+            if (newNode.random != null) newNode.random = newNode.random.next;
+            curr = next;
+        }
+        // step3: extract the cloned nodes from the linked list.
+        curr = head;
+        Node newHead = head.next;
+        while(curr != null) {
+            Node newNode = curr.next, next = curr.next.next;
+            curr.next = next;
+            newNode.next = next == null ? null : next.next;
+            curr = next;
+        }
+        return newHead;
+    }
+}
+```
+
 ### 179. Largest Number
 - [Link](https://leetcode.com/problems/largest-number/)
 - Tags: Sort
-- Stars: 2
+- Stars: 4
 
 #### Arrays.sort Comparator
 1. be careful about these cases: comparing 3456 & 345, 3451 & 345
@@ -3749,6 +3883,11 @@ class Solution {
 ```
 
 #### smarter but much slower idea using concatenation
+- time: 10.51%
+- space: 82.22%
+- attention: You have to remove the leading zeros
+- attention: The comparing function `-(a+b).compareTo(b+a)` is the best solution to understand.
+
 ```java
 class Solution {
     public String largestNumber(int[] nums) {
@@ -3872,7 +4011,7 @@ class Solution {
 ### 130. Surrounded Regions
 - [Link](https://leetcode.com/problems/surrounded-regions/)
 - Tags: DFS, BFS, Union Find
-- Stars: 1
+- Stars: 2
 
 #### My BFS
 ```java
@@ -3948,13 +4087,46 @@ class Solution {
 }
 ```
 
+Updated 2019.8.12
+- time: 27.14%
+- space: 50%
+
+```java
+class Solution {
+    public void solve(char[][] board) {
+        if(board.length == 0 || board[0].length == 0) return;
+        int m = board.length, n = board[0].length;
+        for(int j=0; j<n-1; j++) convertTo(board, 0, j, 'O', 'B');
+        for(int i=0; i<m-1; i++) convertTo(board, i, n-1, 'O', 'B');
+        for(int j=n-1; j>0; j--) convertTo(board, m-1, j, 'O', 'B');
+        for(int i=m-1; i>0; i--) convertTo(board, i, 0, 'O', 'B');
+        for(int i=1; i<m-1; i++)
+            for(int j=1; j<n-1; j++)
+                convertTo(board, i, j, 'O', 'X');
+        for(int i=0; i<m; i++)
+            for(int j=0; j<n; j++)
+                convertTo(board, i, j, 'B', 'O');
+    }
+    public void convertTo(char[][] board, int i, int j, char src, char dst) {
+        int m = board.length, n = board[0].length;
+        if (i<0 || i>=m || j<0 || j>=n || board[i][j] != src) return;
+        board[i][j] = dst;
+        convertTo(board, i-1, j, src, dst);
+        convertTo(board, i+1, j, src, dst);
+        convertTo(board, i, j-1, src, dst);
+        convertTo(board, i, j+1, src, dst);
+    }
+}
+```
+
 ### 91. Decode Ways
 - [Link](https://leetcode.com/problems/decode-ways/)
 - Tags: String, Dynamic Programming
-- Stars: 1
+- Stars: 3
 
 #### DP, space optimized
 `s.charAt(i) == 0` is a special case. 
+
 ```java
 class Solution {
     public int numDecodings(String s) {
@@ -4352,6 +4524,36 @@ class Solution {
             if(sb.charAt(i) != '0') return sb.substring(i, sb.length());
         }
         return "0";
+    }
+}
+```
+
+#### 2019.8.11 int array
+- time: 87.39%
+- space: 100%
+- interviewLevel
+
+```java
+class Solution {
+    public String multiply(String num1, String num2) {
+        int[] nums = new int[num1.length() + num2.length() + 5];
+        for(int i=0; i<num1.length(); i++) {
+            int a = num1.charAt(num1.length()-i-1) - '0';
+            for(int j=0; j<num2.length(); j++) {
+                int b = num2.charAt(num2.length()-j-1) - '0';
+                nums[i+j] += a*b;
+            }
+        }
+        for(int i=0; i<nums.length-1; i++) {
+            nums[i+1] += nums[i]/10;
+            nums[i] %= 10;
+        }
+        int idx = nums.length - 1;
+        while(idx>=0 && nums[idx] == 0) idx--;
+        if (idx < 0) return "0";
+        StringBuilder sb = new StringBuilder();
+        while(idx >= 0) sb.append(nums[idx--]);
+        return sb.toString();
     }
 }
 ```
@@ -7293,6 +7495,229 @@ class Solution {
 }
 ```
 
+### 143. Reorder List
+- [Link](https://leetcode.com/problems/reorder-list/)
+- Tags: Linked List
+- Stars: 3
+
+#### 2019.8.11
+- time: 100%
+- space: 100%
+- attention: `l = head.next` should be operated after `slow.next = null`. Consider the case: `[1,2]` as input
+- attention: `tail` is a handle that represents for current tail. When we set `tail = head`, we could not initiate `l` as `head`. Instead, `l = head.next`.
+
+```java
+class Solution {
+    public void reorderList(ListNode head) {
+        if (head == null || head.next == null) return;
+        ListNode slow = head, fast = head.next;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        ListNode r = reverse(slow.next), l, tail = head;
+        slow.next = null;
+        l = head.next;
+        while(l != null && r != null) {
+            tail.next = r;
+            ListNode rNext = r.next;
+            r.next = l;
+            tail = l;
+            l = l.next;
+            r = rNext;
+        }
+        tail.next = null;
+        if (l != null) tail.next = l;
+        if (r != null) tail.next = r;
+    }
+    public ListNode reverse(ListNode head) {
+        if(head == null || head.next == null) return head;
+        ListNode newHead = new ListNode(0);
+        while(head != null) {
+            ListNode next = head.next;
+            head.next = newHead.next;
+            newHead.next = head;
+            head = next;
+        }
+        return newHead.next;
+    }
+}
+```
+
+### 18. 4Sum
+- [Link](https://leetcode.com/problems/4sum/)
+- Tags: Array, Hash Table, Two Pointers
+- Stars: 2
+
+#### 2019.8.11 O(n^3) Two Pointers
+- time: 14.3%
+- space: 100%
+
+```java
+class Solution {
+    List<List<Integer>> result = new ArrayList<>();
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        if (nums.length < 4) return result;
+        Arrays.sort(nums);
+        for(int i=0; i<nums.length-3; i++) {
+            if (i>0 && nums[i] == nums[i-1]) continue;
+            int a = nums[i];
+            for(int j=i+1; j<nums.length-2; j++) {
+                if (j>i+1 && nums[j] == nums[j-1]) continue;
+                int b = nums[j];
+                int l = j+1, r = nums.length - 1;
+                while(l < r) {
+                    int sum = a + b + nums[l] + nums[r];
+                    if (sum < target) do {l++;} while (l<r && nums[l] == nums[l-1]);
+                    else if (sum > target) do {r--;} while (l<r && nums[r] == nums[r+1]);
+                    else {
+                        result.add(Arrays.asList(a, b, nums[l], nums[r]));
+                        do {l++;} while (l<r && nums[l] == nums[l-1]);
+                        do {r--;} while (l<r && nums[r] == nums[r+1]);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+}
+```
+
+### 71. Simplify Path
+- [Link](https://leetcode.com/problems/simplify-path/)
+- Tags: String, Stack
+- Stars: 2
+
+#### 2019.8.12
+- time: 66.39%
+- space: 86.67%
+- attention: `if (A && B) ... else ...` is different from `if (A) { if (B) ... } else ...`.
+
+```java
+class Solution {
+    public String simplifyPath(String path) {
+        if(path.length() == 0) return "";
+        String[] dirs = path.split("/");
+        List<String> list = new ArrayList<>();
+        for(String dir: dirs) {
+            if (dir.length() == 0 || dir.equals(".")) continue;
+            else if (dir.equals("..")) {
+                if (list.size() > 0) list.remove(list.size()-1);
+            }
+            else list.add(dir);
+        }
+        return "/" + String.join("/", list);
+    }
+}
+```
+
+### 133. Clone Graph
+- [Link](https://leetcode.com/problems/clone-graph/)
+- Tags: DFS, BFS, Graph
+- Stars: 2
+
+#### 2019.8.12 HashMap
+- time: 100%
+- space: 97.65%
+
+```java
+class Solution {
+    public Node cloneGraph(Node node) {
+        Map<Node, Node> map = new HashMap<>();
+        addNode(map, node);
+        for(Node newNode: map.values()) {
+            List<Node> neighbors = new ArrayList<>();
+            for(Node src: newNode.neighbors) 
+                neighbors.add(map.get(src));
+            newNode.neighbors = neighbors;
+        }
+        return map.get(node);
+    }
+    public void addNode(Map<Node, Node> map, Node node) {
+        if (map.containsKey(node)) return;
+        map.put(node, new Node(node.val, node.neighbors));
+        for(Node n: node.neighbors) addNode(map, n);
+    }
+}
+```
+
+Another version
+
+```java
+class Solution {
+    Map<Node, Node> map = new HashMap<>();
+    public Node cloneGraph(Node node) {
+        if (node == null) return null;
+        if (map.containsKey(node)) return map.get(node);
+        Node newNode = new Node(node.val, new ArrayList<>());
+        map.put(node, newNode);
+        for(Node nb: node.neighbors) newNode.neighbors.add(cloneGraph(nb));
+        return newNode;
+    }
+}
+```
+
+### 165. Compare Version Numbers
+- [Link](https://leetcode.com/problems/compare-version-numbers/)
+- Tags: String
+- Stars: 3
+
+#### 2019.8.12
+- time: 90.76%
+- space: 100%
+- attention: The param for `String.split` is a regex. Thus, when splitting by `.`, pass in `"\\."`.
+
+```java
+class Solution {
+    public int compareVersion(String version1, String version2) {
+        int[] v1 = split(version1), v2 = split(version2);
+        int i=0;
+        while(i<v1.length || i<v2.length) {
+            int num1 = i<v1.length ? v1[i] : 0;
+            int num2 = i<v2.length ? v2[i] : 0;
+            if (num1 > num2) return 1;
+            else if (num1 < num2) return -1;
+            i++;
+        }
+        return 0;
+    }
+    public int[] split(String s) {
+        List<Integer> list = new ArrayList<>();
+        int start = 0, end = 0;
+        while(start < s.length()) {
+            if (end < s.length() && s.charAt(end) != '.') end++;
+            else {
+                list.add(Integer.parseInt(s.substring(start, end)));
+                start = ++end;
+            }
+        }
+        int[] result = new int[list.size()];
+        for(int i=0; i<list.size(); i++) result[i] = list.get(i);
+        return result;
+    }
+}
+```
+
+Updated
+
+```java
+class Solution {
+    public int compareVersion(String version1, String version2) {
+        String[] v1 = version1.split("\\.");
+        String[] v2 = version2.split("\\.");
+        int i = 0;
+        while(i<v1.length || i<v2.length) {
+            int num1 = i<v1.length ? Integer.parseInt(v1[i]) : 0;
+            int num2 = i<v2.length ? Integer.parseInt(v2[i]) : 0;
+            if (num1 < num2) return -1;
+            else if (num1 > num2) return 1;
+            i++;
+        }
+        return 0;
+    }
+}
+```
+
 
 ## Others
 
@@ -9730,7 +10155,8 @@ class Tuple{
 ```
 
 #### recursive
-Attention: strLen might OVERFLOW!!!!!!! Thus, we must use long. 
+- attention: strLen might OVERFLOW!!!!!!! Thus, we must use long. 
+
 ```java
 class Solution {
     public String decodeAtIndex(String S, int K) {

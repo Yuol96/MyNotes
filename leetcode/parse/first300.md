@@ -396,35 +396,35 @@
 
 - [x] [31. Next Permutation](https://leetcode.com/problems/next-permutation), 30.1%, Medium
 
-- [ ] [43. Multiply Strings](https://leetcode.com/problems/multiply-strings), 30.1%, Medium
+- [x] [43. Multiply Strings](https://leetcode.com/problems/multiply-strings), 30.1%, Medium
 
-- [ ] [143. Reorder List](https://leetcode.com/problems/reorder-list), 30.0%, Medium
+- [x] [143. Reorder List](https://leetcode.com/problems/reorder-list), 30.0%, Medium
 
-- [ ] [18. 4Sum](https://leetcode.com/problems/4sum), 29.9%, Medium
+- [x] [18. 4Sum](https://leetcode.com/problems/4sum), 29.9%, Medium
 
-- [ ] [54. Spiral Matrix](https://leetcode.com/problems/spiral-matrix), 29.8%, Medium
+- [x] [54. Spiral Matrix](https://leetcode.com/problems/spiral-matrix), 29.8%, Medium
 
 - [ ] [211. Add and Search Word - Data structure design](https://leetcode.com/problems/add-and-search-word-data-structure-design), 29.4%, Medium
 
-- [ ] [152. Maximum Product Subarray](https://leetcode.com/problems/maximum-product-subarray), 28.7%, Medium
+- [x] [152. Maximum Product Subarray](https://leetcode.com/problems/maximum-product-subarray), 28.7%, Medium
 
-- [ ] [71. Simplify Path](https://leetcode.com/problems/simplify-path), 28.3%, Medium
+- [x] [71. Simplify Path](https://leetcode.com/problems/simplify-path), 28.3%, Medium
 
-- [ ] [3. Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters), 28.1%, Medium
+- [x] [3. Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters), 28.1%, Medium
 
-- [ ] [50. Pow(x, n)](https://leetcode.com/problems/powx-n), 27.6%, Medium
+- [x] [50. Pow(x, n)](https://leetcode.com/problems/powx-n), 27.6%, Medium
 
 - [ ] [5. Longest Palindromic Substring](https://leetcode.com/problems/longest-palindromic-substring), 26.8%, Medium
 
 - [x] [61. Rotate List](https://leetcode.com/problems/rotate-list), 26.6%, Medium
 
-- [ ] [138. Copy List with Random Pointer](https://leetcode.com/problems/copy-list-with-random-pointer), 26.0%, Medium
+- [x] [138. Copy List with Random Pointer](https://leetcode.com/problems/copy-list-with-random-pointer), 26.0%, Medium
 
 - [ ] [271. Encode and Decode Strings](https://leetcode.com/problems/encode-and-decode-strings), 26.0%, Medium
 
-- [ ] [133. Clone Graph](https://leetcode.com/problems/clone-graph), 25.5%, Medium
+- [x] [133. Clone Graph](https://leetcode.com/problems/clone-graph), 25.5%, Medium
 
-- [ ] [179. Largest Number](https://leetcode.com/problems/largest-number), 25.3%, Medium
+- [x] [179. Largest Number](https://leetcode.com/problems/largest-number), 25.3%, Medium
 
 - [x] [98. Validate Binary Search Tree](https://leetcode.com/problems/validate-binary-search-tree), 25.3%, Medium
 
@@ -434,15 +434,15 @@
 
 - [ ] [163. Missing Ranges](https://leetcode.com/problems/missing-ranges), 23.0%, Medium
 
-- [ ] [165. Compare Version Numbers](https://leetcode.com/problems/compare-version-numbers), 22.9%, Medium
+- [x] [165. Compare Version Numbers](https://leetcode.com/problems/compare-version-numbers), 22.9%, Medium
 
-- [ ] [130. Surrounded Regions](https://leetcode.com/problems/surrounded-regions), 22.2%, Medium
+- [x] [130. Surrounded Regions](https://leetcode.com/problems/surrounded-regions), 22.2%, Medium
 
-- [ ] [91. Decode Ways](https://leetcode.com/problems/decode-ways), 22.0%, Medium
+- [x] [91. Decode Ways](https://leetcode.com/problems/decode-ways), 22.0%, Medium
 
 - [ ] [288. Unique Word Abbreviation](https://leetcode.com/problems/unique-word-abbreviation), 19.7%, Medium
 
-- [ ] [220. Contains Duplicate III](https://leetcode.com/problems/contains-duplicate-iii), 19.5%, Medium
+- [x] [220. Contains Duplicate III](https://leetcode.com/problems/contains-duplicate-iii), 19.5%, Medium
 
 - [ ] [166. Fraction to Recurring Decimal](https://leetcode.com/problems/fraction-to-recurring-decimal), 19.2%, Medium
 
