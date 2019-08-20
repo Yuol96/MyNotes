@@ -219,7 +219,7 @@ class Solution {
 ```
 
 #### binary search
-- attention that you `r-l` might overflow, so you have to use long integer.
+- attention: `r-l` might overflow, so you have to use long integer.
 
 ```java
 class Solution {
@@ -672,7 +672,7 @@ class Solution {
 - time: 100%
 - space: 100%
 - interviewLevel
-- attention:! It needs to be taken care of when `nums` only has one element.
+- attention: It needs to be taken care of when `nums` only has one element.
 
 ```java
 class Solution {
@@ -1150,7 +1150,8 @@ public class Solution {
 - Stars: 1
 
 #### rotate partially
-Attention that `k` needs to be reduced to [0, nums.length).
+- attention: `k` needs to be reduced to [0, nums.length).
+
 ```java
 class Solution {
     public void rotate(int[] nums, int k) {
@@ -1348,10 +1349,11 @@ class Tuple implements Comparable<Tuple> {
 
 
 #### Binary Search
+- attention: when `count == k`, `mid` might not exists in `matrix`, so we need to get the largest element that is less than or equal to `mid` in `matrix`. Therefore, we have `getMaxlte`.
+
 <span id="378-binary-search"></span>
-1. Attention: when `count == k`, `mid` might not exists in `matrix`, so we need to get the largest element that is less than or equal to `mid` in `matrix`. Therefore, we have `getMaxlte`.
-2. There's a situation that might break the while loop, i.e., there are more than one elements that have the same value as the kth smallest. When this happens, r will goes below l, and it breaks the while loop. Therefore, we need to return `l` instead of an arbitrary number outside the while loop. 
-3. The whole picture of this algorithm:
+1. There's a situation that might break the while loop, i.e., there are more than one elements that have the same value as the kth smallest. When this happens, r will goes below l, and it breaks the while loop. Therefore, we need to return `l` instead of an arbitrary number outside the while loop. 
+2. The whole picture of this algorithm:
 > The key point for any binary search is to figure out the "Search Space". For me, I think there are two kind of "Search Space" -- index and range(the range from the smallest number to the biggest number). Most usually, when the array is sorted in one direction, we can use index as "search space", when the array is unsorted and we are going to find a specific number, we can use "range". 
 
 Similar to [287. Find the Duplicate Number](#287-binary-search).
@@ -1839,8 +1841,10 @@ class Solution {
 ```
 
 #### Hashable Array
-1. When implementing `HashArray.equals()`, the parameter `o` must be of type `Object`!!
-2. Pay attention to the usage of `map.computeIfAbsent` and its return value. 
+- attention: the usage of `map.computeIfAbsent` and its return value. 
+
+When implementing `HashArray.equals()`, the parameter `o` must be of type `Object`!!
+
 ```java
 class Solution {
     public List<List<String>> groupAnagrams(String[] strs) {
@@ -3372,8 +3376,10 @@ class Solution {
 - Stars: 1
 
 #### stack
-1. `token.length()>1` is used to deal with negative numbers.
-2. pay attention to the order of parameters in `compute` function
+- attention: the order of parameters in `compute` function
+
+`token.length()>1` is used to deal with negative numbers.
+
 ```java
 class Solution {
     public int evalRPN(String[] tokens) {
@@ -3910,7 +3916,8 @@ class Solution {
 - Stars: 4
 
 #### recursive
-Attention that you need to take care of cases like `root.val == Integer.MIN_VALUE` and `root.val == Integer.MAX_VALUE`, because under these circumstances, the boundaries might overflow.
+- attention: you need to take care of cases like `root.val == Integer.MIN_VALUE` and `root.val == Integer.MAX_VALUE`, because under these circumstances, the boundaries might overflow.
+
 ```java
 class Solution {
     public boolean isValidBST(TreeNode root) {
@@ -4865,10 +4872,34 @@ class Solution {
 }
 ```
 
+Updated 2019.8.17
+- time: 98.33%
+- space: 97.26%
+
+```java
+class Solution {
+    public int trap(int[] height) {
+        if (height.length == 0) return 0;
+        int result = 0;
+        int i=0, j=height.length - 1, left = height[i], right = height[j];
+        while(i<j) {
+            if (left <= right) {
+                result += left - height[i++];
+                left = Math.max(left, height[i]);
+            } else {
+                result += right - height[j--];
+                right = Math.max(right, height[j]);
+            }
+        }
+        return result;
+    }
+}
+```
+
 ### 128. Longest Consecutive Sequence
 - [Link](https://leetcode.com/problems/longest-consecutive-sequence/)
 - Tags: Array, Union Find
-- Stars: 3
+- Stars: 4
 
 #### union find based on HashMap, only beats 27.49% in time and 34.14% in space
 ```java
@@ -4914,6 +4945,8 @@ class Solution {
 ```
 
 #### only the boundaries, real O(n) time, beats 90.75% in time
+- attention: `if(map.containsKey(num)) continue;` is necessary to avoid duplicate counting. For the same reason, we also need to update `map.put(num, leftLen+rightLen+1);`.
+
 The tricky part was to understand why only the boundaries need to be updated and not the entire sequence with the new sum.
 ```java
 class Solution {
@@ -5090,7 +5123,7 @@ class Solution {
 ### 239. Sliding Window Maximum
 - [Link](https://leetcode.com/problems/sliding-window-maximum/)
 - Tags: Heap, Sliding Window
-- Stars: 3
+- Stars: 4
 
 #### My solution, MaxQueue
 MaxQueue is implemented by two MaxStack.
@@ -5157,12 +5190,37 @@ class MaxStack {
 }
 ```
 
+#### 2019.8.18 TreeMap O(nlogn)
+- time: 12.40%
+- space: 90.63%
+
+```java
+class Solution {
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        if (nums.length == 0) return new int[0];
+        int[] result = new int[nums.length - k + 1];
+        TreeMap<Integer, Integer> map = new TreeMap<>();
+        for(int i=0, j=0; i<nums.length; i++) {
+            map.put(nums[i], map.getOrDefault(nums[i], 0) + 1);
+            if (i >= k-1) {
+                result[j++] = map.lastKey();
+                map.put(nums[i-k+1], map.get(nums[i-k+1]) - 1);
+                if (map.get(nums[i-k+1]) == 0) map.remove(nums[i-k+1]);
+            }
+        }
+        return result;
+    }
+}
+```
+
 ### 295. Find Median from Data Stream
 - [Link](https://leetcode.com/problems/find-median-from-data-stream/)
 - Tags: Heap, Design
 - Stars: 2
 
 #### lower bound binary search insertion
+- language: `list.add(idx, num)`, `list.addFirst(num)`
+
 ```java
 class MedianFinder {
     List<Integer> list;
@@ -5192,6 +5250,8 @@ class MedianFinder {
 ```
 
 #### minHeap and maxHeap
+- language: `Comparator.reverseOrder()`
+
 ```java
 class MedianFinder {
     PriorityQueue<Integer> maxHeap;
@@ -5218,7 +5278,7 @@ class MedianFinder {
 ### 23. Merge k Sorted Lists
 - [Link](https://leetcode.com/problems/merge-k-sorted-lists/)
 - Tags: Linked List, Divide and Conquer, Heap
-- Stars: 2
+- Stars: 3
 
 #### minHeap, 41ms
 ```java
@@ -5280,6 +5340,8 @@ class Solution {
 ```
 
 #### divide and conquer, use merge 2 linkedlist, 5ms beats 100% in time
+- interviewLevel
+
 ```java
 class Solution {
     public ListNode mergeKLists(ListNode[] lists) {
@@ -5595,7 +5657,8 @@ class Solution {
 - Stars: 2
 
 #### recursive
-ATTENTION: `isSubtree` and `isEqual` are different DFS process. Do not try to integrate into a single function.
+- attention: `isSubtree` and `isEqual` are different DFS process. Do not try to integrate into a single function.
+
 ```java
 class Solution {
     public boolean isSubtree(TreeNode s, TreeNode t) {
@@ -5891,8 +5954,7 @@ class Solution {
 - time: 100%
 - space: 98.62%
 - interviewLevel
-
-Attention: in this line `nums[mid] >= nums[0]`, it must be `>=`, not `>`. That's what a sorted array means!
+- attention: in this line `nums[mid] >= nums[0]`, it must be `>=`, not `>`. That's what a sorted array means!
 
 ```java
 class Solution {
@@ -6676,10 +6738,7 @@ class Solution {
 - time: 100%
 - space: 100%
 - interviewLevel
-
-Attention! `h` might be 0, which means `mid` might be `citations.length`.  
-That's why we need this line:  
-`if (citations[citations.length - 1] == 0) return 0;`
+- attention: `h` might be 0, which means `mid` might be `citations.length`. That's why we need this line: `if (citations[citations.length - 1] == 0) return 0;`
 
 ```java
 class Solution {
@@ -6792,8 +6851,7 @@ class Solution {
 #### 2-dimensional binary search
 - time: 100%
 - space: 7.69%
-
-**FOR BINARY SEARCH PROBLEMS, PAY MUCH ATTENTION TO THE OUT-OF-BOUND CHECK!!!**
+- attention: out-of-bound check for binary search
 
 ```java
 class Solution {
@@ -6847,9 +6905,7 @@ class Solution {
 #### binary search by value
 - time: 60.53%
 - space: 100%
-
-**FOR BINARY SEARCH PROBLEMS, PAY MUCH ATTENTION TO THE OUT-OF-BOUND CHECK!!!**  
-**DEAL WITH THE BOUNDARY CASE INDIVIDUALY!!!**
+- attention: out-of-bound check for binary search.
 
 Similar to **H-Index II**
 
@@ -7013,7 +7069,7 @@ class Solution {
 - space: 96.76%
 - interviewLevel
 
-Attention! A tree like below:
+A tree like below:
 ```
         a
     b       c
@@ -7718,6 +7774,516 @@ class Solution {
 }
 ```
 
+### 220. Contains Duplicate III
+- [Link](https://leetcode.com/problems/contains-duplicate-iii/)
+- Tags: Sort, OrderedMap
+- Stars: 5
+
+#### 2019.8.12 TreeMap
+- time: 24.81%
+- space: 97.73%
+- attention: If you want to maintain a queue (push/pop) while performing `O(logN)` search operations, try `TreeMap`!
+- attention: while computing distances of two elements, pay attention to the overflow problem. 
+- language: the use of `TreeMap` and `TreeSet`
+
+```java
+class Solution {
+    public boolean containsNearbyAlmostDuplicate(int[] nums, int k, int t) {
+        TreeMap<Integer, Integer> map = new TreeMap<>();
+        for(int i=0; i<nums.length; i++) {
+            Integer l = map.floorKey(nums[i]), r = map.ceilingKey(nums[i]);
+            if (l != null && Math.abs((long)l-(long)nums[i])<=(long)t) return true;
+            if (r != null && Math.abs((long)r-(long)nums[i])<=(long)t) return true;
+            map.put(nums[i], map.getOrDefault(nums[i], 0) + 1);
+            if (i>=k) {
+                map.put(nums[i-k], map.get(nums[i-k]) - 1);
+                if (map.get(nums[i-k]) == 0) map.remove(nums[i-k]);
+            }
+        }
+        return false;
+    }
+}
+```
+
+### 51. N-Queens
+- [Link](https://leetcode.com/problems/n-queens/)
+- Tags: Backtracking
+- Stars: 3
+
+#### 2019.8.17 backtrack with set marking
+- time: 7.08%
+- space: 10.81%
+
+```java
+class Solution {
+    List<List<String>> result = new ArrayList<>();
+    public List<List<String>> solveNQueens(int n) {
+        if (n == 0) return result;
+        char[][] board = new char[n][n];
+        for(int i=0; i<n; i++) Arrays.fill(board[i], '.');
+        backtrack(board, new HashSet<>(), 0);
+        return result;
+    }
+    public void backtrack(char[][] board, Set<String> set, int i) {
+        if (i == board.length) {
+            result.add(convert(board));
+            return;
+        }
+        for(int j=0; j<board[i].length; j++) {
+            String vertical = j + "v";
+            if (!set.add(vertical)) continue;
+            String left = (j-i) + "l";
+            if (!set.add(left)) {
+                set.remove(vertical);
+                continue;
+            }
+            String right = (j+i) + "r";
+            if (!set.add(right)) {
+                set.remove(vertical);
+                set.remove(left);
+                continue;
+            }
+            board[i][j] = 'Q';
+            backtrack(board, set, i+1);
+            board[i][j] = '.';
+            set.remove(vertical); set.remove(left); set.remove(right);
+        }
+    }
+    public List<String> convert(char[][] board) {
+        List<String> result = new ArrayList<>();
+        for(char[] row: board) result.add(new String(row));
+        return result;
+    }
+}
+```
+
+#### 2019.8.17 backtrack with array marking
+- time: 95.29%
+- space: 100%
+- language: convert a `char[]` into `String`
+
+```java
+class Solution {
+    List<List<String>> result = new ArrayList<>();
+    boolean[] vertical, left, right;
+    int n;
+    public List<List<String>> solveNQueens(int n) {
+        if (n == 0) return result;
+        this.n = n;
+        vertical = new boolean[n]; 
+        left = new boolean[2*n-1]; 
+        right = new boolean[2*n-1];
+        char[][] board = new char[n][n];
+        for(int i=0; i<n; i++) Arrays.fill(board[i], '.');
+        backtrack(board, 0);
+        return result;
+    }
+    public void backtrack(char[][] board, int i) {
+        if (i == n) {
+            result.add(convert(board));
+            return;
+        }
+        for(int j=0; j<n; j++) {
+            if (vertical[j] || left[j-i+n-1] || right[j+i]) continue;
+            vertical[j] = left[j-i+n-1] = right[j+i] = true;
+            board[i][j] = 'Q';
+            backtrack(board, i+1);
+            board[i][j] = '.';
+            vertical[j] = left[j-i+n-1] = right[j+i] = false;
+        }
+    }
+    public List<String> convert(char[][] board) {
+        List<String> result = new ArrayList<>();
+        for(char[] row: board) result.add(new String(row));
+        return result;
+    }
+}
+```
+
+### 52. N-Queens II
+- [Link](https://leetcode.com/problems/n-queens-ii/)
+- Tags: Backtracking
+- Stars: 4
+
+#### 2019.8.17 backtrack with array marking
+- time: 95.79%
+- space: 8.70%
+
+```java
+class Solution {
+    int result = 0;
+    int n;
+    boolean[] vertical, left, right;
+    public int totalNQueens(int n) {
+        if (n == 0) return 0;
+        this.n = n;
+        vertical = new boolean[n]; 
+        left = new boolean[2*n-1]; 
+        right = new boolean[2*n-1];
+        backtrack(0);
+        return result;
+    }
+    private void backtrack(int i) {
+        if (i == n) {
+            result++;
+            return ;
+        }
+        for(int j=0; j<n; j++) {
+            if (vertical[j] || left[j-i+n-1] || right[j+i]) continue;
+            vertical[j] = left[j-i+n-1] = right[j+i] = true;
+            backtrack(i+1);
+            vertical[j] = left[j-i+n-1] = right[j+i] = false;
+        }
+    }
+}
+```
+
+### 145. Binary Tree Postorder Traversal
+- [Link](https://leetcode.com/problems/binary-tree-postorder-traversal/)
+- Tags: Stack, Tree
+- Stars: 3
+
+#### 2019.8.17 iterative Stack<Pair>
+- time: 63.78%
+- space: 100%
+- attention: when pushing items into the stack, make sure to push the right child first.
+
+```java
+class Solution {
+    public List<Integer> postorderTraversal(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        if (root == null) return result;
+        Stack<Pair> st = new Stack<>();
+        st.add(new Pair(root));
+        while(!st.isEmpty()) {
+            Pair p = st.pop();
+            if (p.visited) {
+                result.add(p.node.val);
+            } else {
+                p.visited = true;
+                st.add(p);
+                if (p.node.right != null) st.add(new Pair(p.node.right));
+                if (p.node.left != null) st.add(new Pair(p.node.left));
+            }
+        }
+        return result;
+    }
+    
+    public class Pair {
+        TreeNode node;
+        boolean visited;
+        Pair(TreeNode n) {
+            node = n;
+            visited = false;
+        }
+    }
+}
+```
+
+#### 2019.8.17 iterative Stack<TreeNode>
+- time: 63.78%
+- space: 100%
+
+```java
+class Solution {
+    public List<Integer> postorderTraversal(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        if (root == null) return result;
+        Stack<TreeNode> st = new Stack<>();
+        TreeNode curr = root;
+        while(true) {
+            while(curr.left != null) {
+                st.add(curr);
+                curr = curr.left;
+            }
+            if (curr.right != null) {
+                st.add(curr);
+                curr = curr.right;
+                continue;
+            } 
+            while(!st.isEmpty() && 
+                  (curr == st.peek().right || st.peek().right == null)) {
+                result.add(curr.val);
+                curr = st.pop();
+            }
+            result.add(curr.val);
+            if (st.isEmpty()) break;
+            else curr = st.peek().right;
+        }
+        return result;
+    }
+}
+```
+
+### 154. Find Minimum in Rotated Sorted Array II
+- [Link](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array-ii/)
+- Tags: Array, Binary Search
+- Stars: 4
+
+#### 2019.8.18 clip (linear speed) + binary search
+- time: 100%
+- space: 6.25%
+- attention: you have to compare the result of binary search with the clipped elements and return `Math.min(nums[i], nums[0])`. (Consider the case `[3,1,3]` and `[0,1,2,3,0]`)
+
+```java
+class Solution {
+    public int findMin(int[] nums) {
+        int i = 0, j = nums.length - 1;
+        while(i<j && nums[i] == nums[j]) {i++; j--;}
+        if (i>=j) return Math.min(nums[0], nums[i]);
+        if (nums[i] < nums[j]) return Math.min(nums[i], nums[0]);
+        int l = i, r = j;
+        while(l<r) {
+            int mid = l + ((r-l)>>1);
+            if (nums[mid] >= nums[i]) l = mid + 1;
+            else r = mid;
+        }
+        return nums[l];
+    }
+}
+```
+
+### 72. Edit Distance
+- [Link](https://leetcode.com/problems/edit-distance/)
+- Tags: String, Dynamic Programming
+- Stars: 4
+
+#### 2019.8.19 DP
+- time: 94.96%
+- space: 100%
+- attention: You can add additional row and column to make it easier. 
+
+```java
+class Solution {
+    public int minDistance(String word1, String word2) {
+        int len1 = word1.length(), len2 = word2.length();
+        if (len1 == 0 || len2 == 0) return Math.max(len1, len2);
+        int[][] dp = new int[len1+1][len2+1];
+        for(int i=0; i<=len1; i++) dp[i][0] = i;
+        for(int j=0; j<=len2; j++) dp[0][j] = j;
+        for(int i=1; i<=len1; i++)
+            for(int j=1; j<=len2; j++) {
+                if (word1.charAt(i-1) == word2.charAt(j-1)) dp[i][j] = dp[i-1][j-1];
+                else dp[i][j] = Math.min(dp[i-1][j-1], Math.min(dp[i-1][j], dp[i][j-1])) + 1;
+            }
+        return dp[len1][len2];
+    }
+}
+```
+
+### 37. Sudoku Solver
+- [Link](https://leetcode.com/problems/sudoku-solver/)
+- Tags: Hash Table, Backtracking
+- Stars: 4
+
+#### 2019.8.19 DFS
+- time: 89.96%
+- space: 70.18%
+- attention: It may not exist that an empty cell has only one option (1-9) available. Therefore, we have to consider DFS solutions.
+
+```java
+class Solution {
+    boolean[][] rowMarks = new boolean[9][9];
+    boolean[][] colMarks = new boolean[9][9];
+    boolean[][][] gridMarks = new boolean[3][3][9];
+    public void solveSudoku(char[][] board) {
+        for(int i=0; i<9; i++)
+            for(int j=0; j<9; j++)
+                if (board[i][j] != '.') markAs(i, j, board[i][j], true);
+        DFS(board, 0, 0);
+    }
+    public boolean DFS(char[][] board, int r, int c) {
+        if (r == 9) return true;
+        if (c == 9) return DFS(board, r+1, 0);
+        if (board[r][c] != '.') return DFS(board, r, c+1);
+        for(int idx=0; idx<9; idx++) {
+            if (rowMarks[r][idx] || colMarks[c][idx] || gridMarks[r/3][c/3][idx]) continue;
+            board[r][c] = (char)(idx+'1');
+            markAs(r, c, board[r][c], true);
+            if (DFS(board, r, c+1)) return true;
+            markAs(r, c, board[r][c], false);
+            board[r][c] = '.';
+        }
+        return false;
+    }
+    public void markAs(int i, int j, char c, boolean flag) {
+        int idx = c - '1';
+        rowMarks[i][idx] = flag;
+        colMarks[j][idx] = flag;
+        gridMarks[i/3][j/3][idx] = flag;
+    }
+}
+```
+
+### 25. Reverse Nodes in k-Group
+- [Link](https://leetcode.com/problems/reverse-nodes-in-k-group/)
+- Tags: Linked List
+- Stars: 3
+
+#### 2019.8.19 recursive
+- time: 100%
+- space: 25.86%
+
+```java
+class Solution {
+    public ListNode reverseKGroup(ListNode head, int k) {
+        if (head == null) return head;
+        ListNode tail = head;
+        for(int i=1; i<k; i++) {
+            if (tail.next == null) return head;
+            tail = tail.next;
+        }
+        ListNode remain = tail.next, curr = head;
+        while(curr != tail) {
+            ListNode next = curr.next;
+            curr.next = tail.next;
+            tail.next = curr;
+            curr = next;
+        }
+        head.next = reverseKGroup(remain, k);
+        return tail;
+    }
+}
+```
+
+#### 2019.8.19 iterative
+- time: 36.90%
+- space: 24.14%
+- attention: for Linked List problems, avoid using the handle node.
+
+```java
+class Solution {
+    public ListNode reverseKGroup(ListNode head, int k) {
+        ListNode prefix = null, result = head;
+        while(true) {
+            if (head == null) break;
+            ListNode tail = head;
+            boolean stop = false;
+            for(int i=1; i<k; i++) {
+                if(tail.next == null) {
+                    stop = true; 
+                    break;
+                } else tail = tail.next;
+            }
+            if (stop) break;
+            if (prefix == null) result = tail;
+            else prefix.next = tail;
+            prefix = head;
+            ListNode remain = tail.next, curr = head;
+            while(curr != tail) {
+                ListNode next = curr.next;
+                curr.next = tail.next;
+                tail.next = curr;
+                curr = next;
+            }
+            head.next = remain;
+            head = remain;
+        }
+        return result;
+    }
+}
+```
+
+Updated
+```java
+class Solution {
+    public ListNode reverseKGroup(ListNode head, int k) {
+        int n = 0;
+        for(ListNode curr=head; curr!=null; curr=curr.next) n++;
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        for(ListNode prefix=dummy, tail=head; n>=k; n-=k) {
+            for(int i=0; i<k; i++) {
+                ListNode next = tail.next;
+                tail.next = prefix.next;
+                prefix.next = tail;
+                tail = next;
+            }
+            head.next = tail;
+            prefix = head;
+            head = tail = prefix.next;
+        }
+        return dummy.next;
+    }
+}
+```
+
+### 115. Distinct Subsequences
+- [Link](https://leetcode.com/problems/distinct-subsequences/)
+- Tags: String, Dynamic Programming
+- Stars: 4
+
+#### 2019.8.19 DP
+- time: 5.84%
+- space: 88.46%
+
+```java
+class Solution {
+    public int numDistinct(String s, String t) {
+        if (s.length() < t.length()) return 0;
+        if (t.length() == 0) return 1;
+        int len1 = s.length(), len2 = t.length();
+        int[][] dp = new int[len1][len2];
+        dp[0][0] = s.charAt(0) == t.charAt(0) ? 1 : 0;
+        for(int i=1; i<len1; i++) {
+            dp[i][0] = s.charAt(i) == t.charAt(0) ? dp[i-1][0] + 1 : dp[i-1][0];
+            for(int j=1; j<len2 && j<=i; j++) {
+                dp[i][j] += dp[i-1][j];
+                if (s.charAt(i) == t.charAt(j)) dp[i][j] += dp[i-1][j-1];
+            }
+        }
+        return dp[len1-1][len2-1];
+    }
+}
+```
+
+### 99. Recover Binary Search Tree
+- [Link](https://leetcode.com/problems/recover-binary-search-tree/)
+- Tags: Tree, DFS
+- Stars: 5
+
+#### 2019.8.19 
+- time: 99.56%
+- space: 100%
+
+Consider the input tree as an ordered list (array) in which only two elements are mistakenly swapped. 
+If we define the reverse-ordered node as the node whose value is smaller than its previous node's value, 
+then we can find that there is at least one reverse-ordered node in the input. 
+Once we find the last reverse-ordered node (marked as `A`), we know this is one of two nodes that are engaged in the final swap operation, and the other node `B` must have a greater value and is the first node that is greater than `A` in the input.
+
+```java
+class Solution {
+    TreeNode last = null;
+    public void recoverTree(TreeNode root) {
+        if (root == null) return;
+        // traverse to get the last reverse-ordered node
+        TreeNode node = getLastReverseOrderNode(root);
+        traverse(root, node);
+    }
+    public TreeNode getLastReverseOrderNode(TreeNode root) {
+        if (root == null) return null;
+        TreeNode ret = getLastReverseOrderNode(root.left);
+        if (last != null && last.val >= root.val) ret = root;
+        else last = root;
+        TreeNode right = getLastReverseOrderNode(root.right);
+        return right != null ? right : ret;
+    }
+    public boolean traverse(TreeNode root, TreeNode node) {
+        if (root == null) return false;
+        if (traverse(root.left, node)) return true;
+        if (node.val <= root.val) {
+            swap(node, root);
+            return true;
+        }
+        return traverse(root.right, node);
+    }
+    public void swap(TreeNode a, TreeNode b) {
+        int temp = a.val;
+        a.val = b.val;
+        b.val = temp;
+    }
+}
+```
 
 ## Others
 

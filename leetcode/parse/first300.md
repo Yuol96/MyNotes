@@ -454,15 +454,15 @@
 
 - [ ] [296. Best Meeting Point](https://leetcode.com/problems/best-meeting-point), 54.3%, Hard
 
-- [ ] [52. N-Queens II](https://leetcode.com/problems/n-queens-ii), 50.9%, Hard
+- [x] [52. N-Queens II](https://leetcode.com/problems/n-queens-ii), 50.9%, Hard
 
-- [ ] [145. Binary Tree Postorder Traversal](https://leetcode.com/problems/binary-tree-postorder-traversal), 47.2%, Hard
+- [x] [145. Binary Tree Postorder Traversal](https://leetcode.com/problems/binary-tree-postorder-traversal), 47.2%, Hard
 
 - [ ] [159. Longest Substring with At Most Two Distinct Characters](https://leetcode.com/problems/longest-substring-with-at-most-two-distinct-characters), 46.3%, Hard
 
 - [ ] [272. Closest Binary Search Tree Value II](https://leetcode.com/problems/closest-binary-search-tree-value-ii), 43.9%, Hard
 
-- [ ] [42. Trapping Rain Water](https://leetcode.com/problems/trapping-rain-water), 42.2%, Hard
+- [x] [42. Trapping Rain Water](https://leetcode.com/problems/trapping-rain-water), 42.2%, Hard
 
 - [ ] [128. Longest Consecutive Sequence](https://leetcode.com/problems/longest-consecutive-sequence), 41.0%, Hard
 
@@ -470,29 +470,29 @@
 
 - [ ] [291. Word Pattern II](https://leetcode.com/problems/word-pattern-ii), 40.3%, Hard
 
-- [ ] [297. Serialize and Deserialize Binary Tree](https://leetcode.com/problems/serialize-and-deserialize-binary-tree), 39.7%, Hard
+- [x] [297. Serialize and Deserialize Binary Tree](https://leetcode.com/problems/serialize-and-deserialize-binary-tree), 39.7%, Hard
 
-- [ ] [154. Find Minimum in Rotated Sorted Array II](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array-ii), 39.0%, Hard
+- [x] [154. Find Minimum in Rotated Sorted Array II](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array-ii), 39.0%, Hard
 
-- [ ] [51. N-Queens](https://leetcode.com/problems/n-queens), 38.0%, Hard
+- [x] [51. N-Queens](https://leetcode.com/problems/n-queens), 38.0%, Hard
 
 - [ ] [239. Sliding Window Maximum](https://leetcode.com/problems/sliding-window-maximum), 37.3%, Hard
 
-- [ ] [72. Edit Distance](https://leetcode.com/problems/edit-distance), 36.7%, Hard
+- [x] [72. Edit Distance](https://leetcode.com/problems/edit-distance), 36.7%, Hard
 
 - [ ] [248. Strobogrammatic Number III](https://leetcode.com/problems/strobogrammatic-number-iii), 35.9%, Hard
 
-- [ ] [37. Sudoku Solver](https://leetcode.com/problems/sudoku-solver), 35.8%, Hard
+- [x] [37. Sudoku Solver](https://leetcode.com/problems/sudoku-solver), 35.8%, Hard
 
-- [ ] [25. Reverse Nodes in k-Group](https://leetcode.com/problems/reverse-nodes-in-k-group), 35.6%, Hard
+- [x] [25. Reverse Nodes in k-Group](https://leetcode.com/problems/reverse-nodes-in-k-group), 35.6%, Hard
 
-- [ ] [295. Find Median from Data Stream](https://leetcode.com/problems/find-median-from-data-stream), 35.3%, Hard
+- [x] [295. Find Median from Data Stream](https://leetcode.com/problems/find-median-from-data-stream), 35.3%, Hard
 
-- [ ] [115. Distinct Subsequences](https://leetcode.com/problems/distinct-subsequences), 34.6%, Hard
+- [x] [115. Distinct Subsequences](https://leetcode.com/problems/distinct-subsequences), 34.6%, Hard
 
-- [ ] [99. Recover Binary Search Tree](https://leetcode.com/problems/recover-binary-search-tree), 34.0%, Hard
+- [x] [99. Recover Binary Search Tree](https://leetcode.com/problems/recover-binary-search-tree), 34.0%, Hard
 
-- [ ] [23. Merge k Sorted Lists](https://leetcode.com/problems/merge-k-sorted-lists), 33.3%, Hard
+- [x] [23. Merge k Sorted Lists](https://leetcode.com/problems/merge-k-sorted-lists), 33.3%, Hard
 
 - [ ] [123. Best Time to Buy and Sell Stock III](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii), 33.1%, Hard
 
