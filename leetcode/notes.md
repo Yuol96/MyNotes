@@ -111,7 +111,7 @@ class Solution {
 ### 371. Sum of Two Integers
 - [Link](https://leetcode.com/problems/sum-of-two-integers/)
 - Tags: Bit Manipulation
-- Stars: 2
+- Stars: 3
 
 #### 行波进位加法器
 ```java
@@ -561,7 +561,7 @@ class Solution {
 ### 326. Power of Three
 - [Link](https://leetcode.com/problems/power-of-three/)
 - Tags: Math
-- Stars: 3
+- Stars: 4
 
 #### Math
 ```java
@@ -9610,6 +9610,145 @@ class Solution {
         for(int j=n-k-1; j>k; j--) result[n-k-1][j] = start++;
         for(int i=n-k-1; i>k; i--) result[i][k] = start++;
         onion(k+1, start);
+    }
+}
+```
+
+## 300 - 399 Questions
+
+### 389. Find the Difference
+- [Link](https://leetcode.com/problems/find-the-difference/)
+- Tags: Hash Table, Bit Manipulation
+- Stars: 1
+
+#### 2019.8.20 stat
+- time: 98.86%
+- space: 9.38%
+
+```java
+class Solution {
+    public char findTheDifference(String s, String t) {
+        char[] stat = new char[26];
+        for(char c: s.toCharArray()) stat[c-'a']++;
+        for(char c: t.toCharArray()) stat[c-'a']--;
+        for(int i=0; i<26; i++) if (stat[i] > 0) return (char)(i+'a');
+        return 0;
+    }
+}
+```
+
+#### 2019.8.20 Bit manipulation
+- time: 98.86%
+- space: 43.75%
+- interviewLevel
+
+```java
+class Solution {
+    public char findTheDifference(String s, String t) {
+        char result = 0;
+        for(char c: s.toCharArray()) result ^= c;
+        for(char c: t.toCharArray()) result ^= c;
+        return result;
+    }
+}
+```
+
+### 342. Power of Four
+- [Link](https://leetcode.com/problems/power-of-four/)
+- Tags: Bit Manipulation
+- Stars: 4
+
+#### 2019.8.20 math and bit manipulation
+- time: 100%
+- space: 6.67%
+- interviewLevel
+- attention: This question is different from 389 (Find the Difference). 3 is a prime while 4 is not.
+- attention: 4 is a special number that has a special relationship with bit manipulation.
+
+`(num&(num-1)) == 0` is to ensure that the bitCount of `num` is 1.  
+`(num&0xAAAAAAAA) == 0` is to make sure that the bit in `num` does not locate in an odd position.
+
+```java
+class Solution {
+    public boolean isPowerOfFour(int num) {
+        return num>0 && ((num&(num-1)) == 0) && (num&0xAAAAAAAA) == 0; // ...1010...
+    }
+}
+```
+
+### 303. Range Sum Query - Immutable
+- [Link](https://leetcode.com/problems/range-sum-query-immutable/)
+- Tags: Dynamic Programming
+- Stars: 1
+
+#### 2019.8.20 DP
+- time: 100%
+- space: 100%
+- interviewLevel
+
+```java
+class NumArray {
+    int[] accu;
+    public NumArray(int[] nums) {
+        accu = new int[nums.length];
+        if (nums.length > 0) {
+            accu[0] = nums[0];
+            for(int i=1; i<nums.length; i++) accu[i] = accu[i-1] + nums[i];
+        }
+    }
+    public int sumRange(int i, int j) {
+        if (i == 0) return accu[j];
+        return accu[j] - accu[i-1];
+    }
+}
+```
+
+### 392. Is Subsequence
+- [Link](https://leetcode.com/problems/is-subsequence/)
+- Tags: Binary Search, Dynamic Programming, Greedy
+- Stars: 3
+
+#### 2019.8.21 two pointers
+- time: 49.41%
+- space: 100%
+
+```java
+class Solution {
+    public boolean isSubsequence(String s, String t) {
+        int i=0, j=0, len1 = s.length(), len2 = t.length();
+        while(i<len1 && j<len2) {
+            if (s.charAt(i) == t.charAt(j)) {
+                i++; j++;
+            } else j++;
+        }
+        return i == len1;
+    }
+}
+```
+
+#### 2019.8.21 Follow-Up Question
+- time: 24.11%
+- space: 16%
+- language: init an array of List: `List<Integer>[] arrOfList = new List[n]` and then init each list one by one.
+- languege: binary search for list: `Collections.binarySearch(list, target)`.
+
+```java
+class Solution {
+    public boolean isSubsequence(String s, String t) {
+        List<Integer>[] char2indices = new List[26];
+        for(int i=0; i<26; i++) char2indices[i] = new ArrayList<>();
+        int len1 = s.length(), len2 = t.length();
+        for(int i=0; i<len2; i++) char2indices[t.charAt(i)-'a'].add(i);
+        int start = 0;
+        for(int i=0; i<len1; i++) {
+            char c = s.charAt(i);
+            List<Integer> indices = char2indices[c-'a'];
+            int idx = Collections.binarySearch(indices, start);
+            if (idx < 0) idx = - (idx + 1);
+            if (idx == indices.size()) return false;
+            start = indices.get(idx) + 1;
+        }
+        return true;
     }
 }
 ```
