@@ -435,14 +435,12 @@ The space of the algorithm above can be further optimized:
 ```java
 class Solution {
     public int maxProfit(int[] prices) {
-        if(prices.length == 0)
-            return 0;
-        int maxProfit = 0, dp = 0;
+        int result = 0, dp = 0;
         for(int i=1; i<prices.length; i++){
             dp = Math.max(0, dp + prices[i] - prices[i-1]);
-            maxProfit = Math.max(maxProfit, dp);
+            result = Math.max(result, dp);
         }
-        return maxProfit;
+        return result;
     }
 }
 ```
@@ -1280,7 +1278,7 @@ class Solution {
 ### 384. Shuffle an Array
 - [Link](https://leetcode.com/problems/shuffle-an-array/)
 - Tags: Design
-- Stars: 1
+- Stars: 4
 
 #### swap step by step
 ```java
@@ -1289,11 +1287,9 @@ class Solution {
     public Solution(int[] nums) {
         arr = nums;
     }
-    /** Resets the array to its original configuration and return it. */
     public int[] reset() {
         return arr;
     }
-    /** Returns a random shuffling of the array. */
     public int[] shuffle() {
         if(arr==null) return null;
         int[] newArr = arr.clone();
@@ -1308,6 +1304,36 @@ class Solution {
         int temp = nums[i];
         nums[i] = nums[j];
         nums[j] = temp;
+    }
+}
+```
+
+Or in the reverse order:
+
+```java
+public class Solution {
+    private int[] nums;
+    private Random random;
+    public Solution(int[] nums) {
+        this.nums = nums;
+        random = new Random();
+    }
+    public int[] reset() {
+        return nums;
+    }
+    public int[] shuffle() {
+        if(nums == null) return null;
+        int[] a = nums.clone();
+        for(int j = 1; j < a.length; j++) {
+            int i = random.nextInt(j + 1);
+            swap(a, i, j);
+        }
+        return a;
+    }
+    private void swap(int[] a, int i, int j) {
+        int t = a[i];
+        a[i] = a[j];
+        a[j] = t;
     }
 }
 ```
@@ -8316,6 +8342,70 @@ class Solution {
 
 ## First 300 Questions
 
+### 188. Best Time to Buy and Sell Stock IV
+- [Link](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv/)
+- Tags: Dynamic Programming
+- Stars: 5
+
+#### 2019.8.21 state machine (DP)
+- time: 90.74%
+- space: 100%
+- interviewLevel
+- attention: `if (k >= prices.length/2) return quickMaxProfit(prices);` is to avoid TLE for some large `k` cases.
+
+```java
+class Solution {
+    public int maxProfit(int k, int[] prices) {
+        if (k >= prices.length/2) return quickMaxProfit(prices);
+        int[] states = new int[2*k+1];
+        for(int i=1; i<=2*k; i+=2) states[i] = Integer.MIN_VALUE;
+        for(int p: prices) {
+            int i=2*k;
+            while(i>0) {
+                states[i] = Math.max(states[i], states[i-1] + p);
+                i--;
+                states[i] = Math.max(states[i], states[i-1] - p);
+                i--;
+            }
+        }
+        int result = 0;
+        for(int i=2; i<=2*k; i+=2) if (states[i] > result) result = states[i];
+        return result;
+    }
+    public int quickMaxProfit(int[] prices) {
+        int result = 0;
+        for(int i=1; i<prices.length; i++) result += Math.max(0, prices[i]-prices[i-1]);
+        return result;
+    }
+}
+```
+
+#### 2019.8.21 DP
+- time: 69.85%
+- space: 25%
+
+```java
+class Solution {
+    public int maxProfit(int k, int[] prices) {
+        if (k >= prices.length/2) return quickMaxProfit(prices);
+        int[][] dp = new int[k+1][prices.length];
+        for(int i=1; i<k+1; i++) {
+            int currMaxB4Sell = -prices[0];
+            for(int j=1; j<prices.length; j++) {
+                dp[i][j] = Math.max(dp[i][j-1], prices[j] + currMaxB4Sell);
+                currMaxB4Sell = Math.max(currMaxB4Sell, dp[i-1][j-1] - prices[j]);
+            }
+        }
+        return dp[k][prices.length-1];
+    }
+    public int quickMaxProfit(int[] prices) {
+        int result = 0;
+        for(int i=1; i<prices.length; i++) result += Math.max(0, prices[i]-prices[i-1]);
+        return result;
+    }
+}
+```
+
 ### 292. Nim Game
 - [Link](https://leetcode.com/problems/nim-game/)
 - Tags: Brainteaser, Minimax
@@ -9614,6 +9704,85 @@ class Solution {
 }
 ```
 
+### 123. Best Time to Buy and Sell Stock III
+- [Link](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/)
+- Tags: Array, Dynamic Programming
+- Stars: 5
+
+#### 2019.8.21 O(n^2)
+- time: 5.04%
+- space: 7.32%
+
+```java
+class Solution {
+    public int maxProfit(int[] prices) {
+        int result = 0;
+        for(int i=1; i<prices.length-2; i++) {
+            int a = maxProfit(prices, 0, i), b = maxProfit(prices, i+1, prices.length-1);
+            result = Math.max(result, a+b);
+        }
+        result = Math.max(result, maxProfit(prices, 0, prices.length-1));
+        return result;
+    }
+    public int maxProfit(int[] prices, int l, int r) {
+        int result = 0, dp = 0;
+        for(int i=l+1; i<=r; i++) {
+            dp = Math.max(dp + prices[i] - prices[i-1], 0);
+            if (dp > result) result = dp;
+        }
+        return result;
+    }
+}
+```
+
+#### 2019.8.21 state machine (DP)
+- time: 99.77%
+- space: 100%
+- interviewLevel
+- attention: `s1` and `s3` must be init to 0.
+
+Maximize the value of each state in each iteration.
+
+```java
+class Solution {
+    public int maxProfit(int[] prices) {
+        int s0=Integer.MIN_VALUE, s1=0, s2=Integer.MIN_VALUE, s3=0;
+        for(int p: prices) {
+            int a = Math.max(s0, -p),
+                b = Math.max(s1, s0 + p),
+                c = Math.max(s2, s1 - p),
+                d = Math.max(s3, s2 + p);
+            s0 = a; s1 = b; s2 = c; s3 = d;
+        }
+        return Math.max(s1, s3);
+    }
+}
+```
+
+#### 2019.8.21 DP
+- time: 99.77%
+- space: 100%
+- interviewLevel
+- reference: https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/discuss/135704/Detail-explanation-of-DP-solution
+- attention: `dp[i][j]` means the maximum profit gained from `prices[:j+1]` for all `i` transactions. Notice that `prices[j]` is not necessarily the sell price in the last transaction.
+
+```java
+class Solution {
+    public int maxProfit(int[] prices) {
+        if (prices.length == 0) return 0;
+        int[][] dp = new int[3][prices.length];
+        for(int i=1; i<3; i++) {
+            int currMaxB4Sell = -prices[0];
+            for(int j=1; j<prices.length; j++) {
+                dp[i][j] = Math.max(dp[i][j-1], prices[j] + currMaxB4Sell);
+                currMaxB4Sell = Math.max(currMaxB4Sell, dp[i-1][j-1] - prices[j]);
+            }
+        }
+        return dp[2][prices.length-1];
+    }
+}
+```
+
 ## 300 - 399 Questions
 
 ### 389. Find the Difference
@@ -9749,6 +9918,87 @@ class Solution {
             start = indices.get(idx) + 1;
         }
         return true;
+    }
+}
+```
+
+### 338. Counting Bits
+- [Link](https://leetcode.com/problems/counting-bits/)
+- Tags: Dynamic Programming, Bit Manipulation
+- Stars: 4
+
+#### 2019.8.21 Math
+- time: 99.74%
+- space: 5.88%
+
+```java
+class Solution {
+    public int[] countBits(int num) {
+        int[] result = new int[num+1];
+        if (num == 0) return result;
+        result[1] = 1;
+        int count = 2;
+        while(count < num+1) {
+            int len = count;
+            for(int i=0; i<len && count < num+1; i++) 
+                result[count++] = 1 + result[i];
+        }
+        return result;
+    }
+}
+```
+
+#### 2019.8.21 DP + bit
+- time: 99.74%
+- space: 5.88%
+- interviewLevel
+
+```java
+class Solution {
+    public int[] countBits(int num) {
+        int[] result = new int[num+1];
+        for(int i=1; i<num+1; i++) result[i] = result[i>>1] + (i&1);
+        return result;
+    }
+}
+```
+
+Another version
+
+```java
+class Solution {
+    public int[] countBits(int num) {
+        int[] result = new int[num+1];
+        for(int i=1; i<num+1; i++) result[i] = result[(i&(i-1))] + 1;
+        return result;
+    }
+}
+```
+
+### 398. Random Pick Index
+- [Link](https://leetcode.com/problems/random-pick-index/)
+- Tags: Reservoir Sampling
+- Stars: 4
+
+#### 2019.8.21 Reservoir Sampling
+- time: 38.30%
+- space: 94.12%
+- reference: https://leetcode.com/problems/random-pick-index/discuss/88072/simple-reservoir-sampling-solution
+
+```java
+class Solution {
+    int[] nums;
+    Random rand = new Random();
+    public Solution(int[] nums) {
+        this.nums = nums;
+    }
+    public int pick(int target) {
+        int count = 0, result = -1;
+        for(int i=0; i<nums.length; i++) {
+            if (nums[i] != target) continue;
+            if (rand.nextInt(++count) == 0) result = i;
+        }
+        return result;
     }
 }
 ```

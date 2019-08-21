@@ -494,7 +494,7 @@
 
 - [x] [23. Merge k Sorted Lists](https://leetcode.com/problems/merge-k-sorted-lists), 33.3%, Hard
 
-- [ ] [123. Best Time to Buy and Sell Stock III](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii), 33.1%, Hard
+- [x] [123. Best Time to Buy and Sell Stock III](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii), 33.1%, Hard
 
 - [ ] [85. Maximal Rectangle](https://leetcode.com/problems/maximal-rectangle), 32.6%, Hard
 
@@ -538,7 +538,7 @@
 
 - [ ] [174. Dungeon Game](https://leetcode.com/problems/dungeon-game), 26.6%, Hard
 
-- [ ] [188. Best Time to Buy and Sell Stock IV](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv), 26.0%, Hard
+- [x] [188. Best Time to Buy and Sell Stock IV](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv), 26.0%, Hard
 
 - [ ] [4. Median of Two Sorted Arrays](https://leetcode.com/problems/median-of-two-sorted-arrays), 25.7%, Hard
 
