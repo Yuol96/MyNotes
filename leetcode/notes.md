@@ -1424,6 +1424,32 @@ class Solution {
 }
 ```
 
+Updated 2019.8.26
+- time: 67.32%
+- space: 78.38%
+```java
+class Solution {
+    public int kthSmallest(int[][] matrix, int k) {
+        int n = matrix.length, l = matrix[0][0], r = matrix[n-1][n-1];
+        while(l<r) {
+            int mid = l + ((r-l)>>1), count = countLTE(matrix, mid);
+            if (count >= k) r = mid;
+            else l = mid + 1;
+        }
+        return l;
+    }
+    public int countLTE(int[][] matrix, int target) {
+        int count = 0;
+        for(int[] row: matrix) 
+            for(int num: row) {
+                if (num > target) break;
+                count++;
+            }
+        return count;
+    }
+}
+```
+
 ### 287. Find the Duplicate Number
 - [Link](https://leetcode.com/problems/find-the-duplicate-number/)
 - Tags: Array, Two Pointers, Binary Search
@@ -1559,6 +1585,31 @@ class Solution {
 }
 ```
 
+Updated 2019.8.26
+- time: 100%
+- space: 100%
+
+```java
+class Solution {
+    public ListNode oddEvenList(ListNode head) {
+        if (head == null || head.next == null) return head;
+        ListNode odd = head, even = head.next, oddTail = odd, evenTail = even, curr = even.next;
+        while(curr != null) {
+            oddTail.next = curr;
+            curr = curr.next;
+            oddTail = oddTail.next;
+            if (curr == null) break;
+            evenTail.next = curr;
+            curr = curr.next;
+            evenTail = evenTail.next;
+        }
+        oddTail.next = even;
+        evenTail.next = null;
+        return odd;
+    }
+}
+```
+
 ### 102. Binary Tree Level Order Traversal
 - [Link](https://leetcode.com/problems/binary-tree-level-order-traversal/)
 - Tags: Tree, BFS
@@ -1663,6 +1714,37 @@ public class NestedIterator implements Iterator<Integer> {
             }
         }
         return false;
+    }
+}
+```
+
+#### 2019.8.26 stack
+- time: 53.03%
+- space: 100%
+
+```java
+public class NestedIterator implements Iterator<Integer> {
+    Stack<NestedInteger> stack = new Stack<>();
+    public NestedIterator(List<NestedInteger> nestedList) {
+        for(int i=nestedList.size()-1; i>=0; i--) stack.add(nestedList.get(i));
+    }
+    @Override
+    public Integer next() {
+        NestedInteger top = stack.pop();
+        if (top.isInteger()) return top.getInteger();
+        List<NestedInteger> list = top.getList();
+        for(int i=list.size()-1; i>=0; i--) stack.add(list.get(i));
+        return this.next();
+    }
+    @Override
+    public boolean hasNext() {
+        if (stack.isEmpty()) return false;
+        NestedInteger top = stack.peek();
+        if (top.isInteger()) return true;
+        stack.pop();
+        List<NestedInteger> list = top.getList();
+        for(int i=list.size()-1; i>=0; i--) stack.add(list.get(i));
+        return this.hasNext();
     }
 }
 ```
@@ -5869,6 +5951,330 @@ class Solution {
 }
 ```
 
+## Others
+
+### 129. Sum Root to Leaf Numbers
+- [Link](https://leetcode.com/problems/sum-root-to-leaf-numbers/)
+- Tags: Tree, DFS
+- Stars: 1
+
+#### DFS
+```java
+class Solution {
+    int result = 0;
+    public int sumNumbers(TreeNode root) {
+        if(root == null) return 0;
+        DFS(root, 0);
+        return result;
+    }
+    public void DFS(TreeNode root, int curr){
+        curr *= 10;
+        curr += root.val;
+        if(root.left == null && root.right == null){
+            result += curr;
+            return ;
+        }
+        if(root.left != null) DFS(root.left, curr);
+        if(root.right != null) DFS(root.right, curr);
+    }
+}
+```
+
+## First 300 Questions
+
+### 282. Expression Add Operators
+- [Link](https://leetcode.com/problems/expression-add-operators/)
+- Tags: Divide and Conquer
+- Stars: 4
+
+#### 2019.8.26 backtrack
+- time: 88.13%
+- space: 56.76%
+- attention: the overflow problem in case of `"2147483648" -2147483648`. 
+- attention: a string of number containing leading zeros should not be considered as a valid number, except it is zero itself.
+
+```java
+class Solution {
+    List<String> result = new ArrayList<>();
+    String s;
+    int target, len;
+    public List<String> addOperators(String num, int target) {
+        this.s = num;
+        this.len = num.length();
+        this.target = target;
+        List<String> list = new ArrayList<>();
+        long number = 0;
+        for(int i=0; i<len; i++) {
+            if (s.charAt(0) == '0' && i > 0) break;
+            number *= 10;
+            number += s.charAt(i) - '0';
+            list.add(Long.toString(number));
+            backtrack(list, i+1, 0, number, '+');
+            list.remove(list.size() - 1);
+        }
+        return result;
+    }
+    public void backtrack(List<String> list, int start, long accu, long curr, char lastOp) {
+        if (start >= len) {
+            if (compute(accu, curr, lastOp) == target) result.add(String.join("", list));
+            return;
+        }
+        int number = 0;
+        for(int i=start; i<len; i++) {
+            if (s.charAt(start) == '0' && i > start) break;
+            number *= 10;
+            number += s.charAt(i) - '0';
+            list.add("+");
+            list.add(Integer.toString(number));
+            backtrack(list, i+1, compute(accu, curr, lastOp), number, '+');
+            list.set(list.size()-2, "-");
+            backtrack(list, i+1, compute(accu, curr, lastOp), number, '-');
+            list.set(list.size()-2, "*");
+            backtrack(list, i+1, accu, curr*number, lastOp);
+            list.remove(list.size()-1);
+            list.remove(list.size()-1);
+        }
+    }
+    public long compute(long a, long b, char op) {
+        if (op == '+') return a+b;
+        else if (op == '-') return a-b;
+        return a*b;
+    }
+}
+```
+
+### 224. Basic Calculator
+- [Link](https://leetcode.com/problems/basic-calculator/)
+- Tags: Math, Stack
+- Stars: 3
+
+#### 2019.8.25 two step
+- time: 13.80%
+- space: 69.23%
+- reference: https://www.cnblogs.com/journal-of-xjx/p/5940030.html
+
+```java
+class Solution {
+    public int calculate(String s) {
+        List<Object> list = new ArrayList<>();
+        Stack<Character> st = new Stack<>();
+        int i = 0, len = s.length();
+        while(i < len) {
+            char c = s.charAt(i);
+            if (Character.isDigit(c)) {
+                int j = i+1;
+                while(j<len && Character.isDigit(s.charAt(j))) j++;
+                list.add(Integer.parseInt(s.substring(i, j)));
+                i = j;
+            } else if (c == ' ') i++;
+            else if (c == ')') {
+                while (true) {
+                    char op = st.pop();
+                    if (op == '(') break;
+                    else list.add(op);
+                }
+                i++;
+            } else if (c == '(') {
+                st.add(c);
+                i++;
+            } else {
+                while(!st.isEmpty() && st.peek() != '(') list.add(st.pop());
+                st.add(c);
+                i++;
+            }
+        }
+        while(!st.isEmpty()) list.add(st.pop());
+        Stack<Integer> nums = new Stack<>();
+        for(Object item: list) {
+            if (item instanceof Integer) nums.add((int)item);
+            else {
+                int b = nums.pop(), a = nums.pop();
+                if ((char)item == '+') nums.add(a+b);
+                else nums.add(a-b);
+            }
+        }
+        return nums.pop();
+    }
+}
+```
+
+#### 2019.8.25 one step
+- time: 18.01%
+- space: 70.77%
+
+```java
+class Solution {
+    public int calculate(String s) {
+        Stack<Integer> nums = new Stack<>();
+        Stack<Character> ops = new Stack<>();
+        int i=0, len = s.length();
+        while(i<len) {
+            char c = s.charAt(i);
+            if (c == ' ') i++;
+            else if (c == '(') {
+                ops.add(c);
+                i++;
+            } else if (c == ')') {
+                while(ops.peek() != '(') compute(nums, ops);
+                ops.pop();
+                i++;
+            } else if (Character.isDigit(c)) {
+                int j=i+1;
+                while(j<len && Character.isDigit(s.charAt(j))) j++;
+                nums.add(Integer.parseInt(s.substring(i, j)));
+                i = j;
+            } else {
+                while(!ops.isEmpty() && ops.peek() != '(') compute(nums, ops);
+                ops.add(c);
+                i++;
+            }
+        }
+        while(!ops.isEmpty()) compute(nums, ops);
+        return nums.pop();
+    }
+    private void compute(Stack<Integer> nums, Stack<Character> ops) {
+        if (ops.peek() == '(') return;
+        int b = nums.pop(), a = nums.pop();
+        if (ops.pop() == '+') nums.add(a+b);
+        else nums.add(a-b);
+    }
+}
+```
+
+#### 2019.8.25
+- time: 36.11%
+- space: 100%
+- interviewLevel
+
+```java
+class Solution {
+    public int calculate(String s) {
+        Stack<Integer> st = new Stack<>();
+        int i = 0, len = s.length(), result = 0, sign = 1;
+        while(i<len) {
+            char c = s.charAt(i);
+            if (c == ' ') ;
+            else if (Character.isDigit(c)) {
+                int j=i, number = 0;
+                while(j<len && Character.isDigit(s.charAt(j))) {
+                    number *= 10;
+                    number += s.charAt(j) - '0';
+                    j++;
+                }
+                result += number * sign;
+                i = j - 1;
+            } else if (c == '+') {
+                sign = 1;
+            } else if (c == '-') {
+                sign = -1;
+            } else if (c == '(') {
+                st.add(result);
+                st.add(sign);
+                result = 0;
+                sign = 1;
+            } else {
+                result = result*st.pop() + st.pop();
+            }
+            i++;
+        }
+        return result;
+    }
+}
+```
+
+### 221. Maximal Square
+- [Link](https://leetcode.com/problems/maximal-square/)
+- Tags: Dynamic Programming
+- Stars: 4
+
+#### 2019.8.22 DP
+- time: 99.51%
+- space: 100%
+- attention: if the ordinary idea doesn't work, try to think in a DFS or DP way.
+
+```java
+class Solution {
+    public int maximalSquare(char[][] matrix) {
+        if (matrix.length == 0 || matrix[0].length == 0) return 0;
+        int[][] dp = new int[matrix.length][matrix[0].length];
+        for(int i=0; i<matrix.length; i++) if (matrix[i][0] == '1') dp[i][0] = 1;
+        for(int j=0; j<matrix[0].length; j++) if (matrix[0][j] == '1') dp[0][j] = 1;
+        for(int i=1; i<matrix.length; i++)
+            for(int j=1; j<matrix[0].length; j++) 
+                dp[i][j] = matrix[i][j] == '0' ? 0 : 1 + Math.min(dp[i-1][j-1], Math.min(dp[i-1][j], dp[i][j-1]));
+        int result = 0;
+        for(int i=0; i<matrix.length; i++)
+            for(int j=0; j<matrix[0].length; j++) 
+                if (dp[i][j] > result) result = dp[i][j];
+        return result*result;
+    }
+}
+```
+
+### 188. Best Time to Buy and Sell Stock IV
+- [Link](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv/)
+- Tags: Dynamic Programming
+- Stars: 5
+
+#### 2019.8.21 state machine (DP)
+- time: 90.74%
+- space: 100%
+- interviewLevel
+- attention: `if (k >= prices.length/2) return quickMaxProfit(prices);` is to avoid TLE for some large `k` cases.
+
+```java
+class Solution {
+    public int maxProfit(int k, int[] prices) {
+        if (k >= prices.length/2) return quickMaxProfit(prices);
+        int[] states = new int[2*k+1];
+        for(int i=1; i<=2*k; i+=2) states[i] = Integer.MIN_VALUE;
+        for(int p: prices) {
+            int i=2*k;
+            while(i>0) {
+                states[i] = Math.max(states[i], states[i-1] + p);
+                i--;
+                states[i] = Math.max(states[i], states[i-1] - p);
+                i--;
+            }
+        }
+        int result = 0;
+        for(int i=2; i<=2*k; i+=2) if (states[i] > result) result = states[i];
+        return result;
+    }
+    public int quickMaxProfit(int[] prices) {
+        int result = 0;
+        for(int i=1; i<prices.length; i++) result += Math.max(0, prices[i]-prices[i-1]);
+        return result;
+    }
+}
+```
+
+#### 2019.8.21 DP
+- time: 69.85%
+- space: 25%
+
+```java
+class Solution {
+    public int maxProfit(int k, int[] prices) {
+        if (k >= prices.length/2) return quickMaxProfit(prices);
+        int[][] dp = new int[k+1][prices.length];
+        for(int i=1; i<k+1; i++) {
+            int currMaxB4Sell = -prices[0];
+            for(int j=1; j<prices.length; j++) {
+                dp[i][j] = Math.max(dp[i][j-1], prices[j] + currMaxB4Sell);
+                currMaxB4Sell = Math.max(currMaxB4Sell, dp[i-1][j-1] - prices[j]);
+            }
+        }
+        return dp[k][prices.length-1];
+    }
+    public int quickMaxProfit(int[] prices) {
+        int result = 0;
+        for(int i=1; i<prices.length; i++) result += Math.max(0, prices[i]-prices[i-1]);
+        return result;
+    }
+}
+```
+
 ### 137. Single Number II
 - [Link](https://leetcode.com/problems/single-number-ii/)
 - Tags: Bit Manipulation
@@ -8311,101 +8717,6 @@ class Solution {
 }
 ```
 
-## Others
-
-### 129. Sum Root to Leaf Numbers
-- [Link](https://leetcode.com/problems/sum-root-to-leaf-numbers/)
-- Tags: Tree, DFS
-- Stars: 1
-
-#### DFS
-```java
-class Solution {
-    int result = 0;
-    public int sumNumbers(TreeNode root) {
-        if(root == null) return 0;
-        DFS(root, 0);
-        return result;
-    }
-    public void DFS(TreeNode root, int curr){
-        curr *= 10;
-        curr += root.val;
-        if(root.left == null && root.right == null){
-            result += curr;
-            return ;
-        }
-        if(root.left != null) DFS(root.left, curr);
-        if(root.right != null) DFS(root.right, curr);
-    }
-}
-```
-
-## First 300 Questions
-
-### 188. Best Time to Buy and Sell Stock IV
-- [Link](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv/)
-- Tags: Dynamic Programming
-- Stars: 5
-
-#### 2019.8.21 state machine (DP)
-- time: 90.74%
-- space: 100%
-- interviewLevel
-- attention: `if (k >= prices.length/2) return quickMaxProfit(prices);` is to avoid TLE for some large `k` cases.
-
-```java
-class Solution {
-    public int maxProfit(int k, int[] prices) {
-        if (k >= prices.length/2) return quickMaxProfit(prices);
-        int[] states = new int[2*k+1];
-        for(int i=1; i<=2*k; i+=2) states[i] = Integer.MIN_VALUE;
-        for(int p: prices) {
-            int i=2*k;
-            while(i>0) {
-                states[i] = Math.max(states[i], states[i-1] + p);
-                i--;
-                states[i] = Math.max(states[i], states[i-1] - p);
-                i--;
-            }
-        }
-        int result = 0;
-        for(int i=2; i<=2*k; i+=2) if (states[i] > result) result = states[i];
-        return result;
-    }
-    public int quickMaxProfit(int[] prices) {
-        int result = 0;
-        for(int i=1; i<prices.length; i++) result += Math.max(0, prices[i]-prices[i-1]);
-        return result;
-    }
-}
-```
-
-#### 2019.8.21 DP
-- time: 69.85%
-- space: 25%
-
-```java
-class Solution {
-    public int maxProfit(int k, int[] prices) {
-        if (k >= prices.length/2) return quickMaxProfit(prices);
-        int[][] dp = new int[k+1][prices.length];
-        for(int i=1; i<k+1; i++) {
-            int currMaxB4Sell = -prices[0];
-            for(int j=1; j<prices.length; j++) {
-                dp[i][j] = Math.max(dp[i][j-1], prices[j] + currMaxB4Sell);
-                currMaxB4Sell = Math.max(currMaxB4Sell, dp[i-1][j-1] - prices[j]);
-            }
-        }
-        return dp[k][prices.length-1];
-    }
-    public int quickMaxProfit(int[] prices) {
-        int result = 0;
-        for(int i=1; i<prices.length; i++) result += Math.max(0, prices[i]-prices[i-1]);
-        return result;
-    }
-}
-```
-
 ### 292. Nim Game
 - [Link](https://leetcode.com/problems/nim-game/)
 - Tags: Brainteaser, Minimax
@@ -9784,6 +10095,250 @@ class Solution {
 ```
 
 ## 300 - 399 Questions
+
+### 396. Rotate Function
+- [Link](https://leetcode.com/problems/rotate-function/)
+- Tags: Math
+- Stars: 3
+
+#### 2019.8.27 DP
+- time: 100%
+- space: 100%
+
+Let `sum` be the sum of all elements in `A`. 
+Then `F(1) = F(0) + sum - A.length * A[-1]`
+
+```java
+class Solution {
+    public int maxRotateFunction(int[] A) {
+        if (A.length == 0) return 0;
+        int dp = 0, sum = 0, result = Integer.MIN_VALUE;
+        for(int i=0; i<A.length; i++) {
+            dp += i * A[i];
+            sum += A[i];
+        }
+        result = Math.max(result, dp);
+        for(int i=A.length-1; i>0; i--) {
+            dp = dp + sum - A.length * A[i];
+            result = Math.max(result, dp);
+        }
+        return result;
+    }
+}
+```
+
+### 372. Super Pow
+- [Link](https://leetcode.com/problems/super-pow/)
+- Tags: Math
+- Stars: 4
+
+#### 2019.8.26
+- time: 6.78%
+- space: 33.33%
+
+`(a*b)%c == ((a%c)*(b%c))%c`  
+`((a^x)^y) % m == (((a^x)%m)^y) % m`
+
+```java
+class Solution {
+    Map<Pair, Integer> map = new HashMap<>();
+    public int superPow(int a, int[] b) {
+        return superPow(a, b, b.length-1);
+    }
+    public int superPow(int a, int[] b, int idx) {
+        if (idx == 0) return superPow(a, b[0]);
+        int digit = b[idx];
+        if (digit == 0) return superPow(superPow(a, b, idx-1), 10);
+        b[idx] = 0;
+        return (superPow(a, b, idx) * superPow(a, digit)) % 1337;
+    }
+    public int superPow(int a, int b) {
+        if (b == 0) return 1;
+        Pair pair = new Pair(a, b);
+        if (map.containsKey(pair)) return map.get(pair);
+        int ret = 0;
+        if (b == 1) ret = a%1337;
+        else if (b%2 == 0) ret = ((superPow(a, b>>1))*(superPow(a, b>>1)))%1337;
+        else ret = ((superPow(a, b-1))*(superPow(a, 1)))%1337;
+        map.put(pair, ret);
+        return ret;
+    }
+    public class Pair {
+        int a, b;
+        public Pair(int a, int b) {
+            this.a = a;
+            this.b = b;
+        }
+        public int hashCode() {
+            return Integer.hashCode(a) + Integer.hashCode(b);
+        }
+        public boolean equals(Object o) {
+            Pair p = (Pair)o;
+            return this.a == p.a && this.b == p.b;
+        }
+    }
+}
+```
+
+#### 2019.8.27
+- time: 82.53%
+- space: 100%
+- attention: `a %= 1337` is useful when `a` is very large
+
+In the function `superPow(int a, int b)`, 0<=b<=10, and 0<=a<=1336. Therefore you don't need to record the value in a HashMap.
+
+```java
+class Solution {
+    public int superPow(int a, int[] b) {
+        int result = 1;
+        for(int digit: b) {
+            result = superPow(result, 10);
+            if (digit > 0) result = (result * superPow(a, digit)) % 1337;
+        }
+        return result;
+    }
+    public int superPow(int a, int b) {
+        int result = 1;
+        a %= 1337;
+        for(int i=0; i<b; i++) result = (result * a) % 1337;
+        return result;
+    }
+}
+```
+
+### 309. Best Time to Buy and Sell Stock with Cooldown
+- [Link](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/)
+- Tags: Dynamic Programming
+- Stars: 3
+
+#### 2019.8.26 state machine (DP)
+- time: 100%
+- space: 100%
+- interviewLevel
+
+3 states: buy, sell, cool  
+For buy: `buy[i] = Math.max(buy[i-1], cool[i-1] - prices[i])`  
+For sell: `sell[i] = buy[i-1] + prices[i]`  
+For cool: `cool[i] = Math.max(cool[i-1], sell[i-1])`  
+
+```java
+class Solution {
+    public int maxProfit(int[] prices) {
+        int buy = Integer.MIN_VALUE, sell = 0, cool = 0;
+        for(int price: prices) {
+            int b = Math.max(buy, cool-price),
+                s = buy + price,
+                c = Math.max(cool, sell);
+            buy = b;
+            sell = s;
+            cool = c;
+        }
+        return Math.max(sell, cool);
+    }
+}
+```
+
+### 318. Maximum Product of Word Lengths
+- [Link](https://leetcode.com/problems/maximum-product-of-word-lengths/)
+- Tags: Bit Manipulation
+- Stars: 3
+
+#### 2019.8.26
+- time: 99.67%
+- space: 94.74%
+- interviewLevel
+
+```java
+class Solution {
+    public int maxProduct(String[] words) {
+        if (words.length < 2) return 0;
+        int[] nums = new int[words.length];
+        int result = 0;
+        for(int i=0; i<words.length; i++) nums[i] = convert(words[i]);
+        for(int i=0; i<nums.length-1; i++) 
+            for(int j=i+1; j<nums.length; j++)
+                if ((nums[i]&nums[j]) == 0) 
+                    result = Math.max(result, words[i].length()*words[j].length());
+        return result;
+    }
+    public int convert(String word) {
+        int result = 0;
+        for(char c: word.toCharArray()) result |= (1<<(c-'a'));
+        return result;
+    }
+}
+```
+
+### 306. Additive Number
+- [Link](https://leetcode.com/problems/additive-number/)
+- Tags: Backtracking
+- Stars: 3
+
+#### 2019.8.26
+- time: 100%
+- space: 100%
+- interviewLevel
+- attention: use `long` type to avoid overflow
+- attention: a positive string number with leading zeros is invalid
+- attention: this problem requires **at least** three numbers. `(Long.toString(a) + Long.toString(b)).length() < len`
+
+```java
+class Solution {
+    String s;
+    int len;
+    public boolean isAdditiveNumber(String num) {
+        this.s = num;
+        this.len = num.length();
+        return backtrack(-1L, -1L, 0);
+    }
+    public boolean backtrack(long a, long b, int start) {
+        if (start >= len) return (Long.toString(a) + Long.toString(b)).length() < len;
+        long number = 0;
+        for(int i=start; i<len; i++) {
+            if (s.charAt(start) == '0' && i>start) break;
+            number *= 10;
+            number += s.charAt(i) - '0';
+            if (a == -1) {
+                if (backtrack(number, b, i+1)) return true;
+            } else if (b == -1) {
+                if (backtrack(a, number, i+1)) return true;
+            } else if (a+b == number) {
+                return backtrack(b, number, i+1);
+            } else if (a+b < number) break;
+        }
+        return false;
+    }
+}
+```
+
+### 382. Linked List Random Node
+- [Link](https://leetcode.com/problems/linked-list-random-node/)
+- Tags: Reservoir Sampling
+- Stars: 3
+
+#### 2019.8.26
+- time: 38.58%
+- space: 20%
+
+```java
+class Solution {
+    ListNode head;
+    Random rand = new Random();
+    public Solution(ListNode head) {
+        this.head = head;
+    }
+    public int getRandom() {
+        int count = 0, result = 0;
+        ListNode curr = head;
+        while(curr != null) {
+            count++;
+            if (rand.nextInt(count) == 0) result = curr.val;
+            curr = curr.next;
+        }
+        return result;
+    }
+}
+```
 
 ### 389. Find the Difference
 - [Link](https://leetcode.com/problems/find-the-difference/)
