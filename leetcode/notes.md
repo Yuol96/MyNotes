@@ -697,7 +697,7 @@ class Solution {
 ### 337. House Robber III
 - [Link](https://leetcode.com/problems/house-robber-iii/)
 - Tags: Tree, DFS
-- Stars: 3
+- Stars: 4
 
 #### DFS
 ```java
@@ -710,6 +710,48 @@ class Solution {
         if(parentRobbed) return rob(root.left, false) + rob(root.right, false);
         return Math.max(rob(root.left, false) + rob(root.right, false), 
                         rob(root.left, true) + rob(root.right, true) + root.val);
+    }
+}
+```
+
+Updated 2019.8.28
+- time: 34.22%
+- space: 22%
+- language: `System.identityHashCode(Object o)`
+- attention: This method does not differentiate return values from child tree under different circumstances. Thus, it is much slower.
+```java
+class Solution {
+    Map<Pair, Integer> map = new HashMap<>();
+    public int rob(TreeNode root) {
+        return rob(root, 2);
+    }
+    public int rob(TreeNode root, int distance) {
+        if (root == null) return 0;
+        Pair p = new Pair(root, distance);
+        if (map.containsKey(p)) return map.get(p);
+        int ret = 0;
+        if (distance == 0) ret = root.val + rob(root.left, 1) + rob(root.right, 1);
+        else if (distance == 1) ret = rob(root.left, 2) + rob(root.right, 2);
+        else {
+            ret = rob(root, 0);
+            ret = Math.max(ret, rob(root.left, 0) + rob(root.right, 0));
+            ret = Math.max(ret, rob(root.left, 0) + rob(root.right, 1));
+            ret = Math.max(ret, rob(root.left, 1) + rob(root.right, 0));
+        }
+        map.put(p, ret);
+        return ret;
+    }
+    private class Pair {
+        TreeNode node;
+        int distance;
+        public Pair(TreeNode n, int d) {node = n; distance = d;}
+        public int hashCode() {
+            return System.identityHashCode(node) + Integer.hashCode(distance);
+        }
+        public boolean equals(Object o) {
+            Pair p = (Pair)o;
+            return this.node == p.node && this.distance == p.distance;
+        }
     }
 }
 ```
@@ -738,6 +780,30 @@ public class Tuple {
     Tuple(int a, int b){
         robRoot = a;
         notRobRoot = b;
+    }
+}
+```
+
+Updated 2019.8.28
+- time: 94.79%
+- space: 86.11%
+- language: init an array with values. `new int[]{0,0,0}`
+- attention: during dfs, you must not ignore `l[1]+r[1]` (i.e. `l.notRobRoot + r.notRobRoot`)
+- reference: https://leetcode.com/problems/house-robber-iii/discuss/79330/Step-by-step-tackling-of-the-problem
+```java
+class Solution {
+    public int rob(TreeNode root) {
+        int[] temp = dfs(root);
+        return Math.max(temp[0], temp[1]);
+    }
+    public int[] dfs(TreeNode root) {
+        if (root == null) return new int[]{0, 0};
+        int[] l = dfs(root.left);
+        int[] r = dfs(root.right);
+        int robRoot = root.val+l[1]+r[1],
+            notRobRoot = Math.max(Math.max(l[0]+r[0], l[1]+r[1]), 
+                                  Math.max(l[0]+r[1], l[1]+r[0]));
+        return new int[]{robRoot, notRobRoot};
     }
 }
 ```
@@ -10096,6 +10162,254 @@ class Solution {
 
 ## 300 - 399 Questions
 
+### 357. Count Numbers with Unique Digits
+- [Link](https://leetcode.com/problems/count-numbers-with-unique-digits/)
+- Tags: Math, Dynamic Programming, Backtracking
+- Stars: 2
+
+#### 2019.8.28
+- time: 100%
+- space: 14.29%
+```java
+class Solution {
+    public int countNumbersWithUniqueDigits(int n) {
+        if (n == 0) return 1;
+        if (n > 10) n = 10;
+        int[] nums = new int[10];
+        for(int i=0; i<nums.length; i++) nums[i] = 10-i;
+        for(int i=1; i<nums.length; i++) nums[i] *= nums[i-1];
+        int ret = 0;
+        for(int i=0; i<n; i++) {
+            ret += nums[i];
+            if (i>0) ret -= nums[i]/10; // remove leading zero numbers
+        }
+        return ret;
+    }
+}
+```
+
+### 304. Range Sum Query 2D - Immutable
+- [Link](https://leetcode.com/problems/range-sum-query-2d-immutable/)
+- Tags: Dynamic Programming
+- Stars: 3
+
+#### 2019.8.28
+- time: 99.80%
+- space: 100%
+- interviewLevel
+```java
+class NumMatrix {
+    int[][] matrix;
+    public NumMatrix(int[][] matrix) {
+        for(int i=0; i<matrix.length; i++) {
+            for(int j=1; j<matrix[0].length; j++) matrix[i][j] += matrix[i][j-1];
+            if (i > 0) for(int j=matrix[0].length-1; j>=0; j--) matrix[i][j] += matrix[i-1][j];
+        }
+        this.matrix = matrix;
+    }
+    public int sumRegion(int row1, int col1, int row2, int col2) {
+        return matrix[row2][col2] 
+            - (row1>0 ? matrix[row1-1][col2] : 0) 
+            - (col1>0 ? matrix[row2][col1-1] : 0)
+            + (row1>0 && col1>0 ? matrix[row1-1][col1-1] : 0);
+    }
+}
+```
+
+### 397. Integer Replacement
+- [Link](https://leetcode.com/problems/integer-replacement/)
+- Tags: Math, Bit Manipulation
+- Stars: 4
+
+#### 2019.8.28 DP
+- time: 50.43%
+- space: 100%
+- attention: Don't forget the `n == Integer.MAX_VALUE` case (overflow problem)
+
+```java
+class Solution {
+    HashMap<Integer, Integer> map = new HashMap<>();
+    public int integerReplacement(int n) {
+        if (n == 1) return 0;
+        if (n == Integer.MAX_VALUE) return 32;
+        if (map.containsKey(n)) return map.get(n);
+        int ret = Integer.MAX_VALUE;
+        if ((n&1) == 0) ret = integerReplacement(n>>1) + 1;
+        else ret = Math.min(integerReplacement(n+1), integerReplacement(n-1)) + 1;
+        map.put(n, ret);
+        return ret;
+    }
+}
+```
+
+### 373. Find K Pairs with Smallest Sums
+- [Link](https://leetcode.com/problems/find-k-pairs-with-smallest-sums/)
+- Tags: Heap
+- Stars: 4
+
+#### 2019.8.28 Heap, O(klogk)
+- time: 75.46%
+- space: 37.04%
+- language: use `list.add(Arrays.asList(a, b, ...))` to create a List with values.
+
+```java
+class Solution {
+    int[] nums1, nums2;
+    public List<List<Integer>> kSmallestPairs(int[] nums1, int[] nums2, int k) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (nums1.length == 0 || nums2.length == 0) return result;
+        k = Math.min(k, nums1.length*nums2.length);
+        Set<Pair> set = new HashSet<>();
+        this.nums1 = nums1; this.nums2 = nums2;
+        PriorityQueue<Pair> qu = new PriorityQueue<>();
+        qu.add(new Pair(0, 0));
+        while(k>0) {
+            Pair p = qu.poll();
+            result.add(Arrays.asList(nums1[p.a], nums2[p.b]));
+            k--;
+            if (p.a+1 < nums1.length) {
+                Pair temp = new Pair(p.a+1, p.b);
+                if (set.add(temp)) qu.add(temp);
+            }
+            if (p.b+1 < nums2.length) {
+                Pair temp = new Pair(p.a, p.b+1);
+                if (set.add(temp)) qu.add(temp);
+            }
+        }
+        return result;
+    }
+    private class Pair implements Comparable<Pair>{
+        int a, b, sum;
+        public Pair(int x, int y) {
+            a = x; b = y; 
+            sum = nums1[x] + nums2[y];
+        }
+        @Override
+        public int compareTo(Pair p) {
+            return this.sum - p.sum;
+        }
+        public int hashCode() {
+            return Integer.hashCode(a) + Integer.hashCode(b);
+        }
+        public boolean equals(Object o) {
+            Pair p = (Pair)o;
+            return p.a == a && p.b == b;
+        }
+    }
+}
+```
+
+Optimized
+- time: 99.68%
+- space: 66.67%
+- interviewLevel
+- language: `class xxx implements Comparable<xxx>` and `public int compareTo(xxx x)`
+- language: if a Pair/Tuple does not involve comparisons and hash, you can simply use `int[]` instead. Or you can also use a self-defined comparator with `int[]` type.
+- attention: This is essentially a **multi-way merge sort**!!
+```java
+class Solution {
+    int[] nums1, nums2;
+    public List<List<Integer>> kSmallestPairs(int[] nums1, int[] nums2, int k) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (nums1.length == 0 || nums2.length == 0) return result;
+        this.nums1 = nums1; this.nums2 = nums2;
+        k = Math.min(k, nums1.length*nums2.length);
+        PriorityQueue<Pair> qu = new PriorityQueue<>();
+        for(int i=0; i<nums1.length; i++) qu.add(new Pair(i, 0));
+        while(k>0) {
+            Pair p = qu.poll();
+            result.add(Arrays.asList(nums1[p.a], nums2[p.b]));
+            k--;
+            if (p.b+1 < nums2.length) qu.add(new Pair(p.a, p.b+1));
+        }
+        return result;
+    }
+    private class Pair implements Comparable<Pair> {
+        int a, b, sum;
+        public Pair(int x, int y) {
+            a = x; b = y; sum = nums1[x] + nums2[y];
+        }
+        @Override
+        public int compareTo(Pair p) {
+            return this.sum - p.sum;
+        }
+    }
+}
+```
+
+### 368. Largest Divisible Subset
+- [Link](https://leetcode.com/problems/largest-divisible-subset/)
+- Tags: Math, Dynamic Programming
+- Stars: 4
+
+#### 2019.8.28 DP
+- time: 64.51%
+- space: 72.73%
+- attention: The backtrack method has O(2^n) time complexity, yet the DP method only requires O(n^2). Note that even single array DP may have O(n^2) time.
+- attention: By the end of the code, `for(int num: nums) if (nums[lastIdx]%num == 0) result.add(num);` is wrong. Consider the testcase `[4,8,10,240]`. The final result should have a ascending `stat` value.
+
+```java
+class Solution {
+    public List<Integer> largestDivisibleSubset(int[] nums) {
+        List<Integer> result = new ArrayList<>();
+        if (nums.length == 0) return result;
+        Arrays.sort(nums);
+        int[] stat = new int[nums.length];
+        Arrays.fill(stat, 1);
+        int lastIdx = 0, maxCount = 1;
+        for(int i=1; i<nums.length; i++) 
+            for(int j=0; j<i; j++) 
+                if (nums[i]%nums[j] == 0 && stat[j]+1 > stat[i]) {
+                    stat[i] = stat[j] + 1;
+                    if (stat[i] > maxCount) {
+                        maxCount = stat[i];
+                        lastIdx = i;
+                    }
+                }
+        int count = 0;
+        for(int i=0; i<nums.length; i++) 
+            if (nums[lastIdx]%nums[i] == 0 && stat[i] > count) {
+                count = stat[i];
+                result.add(nums[i]);
+            }
+        return result;
+    }
+}
+```
+
+Optimized 
+- time: 93.24%
+- space: 100%
+```java
+class Solution {
+    public List<Integer> largestDivisibleSubset(int[] nums) {
+        List<Integer> result = new ArrayList<>();
+        if (nums.length == 0) return result;
+        Arrays.sort(nums);
+        int[] stat = new int[nums.length];
+        Arrays.fill(stat, 1);
+        int lastIdx = 0, maxCount = 1;
+        for(int i=1; i<nums.length; i++) 
+            for(int j=i-1; j>=0; j--) 
+                if (nums[i]%nums[j] == 0 && stat[j]+1 > stat[i]) {
+                    stat[i] = stat[j] + 1;
+                    if (stat[i] > maxCount) {
+                        maxCount = stat[i];
+                        lastIdx = i;
+                        break;
+                    }
+                }
+        int count = 0;
+        for(int i=0; i<nums.length; i++) 
+            if (nums[lastIdx]%nums[i] == 0 && stat[i] > count) {
+                count = stat[i];
+                result.add(nums[i]);
+            }
+        return result;
+    }
+}
+```
+
 ### 396. Rotate Function
 - [Link](https://leetcode.com/problems/rotate-function/)
 - Tags: Math
@@ -10454,7 +10768,7 @@ class Solution {
 - time: 24.11%
 - space: 16%
 - language: init an array of List: `List<Integer>[] arrOfList = new List[n]` and then init each list one by one.
-- languege: binary search for list: `Collections.binarySearch(list, target)`.
+- language: binary search for list: `Collections.binarySearch(list, target)`.
 
 ```java
 class Solution {
