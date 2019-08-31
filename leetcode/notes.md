@@ -2278,40 +2278,32 @@ class RandomizedSet {
 }
 ```
 
-#### swap
+#### 2019.8.30 swap to the last one
+- time: 75.87%
+- space: 76%
 ```java
 class RandomizedSet {
-    HashMap<Integer, Integer> map;
-    List<Integer> list;
-    Random rand;
-    /** Initialize your data structure here. */
-    public RandomizedSet() {
-        rand = new Random();
-        map = new HashMap<>();
-        list = new ArrayList<>();
-    }
-    /** Inserts a value to the set. Returns true if the set did not already contain the specified element. */
+    Map<Integer, Integer> map = new HashMap<>();
+    List<Integer> list = new ArrayList<>();
+    Random rand = new Random();
+    public RandomizedSet() {}
     public boolean insert(int val) {
-        if(map.containsKey(val)) 
-            return false;
+        if (map.containsKey(val)) return false;
         map.put(val, list.size());
         list.add(val);
         return true;
     }
-    /** Removes a value from the set. Returns true if the set contained the specified element. */
     public boolean remove(int val) {
-        if(!map.containsKey(val))  return false;
-        int idx = map.get(val);
-        if(idx < list.size()-1){
-            int lastone = list.get(list.size()-1);
-            map.put(lastone, idx);
-            list.set(idx, lastone);
-        }
-        list.remove(list.size()-1);
+        if (!map.containsKey(val)) return false;
+        int i = map.get(val), j = list.size()-1;
         map.remove(val);
+        if (i != j) {
+            map.put(list.get(j), i);
+            list.set(i, list.get(j));
+        }
+        list.remove(j);
         return true;
     }
-    /** Get a random element from the set. */
     public int getRandom() {
         return list.get(rand.nextInt(list.size()));
     }
@@ -6047,6 +6039,137 @@ class Solution {
 ```
 
 ## First 300 Questions
+
+### 394. Decode String
+- [Link](https://leetcode.com/problems/decode-string/)
+- Tags: Stack, DFS
+- Stars: 4
+
+#### 2019.8.29 recursive
+- time: 100%
+- space: 100%
+```java
+class Solution {
+    int p = 0, len;
+    String s;
+    public String decodeString(String s) {
+        if (s.length() == 0) return "";
+        this.len = s.length();
+        this.s = s;
+        StringBuilder sb = new StringBuilder();
+        while(p<len) sb.append(decode());
+        return sb.toString();
+    }
+    public String decode() {
+        if (p >= len) return "";
+        if (Character.isDigit(s.charAt(p))) {
+            int k = parseInt();
+            p++;
+            StringBuilder sb = new StringBuilder();
+            while(true) {
+                char c = s.charAt(p);
+                if (Character.isDigit(c)) {
+                    sb.append(decode());
+                } else if (c == ']') {
+                    p++;
+                    break;
+                } else sb.append(parseString());
+            }
+            String temp = sb.toString();
+            if (k == 1) return temp;
+            for(int i=1; i<k; i++) sb.append(temp);
+            return sb.toString();
+        }
+        return parseString();
+    }
+    public String parseString() {
+        int start = p;
+        while(p<len) {
+            char c = s.charAt(p);
+            if (Character.isDigit(c) || c == ']') break;
+            p++;
+        }
+        return s.substring(start, p);
+    }
+    public int parseInt() {
+        int ret = 0;
+        while(Character.isDigit(s.charAt(p))) {
+            ret = 10*ret + (s.charAt(p) - '0');
+            p++;
+        }
+        return ret;
+    }
+}
+```
+
+#### 2019.8.29 iterative
+- time: 100%
+- space: 100%
+```java
+class Solution {
+    public String decodeString(String s) {
+        StringBuilder sb = new StringBuilder();
+        int p = 0, len = s.length();
+        Stack<Integer> count = new Stack<>();
+        Stack<StringBuilder> sbs = new Stack<>();
+        while(p<len) {
+            char c = s.charAt(p);
+            if (Character.isDigit(c)) {
+                int k=0;
+                do {k = 10*k + (s.charAt(p++) - '0');} while(Character.isDigit(s.charAt(p)));
+                p++;
+                count.add(k);
+                sbs.add(sb);
+                sb = new StringBuilder();
+            } else if (c == ']') {
+                p++;
+                int k = count.pop();
+                StringBuilder prefix = sbs.pop();
+                for(int i=0; i<k; i++) prefix.append(sb.toString());
+                sb = prefix;
+            } else {
+                sb.append(c);
+                p++;
+            }
+        }
+        return sb.toString();
+    }
+}
+```
+
+### 233. Number of Digit One
+- [Link](https://leetcode.com/problems/number-of-digit-one/)
+- Tags: Math
+- Stars: 4
+
+#### 2019.8.29
+- time: 100%
+- space: 16.67%
+
+`nums[i]` is the total number of digit 1 appearing in all numbers in the scope of `[0, 10^i)`.
+```java
+class Solution {
+    public int countDigitOne(int n) { // take n == 213 as an example
+        if (n<0) return 0;
+        int[] nums = new int[11];
+        for(int i=1, base = 1; i<11; i++, base*=10) 
+            nums[i] = 10*nums[i-1] + base;
+        int base = 1, count = 0, ret = 0, curr = 0;
+        while(n>0) { // e.g. base == 10 
+            count++; // count becomes 2
+            int digit = n%10; // digit == 1
+            int temp = digit*nums[count-1]; 
+            if (digit>1) temp += base; // temp is the total number of digit 1 in all numbers of `[0, digit*base)`
+            ret += temp;
+            if (digit == 1) ret += curr + 1; // `temp + (digit==1?curr+1:0)` is responsible for `[digit*base, digit*base+curr]`
+            curr += base*digit;
+            base *= 10;
+            n /= 10;
+        }
+        return ret;
+    }
+}
+```
 
 ### 282. Expression Add Operators
 - [Link](https://leetcode.com/problems/expression-add-operators/)
@@ -10161,6 +10284,104 @@ class Solution {
 ```
 
 ## 300 - 399 Questions
+
+### 386. Lexicographical Numbers
+- [Link](https://leetcode.com/problems/lexicographical-numbers/)
+- Tags: 
+- Stars: 3
+
+#### 2019.8.29 minHeap
+- time: 17.74%
+- space: 33.33%
+```java
+class Solution {
+    public List<Integer> lexicalOrder(int n) {
+        List<Integer> ret = new ArrayList<>();
+        PriorityQueue<Pair> heap = new PriorityQueue<>();
+        int base = 1;
+        while(n >= base) {
+            heap.add(new Pair(base, Math.min(n+1, base*10)));
+            base *= 10;
+        }
+        int count = 0;
+        while(count < n) {
+            count++;
+            Pair p = heap.poll();
+            ret.add(p.val);
+            if (p.increment()) heap.add(p);
+        }
+        return ret;
+    }
+    private class Pair implements Comparable<Pair> {
+        int val, top;
+        String str;
+        public Pair(int base, int limit) {
+            val = base;
+            top = limit;
+            str = Integer.toString(base);
+        }
+        @Override
+        public int compareTo(Pair p) {
+            return this.str.compareTo(p.str);
+        }
+        public boolean increment() {
+            val++;
+            if (val == top) return false;
+            str = Integer.toString(val);
+            return true;
+        }
+    }
+}
+```
+
+#### 2019.8.29 DFS
+- time: 100%
+- space: 26.67%
+- reference: https://leetcode.com/problems/lexicographical-numbers/discuss/86231/Simple-Java-DFS-Solution
+```java
+class Solution {
+    List<Integer> ret = new ArrayList<>();
+    int count = 0;
+    int n;
+    public List<Integer> lexicalOrder(int n) {
+        this.n = n;
+        for(int i=1; i<=9; i++) dfs(i);
+        return ret;
+    }
+    public void dfs(int root) {
+        if (count == n || root > n) return;
+        ret.add(root);
+        count++;
+        int child = root*10;
+        for(int i=0; i<10; i++) {
+            if (child+i > n) break;
+            dfs(child+i);
+        }
+    }
+}
+```
+
+#### 2019.8.29 O(1) space
+- time: 38.44%
+- space: 26.67%
+- reference: https://leetcode.com/problems/lexicographical-numbers/discuss/86242/Java-O(n)-time-O(1)-space-iterative-solution-130ms
+```java
+class Solution {
+    public List<Integer> lexicalOrder(int n) {
+        List<Integer> ret = new ArrayList<>();
+        int curr = 1;
+        for(int i=0; i<n; i++) {
+            ret.add(curr);
+            if (curr*10 <= n) curr *= 10;
+            else {
+                while(curr%10 == 9 || curr+1 > n) curr /= 10;
+                curr++;
+            }
+        }
+        return ret;
+    }
+}
+```
 
 ### 357. Count Numbers with Unique Digits
 - [Link](https://leetcode.com/problems/count-numbers-with-unique-digits/)
