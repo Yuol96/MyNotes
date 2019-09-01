@@ -7177,7 +7177,6 @@ class Solution {
 #### min heap
 - time: 6.79%
 - space: 5.25%
-
 ```java
 class Solution {
     public int nthUglyNumber(int n) {
@@ -7201,6 +7200,25 @@ class Solution {
             heap.add(num);
             set.add(num);
         }
+    }
+}
+```
+
+#### 2019.8.31
+- time: 54.99%
+- space: 54.55%
+- reference: https://leetcode.com/problems/ugly-number-ii/
+```java
+class Solution {
+    public int nthUglyNumber(int n) {
+        int[] ugly = new int[n], indices = new int[3], primes = new int[]{2, 3, 5};
+        Arrays.fill(ugly, Integer.MAX_VALUE);
+        ugly[0] = 1;
+        for(int i=1; i<n; i++) {
+            for(int j=0; j<3; j++) ugly[i] = Math.min(ugly[i], primes[j]*ugly[indices[j]]);
+            for(int j=0; j<3; j++) if (primes[j]*ugly[indices[j]] <= ugly[i]) indices[j]++;
+        }
+        return ugly[n-1];
     }
 }
 ```
@@ -10285,6 +10303,383 @@ class Solution {
 
 ## 300 - 399 Questions
 
+### 307. Range Sum Query - Mutable
+- [Link](https://leetcode.com/problems/range-sum-query-mutable/)
+- Tags: Binary Indexed Tree, Segment Tree
+- Stars: 5
+
+#### 2019.8.31 accumulate array + regular reset
+- time: 27.31%
+- space: 25%
+```java
+class NumArray {
+    int[] nums, accu;
+    Map<Integer, Integer> map = new HashMap<>();
+    int thresh;
+    public NumArray(int[] nums) {
+        this.nums = nums;
+        thresh = (int)Math.sqrt(nums.length);
+        accu = nums.clone();
+        for(int i=1; i<nums.length; i++) accu[i] += accu[i-1];
+    }
+    public void update(int i, int val) {
+        map.put(i, val-nums[i]);
+        if (map.size() > thresh) {
+            for(int idx: map.keySet()) nums[idx] += map.get(idx);
+            accu = nums.clone();
+            for(int idx=1; idx<nums.length; idx++) accu[idx] += accu[idx-1];
+            map = new HashMap<>();
+        }
+    }
+    public int sumRange(int i, int j) {
+        int ret = accu[j] - (i == 0 ? 0 : accu[i-1]);
+        for(int idx: map.keySet()) if (idx >= i && idx <= j) ret += map.get(idx);
+        return ret;
+    }
+}
+```
+
+#### 2019.8.31 Binary Indexed Tree (Segment Tree)
+- time: 67.39%
+- space: 62.5%
+```java
+class NumArray {
+    Node root;
+    int[] nums;
+    public NumArray(int[] nums) {
+        this.nums = nums;
+        root = buildTree(0, nums.length-1);
+    }
+    public Node buildTree(int l, int r) {
+        if (l > r) return null;
+        if (l == r) return new Node(nums[l], l, l);
+        Node left = buildTree(l, l+((r-l)>>1)), 
+            right = buildTree(l+((r-l)>>1)+1, r),
+            parent = new Node(left.val+right.val, l, r);
+        parent.left = left;
+        parent.right = right;
+        return parent;
+    }
+    public void update(int i, int val) {
+        int diff = val - nums[i];
+        nums[i] = val;
+        update(i, diff, root);
+    }
+    public void update(int i, int diff, Node node) {
+        if (node == null || i < node.minIdx || i > node.maxIdx) return;
+        node.val += diff;
+        update(i, diff, node.left);
+        update(i, diff, node.right);
+    }
+    public int sumRange(int i, int j) {
+        return sumRange(i, j, root);
+    }
+    public int sumRange(int i, int j, Node node) {
+        if (node == null) return 0;
+        i = Math.max(i, node.minIdx);
+        j = Math.min(j, node.maxIdx);
+        if (i>j) return 0;
+        if (i == node.minIdx && j == node.maxIdx) return node.val;
+        return sumRange(i, j, node.left) + sumRange(i, j, node.right);
+    }
+    public class Node {
+        int val, minIdx, maxIdx;
+        Node left, right;
+        public Node(int v, int min, int max) {
+            val = v;
+            minIdx = min;
+            maxIdx = max;
+        }
+    }
+}
+```
+
+#### 2019.8.31 Binary Indexed Tree (Segment Tree) by Arrays
+- time: 87.08%
+- space: 100%
+- interviewLevel
+- attention: Segment Tree can be implemented by Arrays
+- attention: Note that not all the leaf nodes are in the bottom level. Thus, the length of `tree` may be larger than `2*nums.length` but must be smaller than `2*(2*nums.length)`.
+```java
+class NumArray {
+    int[] nums;
+    int[] tree;
+    public NumArray(int[] nums) {
+        this.nums = nums;
+        tree = new int[2*2*nums.length];
+        buildTree(0, 0, nums.length-1);
+    }
+    public void buildTree(int node, int start, int end) {
+        if (start >= end) {
+            if (start == end) tree[node] = nums[start];
+            return;
+        }
+        int mid = start + ((end-start)>>1);
+        int leftNode = 2*node + 1, rightNode = 2*node + 2;
+        buildTree(leftNode, start, mid);
+        buildTree(rightNode, mid+1, end);
+        tree[node] = tree[leftNode] + tree[rightNode];
+    }
+    
+    public void update(int i, int val) {
+        update(0, 0, nums.length-1, i, val);
+    }
+    public void update(int node, int start, int end, int idx, int val) {
+        if (idx > end || idx < start) return;
+        if (start == end) {
+            nums[idx] = tree[node] = val;
+            return;
+        }
+        int mid = start + ((end-start)>>1);
+        int leftNode = 2*node + 1, rightNode = 2*node + 2;
+        update(leftNode, start, mid, idx, val);
+        update(rightNode, mid+1, end, idx, val);
+        tree[node] = tree[leftNode] + tree[rightNode];
+    }
+    
+    public int sumRange(int i, int j) {
+        return sumRange(0, 0, nums.length-1, i, j);
+    }
+    public int sumRange(int node, int start, int end, int L, int R) {
+        if (R < start || L > end) return 0;
+        if (L <= start && end <= R) return tree[node];
+        int mid = start + ((end-start)>>1);
+        int leftNode = 2*node + 1, rightNode = 2*node + 2;
+        return sumRange(leftNode, start, mid, L, R) + sumRange(rightNode, mid+1, end, L, R);
+    }
+}
+```
+
+### 332. Reconstruct Itinerary
+- [Link](https://leetcode.com/problems/reconstruct-itinerary/)
+- Tags: DFS, Graph
+- Stars: 3
+
+#### 2019.8.31
+- time: 47.28%
+- space: 62.69%
+```java
+class Solution {
+    int[][] graph;
+    Map<String, Integer> port2idx;
+    String[] ports;
+    int count = 0;
+    public List<String> findItinerary(List<List<String>> tickets) {
+        this.port2idx = new HashMap<>();
+        for(List<String> ticket: tickets) {
+            port2idx.put(ticket.get(0), -1);
+            port2idx.put(ticket.get(1), -1);
+            count++;
+        }
+        this.ports = new String[port2idx.size()];
+        int idx = 0;
+        for(String port: port2idx.keySet()) ports[idx++] = port;
+        Arrays.sort(ports);
+        for(int i=0; i<ports.length; i++) port2idx.put(ports[i], i);
+        this.graph = new int[ports.length][ports.length];
+        for(List<String> ticket: tickets) {
+            int fromIdx = port2idx.get(ticket.get(0)), toIdx = port2idx.get(ticket.get(1));
+            graph[fromIdx][toIdx]++;
+        }
+        List<String> ret = new ArrayList<>();
+        ret.add("JFK");
+        dfs(ret, "JFK");
+        return ret;
+    }
+    public boolean dfs(List<String> ret, String curr) {
+        if (count == 0) return true;
+        int i = port2idx.get(curr);
+        for(int j=0; j<ports.length; j++) {
+            if (graph[i][j] == 0) continue;
+            graph[i][j]--;
+            count--;
+            ret.add(ports[j]);
+            if (dfs(ret, ports[j])) return true;
+            ret.remove(ret.size()-1);
+            count++;
+            graph[i][j]++;
+        }
+        return false;
+    }
+}
+```
+
+#### 2019.8.31 post-order dfs
+- time: 23.40%
+- space: 88.06%
+```java
+class Solution {
+    List<String> ret = new LinkedList<>();
+    Map<String, PriorityQueue<String>> map = new HashMap<>();
+    public List<String> findItinerary(List<List<String>> tickets) {
+        for(List<String> ticket: tickets) 
+            map.computeIfAbsent(ticket.get(0), k->new PriorityQueue<>()).add(ticket.get(1));
+        dfs("JFK");
+        return ret;
+    }
+    public void dfs(String curr) {
+        while(map.containsKey(curr) && !map.get(curr).isEmpty())
+            dfs(map.get(curr).poll());
+        ret.add(0, curr);
+    }
+}
+```
+
+### 313. Super Ugly Number
+- [Link](https://leetcode.com/problems/super-ugly-number/)
+- Tags: Math, Heap
+- Stars: 4
+
+#### 2019.8.31 minHeap
+- time: 12.24%
+- space: 16.67%
+```java
+class Solution {
+    public int nthSuperUglyNumber(int n, int[] primes) {
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+        Set<Integer> set = new HashSet<>();
+        minHeap.add(1);
+        int ret = 0;
+        for(int i=0; i<n; i++) {
+            ret = minHeap.poll();
+            for(int prime: primes) {
+                int newEle = ret * prime;
+                if (newEle/prime != ret) break;
+                if (!set.contains(newEle)) {
+                    minHeap.add(newEle);
+                    set.add(newEle);
+                }
+            }
+        }
+        return ret;
+    }
+}
+```
+
+Optimized (without HashSet)
+- time: 30.28%
+- space: 33.33%
+```java
+class Solution {
+    public int nthSuperUglyNumber(int n, int[] primes) {
+        PriorityQueue<Pair> minHeap = new PriorityQueue<>();
+        int ret = 1;
+        for(int i=0; i<primes.length; i++) minHeap.add(new Pair(primes[i], i));
+        for(int i=1; i<n; i++) {
+            Pair p = minHeap.poll();
+            ret = p.val;
+            for(int j=p.idx; j<primes.length; j++) {
+                int newEle = ret * primes[j];
+                if (newEle/primes[j] != ret) break;
+                minHeap.add(new Pair(newEle, j));
+            }
+        }
+        return ret;
+    }
+    public class Pair implements Comparable<Pair> {
+        int val, idx;
+        public Pair(int v, int i) {val = v; idx = i;}
+        @Override
+        public int compareTo(Pair p) {
+            return this.val - p.val;
+        }
+    }
+}
+```
+
+#### 2019.8.31 
+- time: 65.66%
+- space: 100%
+- reference: https://leetcode.com/problems/super-ugly-number/discuss/76343/108ms-easy-to-understand-java-solution
+```java
+class Solution {
+    public int nthSuperUglyNumber(int n, int[] primes) {
+        int[] ugly = new int[n], indices = new int[primes.length];
+        Arrays.fill(ugly, Integer.MAX_VALUE);
+        ugly[0] = 1;
+        for(int i=1; i<n; i++) {
+            for(int j=0; j<primes.length; j++) ugly[i] = Math.min(ugly[i], primes[j] * ugly[indices[j]]);
+            for(int j=0; j<primes.length; j++) if (primes[j]*ugly[indices[j]] <= ugly[i]) indices[j]++;
+        }
+        return ugly[n-1];
+    }
+}
+```
+
+### 319. Bulb Switcher
+- [Link](https://leetcode.com/problems/bulb-switcher/)
+- Tags: Math, Brainteaser
+- Stars: 3
+
+#### 2019.8.31 
+- time: 100%
+- space: 33.33%
+```java
+class Solution {
+    public int bulbSwitch(int n) {
+        return (int)Math.sqrt(n);
+    }
+}
+```
+
+### 399. Evaluate Division
+- [Link](https://leetcode.com/problems/evaluate-division/)
+- Tags: Union Find, Graph
+- Stars: 4
+
+#### 2019.8.31 graph
+- time: 6.94%
+- space: 76.47%
+```java
+class Solution {
+    Map<String, List<String>> node2childs = new HashMap<>();
+    Map<String, List<Double>> node2vals = new HashMap<>();
+    List<Double> ret = new ArrayList<>();
+    public double[] calcEquation(List<List<String>> equations, double[] values, List<List<String>> queries) {
+        for(int i=0; i<equations.size(); i++) {
+            List<String> eq = equations.get(i);
+            String a = eq.get(0), b = eq.get(1);
+            double v = values[i];
+            node2childs.computeIfAbsent(a, k->new ArrayList<>()).add(b);
+            node2vals.computeIfAbsent(a, k->new ArrayList<>()).add(v);
+            if (v != 0) {
+                node2childs.computeIfAbsent(b, k->new ArrayList<>()).add(a);
+                node2vals.computeIfAbsent(b, k->new ArrayList<>()).add(1/v);
+            }
+        }
+        for(List<String> query: queries) ret.add(bfs(query.get(0), query.get(1)));
+        double[] result = new double[ret.size()];
+        for(int i=0; i<ret.size(); i++) result[i] = ret.get(i);
+        return result;
+    }
+    public double bfs(String a, String b) {
+        if (!node2childs.containsKey(a) || !node2childs.containsKey(b)) return -1.0;
+        if (a.equals(b)) return 1.0;
+        Queue<String> qu = new LinkedList<>();
+        Queue<Double> quVals = new LinkedList<>();
+        Set<String> marks = new HashSet<>();
+        qu.add(a);
+        quVals.add(1.0);
+        marks.add(a);
+        while(!qu.isEmpty()) {
+            String curr = qu.poll();
+            double v = quVals.poll();
+            List<String> childs = node2childs.get(curr);
+            List<Double> vals = node2vals.get(curr);
+            for(int i=0; i<childs.size(); i++) {
+                String child = childs.get(i);
+                if (marks.contains(child)) continue;
+                if (b.equals(child)) return v*vals.get(i);
+                qu.add(child);
+                quVals.add(v*vals.get(i));
+                marks.add(child);
+            }
+        }
+        return -1.0;
+    }
+}
+```
+
 ### 386. Lexicographical Numbers
 - [Link](https://leetcode.com/problems/lexicographical-numbers/)
 - Tags: 
@@ -12102,6 +12497,75 @@ class Solution {
 ```
 
 # Weekly Contests
+
+## No. 152
+### 5175. Can Make Palindrome from Substring
+- [Link](https://leetcode.com/problems/can-make-palindrome-from-substring/)
+- Tags: Array, String
+- Stars: 3
+
+#### 2019.9.1 
+- time 65 ms
+- space 119.9 MB
+
+`count` is the number of characters that occurs odd times
+```java
+class Solution {
+    public List<Boolean> canMakePaliQueries(String s, int[][] queries) {
+        List<Boolean> ret = new ArrayList<>();
+        int[][] stat = new int[s.length()][26];
+        for(int i=0; i<s.length(); i++) {
+            if (i > 0) stat[i] = Arrays.copyOf(stat[i-1], 26);
+            char c = s.charAt(i);
+            stat[i][c-'a']++;
+        }
+        for(int[] query: queries) {
+            int count = 0;
+            for(int i=0; i<26; i++) {
+                if ((stat[query[1]][i] - (query[0] > 0 ? stat[query[0]-1][i] : 0)) % 2 == 0) continue;
+                count++;
+            }
+            if (count - 2*query[2] > 1) ret.add(false);
+            else ret.add(true);
+        }
+        return ret;
+    }
+}
+```
+
+### 5176. Number of Valid Words for Each Puzzle
+- [Link](https://leetcode.com/problems/number-of-valid-words-for-each-puzzle/)
+- Tags: Hash Table, Bit Manipulation
+- Stars: 3
+
+#### 2019.9.1 bit manipulation
+- time 1536 ms
+- space 50.6 MB
+- attention: need to filter invalid words first!
+```java
+class Solution {
+    public List<Integer> findNumOfValidWords(String[] words, String[] puzzles) {
+        List<Integer> ret = new ArrayList<>();
+        int[] stat = new int[words.length];
+        int len = 0;
+        for(int i=0; i<words.length; i++) {
+            int temp = 0;
+            for(char c: words[i].toCharArray()) temp |= (1<<(c-'a'));
+            if (Integer.bitCount(temp) > 7) continue;
+            stat[len++] = temp;
+        }
+        for(String puzzle: puzzles) {
+            int count = 0, curr = 0;
+            char first = puzzle.charAt(0);
+            for(char c: puzzle.toCharArray()) curr |= (1<<(c-'a'));
+            for(int i=0; i<len; i++) if (((stat[i] | curr) == curr) && (stat[i] & (1<<(first-'a'))) != 0) count++;
+            ret.add(count);
+        }
+        return ret;
+    }
+}
+```
+
 
 ## No. 96
 ### 881. Boats to Save People
