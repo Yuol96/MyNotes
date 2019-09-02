@@ -2868,7 +2868,7 @@ class Solution {
 ### 395. Longest Substring with At Least K Repeating Characters
 - [Link](https://leetcode.com/problems/longest-substring-with-at-least-k-repeating-characters/)
 - Tags: 
-- Stars: 3
+- Stars: 4
 
 #### two pointers
 ```java
@@ -4627,6 +4627,7 @@ class Solution {
 - Stars: 3
 
 #### Math solution
+- reference: https://leetcode.com/problems/integer-break/discuss/80721/Why-factor-2-or-3-The-math-behind-this-problem./85299
 ```java
 class Solution {
     public int integerBreak(int n) {
@@ -4639,6 +4640,23 @@ class Solution {
         }
         result *= n;
         return result;
+    }
+}
+```
+
+Updated 2019.9.1
+```java
+class Solution {
+    public int integerBreak(int n) {
+        if (n < 4) return n-1;
+        int ret = 1;
+        while(n >= 3) {
+            n -= 3;
+            ret *= 3;
+        }
+        if (n == 2) ret *= 2;
+        else if (n == 1) ret = ret/3*4;
+        return ret;
     }
 }
 ```
@@ -4948,12 +4966,12 @@ class Solution {
 ### 324. Wiggle Sort II
 - [Link](https://leetcode.com/problems/wiggle-sort-ii/)
 - Tags: Sort
-- Stars: 3
+- Stars: 5
 
-#### sort and reverse, O(nlogn) time 
-This solution can be optimized by virtual indexing! 
-
-[Explanation/Proof for the correctness](https://leetcode.com/problems/wiggle-sort-ii/discuss/77678/3-lines-Python-with-Explanation-Proof)
+#### 2019.9.1 O(nlogn) time sort 
+- time: 100%
+- space: 100%
+- reference: https://leetcode.com/problems/wiggle-sort-ii/discuss/77678/3-lines-Python-with-Explanation-Proof
 ```java
 class Solution {
     public void wiggleSort(int[] nums) {
@@ -4967,6 +4985,111 @@ class Solution {
             if(r==(nums.length-1)/2) break;
             nums[i++] = copy[r--];
         }
+    }
+}
+```
+
+#### 2019.9.1 virtual sort O(1) space
+- time: 51.95%
+- space: 100%
+virtual indexing
+```java
+class Solution {
+    int len, mid;
+    public void wiggleSort(int[] nums) {
+        len = nums.length;
+        mid = (nums.length-1)/2;
+        virtualSort(nums, 0, nums.length-1);
+    }
+    public void virtualSort(int[] nums, int vl, int vr) {
+        if (vl >= vr) return;
+        int vmid = partition(nums, vl, vr);
+        virtualSort(nums, vl, vmid-1);
+        virtualSort(nums, vmid+1, vr);
+    }
+    public int partition(int[] nums, int vl, int vr) {
+        int vi = vl, vj = vr+1, pivot = get(nums, vl);
+        while(true) {
+            while(get(nums, ++vi) < pivot && vi < vr);
+            while(pivot < get(nums, --vj) && vl < vj);
+            if (vi >= vj) break;
+            swap(nums, vi, vj);
+        }
+        swap(nums, vl, vj);
+        return vj;
+    }
+    public void swap(int[] nums, int vi, int vj) {
+        int i = virtual2real(vi), j = virtual2real(vj), temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+    public int get(int[] nums, int vi) {
+        return nums[virtual2real(vi)];
+    }
+    public int virtual2real(int i) {
+        if (i <= mid) return 2*(mid-i);
+        return 2*(len-1-i) + 1;
+    }
+    public int real2virtual(int i) {
+        if (i%2 == 0) return mid - (i>>1);
+        return len-1-((i-1)>>1);
+    }
+}
+```
+
+#### 2019.9.1 O(n) time + O(1) space after find median
+- time: 51.95%
+- space: 100%
+- attention: Similar to the solution above, but notice that you don't need a complete sort. Actually, you only need to use "Quick Search partition" to put the median in the middle of virtual indices. Then, make sure all the elements that are equal to the median are placed adjacent to the median in the virtual world. With this, you get an array where elements with virtual index smaller than `mid` are smaller or equal to the median, and vise versa.
+- reference: https://leetcode.com/problems/wiggle-sort-ii/discuss/77682/Step-by-step-explanation-of-index-mapping-in-Java
+```java
+class Solution {
+    int len, mid;
+    public void wiggleSort(int[] nums) {
+        len = nums.length;
+        mid = (nums.length-1)/2;
+        findNthEle(nums, 0, len-1, mid);
+        int median = get(nums, mid);
+        for(int vi=mid-1, vl=mid-1; vi>=0; vi--) 
+            if (get(nums, vi) == median) swap(nums, vi, vl--);
+        for(int vi=mid+1, vr=mid+1; vi<len; vi++)
+            if (get(nums, vi) == median) swap(nums, vi, vr++);
+    }
+    public void findNthEle(int[] nums, int vl, int vr, int vmid) {
+        if (vl >= vr) return;
+        while(true) {
+            int vj = partition(nums, vl, vr);
+            if (vj > vmid) vr = vj-1;
+            else if (vj < vmid) vl = vj+1;
+            else return;
+        }
+    }
+    public int partition(int[] nums, int vl, int vr) {
+        int vi = vl, vj = vr+1, pivot = get(nums, vl);
+        while(true) {
+            while(get(nums, ++vi) < pivot && vi < vr);
+            while(pivot < get(nums, --vj) && vl < vj);
+            if (vi >= vj) break;
+            swap(nums, vi, vj);
+        }
+        swap(nums, vl, vj);
+        return vj;
+    }
+    public void swap(int[] nums, int vi, int vj) {
+        int i = virtual2real(vi), j = virtual2real(vj), temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+    public int get(int[] nums, int vi) {
+        return nums[virtual2real(vi)];
+    }
+    public int virtual2real(int i) {
+        if (i <= mid) return 2*(mid-i);
+        return 2*(len-1-i) + 1;
+    }
+    public int real2virtual(int i) {
+        if (i%2 == 0) return mid - (i>>1);
+        return len-1-((i-1)>>1);
     }
 }
 ```
@@ -10302,6 +10425,224 @@ class Solution {
 ```
 
 ## 300 - 399 Questions
+
+### 376. Wiggle Subsequence
+- [Link](https://leetcode.com/problems/wiggle-subsequence/)
+- Tags: Dynamic Programming, Greedy
+- Stars: 4
+
+#### 2019.9.2
+- time: 100%
+- space: 100%
+- attention: this problem should be discussed on two sides. The init direction up or down. Either of the case is DP problem, which is similar to **Longest Increasing Subsequence**.
+```java
+class Solution {
+    public int wiggleMaxLength(int[] nums) {
+        if (nums.length < 2) return nums.length;
+        return Math.max(wiggleMaxLength(nums, 1), wiggleMaxLength(nums, -1));
+    }
+    public int wiggleMaxLength(int[] nums, int direction) {
+        int ret = 1;
+        for(int i=1; i<nums.length; i++) {
+            if (direction == -1 && nums[i-1] > nums[i]) {
+                ret++;
+                direction = 1;
+            } else if (direction == 1 && nums[i-1] < nums[i]) {
+                ret++;
+                direction = -1;
+            }
+        }
+        return ret;
+    }
+}
+```
+
+### 310. Minimum Height Trees
+- [Link](https://leetcode.com/problems/minimum-height-trees/)
+- Tags: BFS, Graph
+- Stars: 5
+
+#### 2019.9.2 Tree DP
+- time: 75.66%
+- space: 66.67%
+- attention: `node.directions` records the distances from `node` to deepest leaf node of `node.childs`.
+- reference: https://leetcode.com/problems/minimum-height-trees/discuss/76052/Two-O(n)-solutions
+```java
+class Solution {
+    Node[] nodes;
+    public List<Integer> findMinHeightTrees(int n, int[][] edges) {
+        List<Integer> ret = new ArrayList<>();
+        if (n == 0) return ret;
+        nodes = new Node[n];
+        for(int i=0; i<n; i++) nodes[i] = new Node(i);
+        for(int[] e: edges) {
+            nodes[e[0]].addEdge(e[1]);
+            nodes[e[1]].addEdge(e[0]);
+        }
+        int min = Integer.MAX_VALUE;
+        for(int i=0; i<n; i++) {
+            int curr = dfs(nodes[i], i);
+            if (min > curr) {
+                min = curr;
+                ret = new ArrayList<>();
+                ret.add(i);
+            } else if (min == curr) ret.add(i);
+        }
+        return ret;
+    }
+    public int dfs(Node node, int parentNodeLabel) {
+        int ret = 0;
+        for(int i=0; i<node.childs.size(); i++) {
+            int childIdx = node.childs.get(i);
+            Node child = nodes[childIdx];
+            if (child.label == parentNodeLabel) continue;
+            int distance = node.directions.get(i);
+            if (distance == -1) {
+                distance = dfs(child, node.label) + 1;
+                node.directions.set(i, distance);
+            }
+            ret = Math.max(ret, distance);
+        }
+        return ret;
+    }
+    public class Node {
+        int label;
+        List<Integer> childs = new ArrayList<>();
+        List<Integer> directions = new ArrayList<>();
+        public Node(int idx) {
+            label = idx;
+        }
+        public void addEdge(int i) {
+            childs.add(i);
+            directions.add(-1);
+        }
+    }
+}
+```
+
+#### 2019.9.2 Topological Sort
+- time: 34.60%
+- space: 88.89%
+- interviewLevel
+- language: For `Set`, use `set.iterator().next()` to get its elements.
+- attention: similar to **Topological Sort** (农村包围城市)
+- reference: https://leetcode.com/problems/minimum-height-trees/discuss/76055/Share-some-thoughts
+- cheat
+```java
+class Solution {
+    public List<Integer> findMinHeightTrees(int n, int[][] edges) {
+        if (n == 0) return new ArrayList<>();
+        Set<Integer>[] graph = new Set[n];
+        for(int i=0; i<n; i++) graph[i] = new HashSet<>();
+        for(int[] e: edges) {
+            graph[e[0]].add(e[1]);
+            graph[e[1]].add(e[0]);
+        }
+        List<Integer> leafNodes = new ArrayList<>();
+        for(int i=0; i<n; i++) if (graph[i].size() <= 1) leafNodes.add(i);
+        while(n > 2) {
+            n -= leafNodes.size();
+            List<Integer> newLeafNodes = new ArrayList<>();
+            for(int leaf: leafNodes) {
+                int innerNode = graph[leaf].iterator().next();
+                graph[innerNode].remove(leaf);
+                if (graph[innerNode].size() == 1) newLeafNodes.add(innerNode);
+            }
+            leafNodes = newLeafNodes;
+        }
+        return leafNodes;
+    }
+}
+```
+
+### 377. Combination Sum IV
+- [Link](https://leetcode.com/problems/combination-sum-iv/)
+- Tags: Dynamic Programming
+- Stars: 4
+
+#### 2019.8.31
+- time: 84.14%
+- space: 100%
+- attention: Counting problems （计数问题） are often DP problems, because it only cares about the `count` number, not details. Just like a tree problem (i.e. segment tree), the dfs or leaf nodes are not important. On the other hand, only the values of inner nodes matters.
+```java
+class Solution {
+    public int combinationSum4(int[] nums, int target) {
+        int[] dp = new int[target+1];
+        Arrays.sort(nums);
+        dp[0] = 1;
+        for(int i=1; i<=target; i++) {
+            for(int num: nums) {
+                if (num > i) break;
+                dp[i] += dp[i-num];
+            }
+        }
+        return dp[target];
+    }
+}
+```
+
+### 355. Design Twitter
+- [Link](https://leetcode.com/problems/design-twitter/)
+- Tags: Hash Table, Heap, Design
+- Stars: 3
+
+#### 2019.8.31
+- time: 82.17%
+- space: 100%
+- attention: in the `follow` function, make sure to deal with the case where `followerId == followeeId`
+```java
+class Twitter {
+    public static int timestamp = 0;
+    Map<Integer, List<Tweet>> userId2tweets = new HashMap<>();
+    Map<Integer, Set<Integer>> userGraph = new HashMap<>();
+    public Twitter() {}
+    public void postTweet(int userId, int tweetId) {
+        List<Tweet> list = userId2tweets.computeIfAbsent(userId, k->new ArrayList<>());
+        list.add(new Tweet(tweetId, list, list.size()));
+    }
+    public List<Integer> getNewsFeed(int userId) {
+        PriorityQueue<Tweet> maxHeap = new PriorityQueue<>();
+        addToHeap(maxHeap, userId);
+        if (userGraph.containsKey(userId)) 
+            for(int followeeId: userGraph.get(userId)) addToHeap(maxHeap, followeeId);
+        List<Integer> ret = new ArrayList<>();
+        for(int i=0; i<10; i++) {
+            if (maxHeap.isEmpty()) break;
+            Tweet twt = maxHeap.poll();
+            ret.add(twt.tweetId);
+            if (twt.idx > 0) maxHeap.add(twt.list.get(twt.idx-1));
+        }
+        return ret;
+    }
+    public void addToHeap(PriorityQueue<Tweet> heap, int userId) {
+        if (userId2tweets.containsKey(userId)) {
+            List<Tweet> list = userId2tweets.get(userId);
+            heap.add(list.get(list.size()-1));
+        }
+    }
+    public void follow(int followerId, int followeeId) {
+        if (followerId == followeeId) return;
+        userGraph.computeIfAbsent(followerId, k->new HashSet<>()).add(followeeId);
+    }
+    public void unfollow(int followerId, int followeeId) {
+        if (!userGraph.containsKey(followerId)) return;
+        userGraph.get(followerId).remove(followeeId);
+    }
+    public class Tweet implements Comparable<Tweet> {
+        int tweetId, idx, time;
+        List<Tweet> list;
+        public Tweet(int tId, List<Tweet> lst, int i) {
+            tweetId = tId;
+            list = lst;
+            idx = i;
+            time = timestamp++; 
+        }
+        public int compareTo(Tweet t) {
+            return t.time - this.time;
+        }
+    }
+}
+```
 
 ### 307. Range Sum Query - Mutable
 - [Link](https://leetcode.com/problems/range-sum-query-mutable/)
