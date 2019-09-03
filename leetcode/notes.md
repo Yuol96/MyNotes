@@ -6163,6 +6163,291 @@ class Solution {
 
 ## First 300 Questions
 
+### 245. Shortest Word Distance III
+- [Link](https://leetcode.com/problems/shortest-word-distance-iii/)
+- Tags: Array
+- Stars: 3
+
+#### 2019.9.2 two pointers
+- time: 100%
+- space: 100%
+- interviewLevel
+```java
+class Solution {
+    public int shortestWordDistance(String[] words, String word1, String word2) {
+        int ret = Integer.MAX_VALUE, len=words.length;
+        if (!word1.equals(word2)) {
+            int i=moveTo(words, word1, 0), j=moveTo(words, word2, 0);
+            while(i<len && j<len) {
+                ret = Math.min(ret, Math.abs(j-i));
+                if (i<j) i = moveTo(words, word1, i+1); 
+                else j = moveTo(words, word2, j+1);
+            }
+        } else {
+            int i=moveTo(words, word1, 0);
+            while(i<len) {
+                int j = moveTo(words, word1, i+1);
+                if (j < len) ret = Math.min(ret, j-i);
+                i = j;
+            }
+        }
+        return ret;
+    }
+    public int moveTo(String[] words, String template, int start) {
+        for(int i=start; i<words.length; i++) if (words[i].equals(template)) return i;
+        return words.length;
+    }
+}
+```
+
+#### 2019.9.2 HashMap
+- time: 12.57%
+- space: 100%
+```java
+class Solution {
+    public int shortestWordDistance(String[] words, String word1, String word2) {
+        Map<String, List<Integer>> map = new HashMap<>();
+        for(int i=0; i<words.length; i++) 
+            map.computeIfAbsent(words[i], k->new ArrayList<>()).add(i);
+        int ret = Integer.MAX_VALUE;
+        if (word1.equals(word2)) {
+            List<Integer> list = map.get(word1);
+            for(int i=1; i<list.size(); i++) ret = Math.min(ret, list.get(i)-list.get(i-1));
+        } else {
+            List<Integer> list1 = map.get(word1), list2 = map.get(word2);
+            int i=0, j=0, len1=list1.size(), len2=list2.size();
+            while(i<len1 && j<len2) {
+                int a = list1.get(i), b = list2.get(j);
+                if (a<b) {
+                    ret = Math.min(ret, b-a);
+                    i++;
+                } else {
+                    ret = Math.min(ret, a-b);
+                    j++;
+                }
+            }
+        }
+        return ret;
+    }
+}
+```
+
+### 244. Shortest Word Distance II
+- [Link](https://leetcode.com/problems/shortest-word-distance-ii/)
+- Tags: Hash Table, Design
+- Stars: 3
+
+#### 2019.9.2 two pointers
+- time: 69.60%
+- space: 100%
+```java
+class WordDistance {
+    Map<String, List<Integer>> map = new HashMap<>();
+    public WordDistance(String[] words) {
+        for(int i=0; i<words.length; i++) 
+            map.computeIfAbsent(words[i], k->new ArrayList<>()).add(i);
+    }
+    public int shortest(String word1, String word2) {
+        List<Integer> list1 = map.get(word1), list2 = map.get(word2);
+        int i=0, j=0, len1=list1.size(), len2=list2.size(), ret=Integer.MAX_VALUE;
+        while(i<len1 && j<len2) {
+            int a = list1.get(i), b = list2.get(j);
+            ret = Math.min(ret, Math.abs(a-b));
+            if (a<b) i++;
+            else j++;
+        }
+        return ret;
+    }
+}
+```
+
+### 243. Shortest Word Distance
+- [Link](https://leetcode.com/problems/shortest-word-distance/)
+- Tags: Array
+- Stars: 3
+
+#### 2019.9.2 two pointers
+- time: 100%
+- space: 100%
+- interviewLevel
+```java
+class Solution {
+    public int shortestDistance(String[] words, String word1, String word2) {
+        int i=moveTo(words, word1, 0), j=moveTo(words, word2, 0), len=words.length, ret = Integer.MAX_VALUE;
+        while(i<len && j<len) {
+            ret = Math.min(ret, Math.abs(j-i));
+            if (i<j) i = moveTo(words, word1, i+1); 
+            else j = moveTo(words, word2, j+1);
+        }
+        return ret;
+    }
+    public int moveTo(String[] words, String template, int start) {
+        for(int i=start; i<words.length; i++) if (words[i].equals(template)) return i;
+        return words.length;
+    }
+}
+```
+
+### 266. Palindrome Permutation
+- [Link](https://leetcode.com/problems/palindrome-permutation/)
+- Tags: Hash Table
+- Stars: 1
+
+#### 2019.9.2 
+- time: 79.24%
+- space: 100%
+- attention: bit manipulation may not work. e.g. the XOR result of each char in "abdg" is 0!!!
+```java
+class Solution {
+    public boolean canPermutePalindrome(String s) {
+        Map<Character, Integer> map = new HashMap<>();
+        for(char c: s.toCharArray()) map.put(c, map.getOrDefault(c, 0) + 1);
+        int count = 0;
+        for(int val: map.values()) if (val % 2 == 1) count++;
+        return count<2;
+    }
+}
+```
+
+Another
+- time: 100%
+- space: 100%
+```java
+class Solution {
+    public boolean canPermutePalindrome(String s) {
+        int[] stat = new int[256];
+        for(char c: s.toCharArray()) stat[c]++;
+        int count = 0;
+        for(int num: stat) if(num%2 == 1) count++;
+        return count<2;
+    }
+}
+```
+
+### 281. Zigzag Iterator
+- [Link](https://leetcode.com/problems/zigzag-iterator/)
+- Tags: Design
+- Stars: 3
+
+#### 2019.9.2 
+- time: 79.24%
+- space: 100%
+- language: `List.iterator()`
+- interviewLevel
+```java
+public class ZigzagIterator {
+    Queue<Iterator<Integer>> qu = new LinkedList<>();
+    public ZigzagIterator(List<Integer> v1, List<Integer> v2) {
+        if (v1.size() > 0) qu.add(v1.iterator());
+        if (v2.size() > 0) qu.add(v2.iterator());
+    }
+    public int next() {
+        Iterator<Integer> iter = qu.poll();
+        int ret = iter.next();
+        if (iter.hasNext()) qu.add(iter);
+        return ret;
+    }
+    public boolean hasNext() {
+        return !qu.isEmpty();
+    }
+}
+```
+
+### 280. Wiggle Sort
+- [Link](https://leetcode.com/problems/wiggle-sort/)
+- Tags: Array, Sort
+- Stars: 3
+
+#### 2019.9.2 sort
+- time: 25.64%
+- space: 100%
+```java
+class Solution {
+    public void wiggleSort(int[] nums) {
+        Arrays.sort(nums);
+        for(int i=2; i<nums.length; i+=2) swap(nums, i, i-1);
+    }
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
+```
+
+#### 2019.9.2 quick search by virtual indexing
+- time: 26.67%
+- space: 100%
+```java
+class Solution {
+    int len, mid;
+    public void wiggleSort(int[] nums) {
+        len = nums.length;
+        mid = (len-1)/2;
+        findNthValue(nums, 0, len-1, mid);
+    }
+    private void findNthValue(int[] nums, int l, int r, int N) {
+        if (l >= r) return;
+        while(true) {
+            int j = partition(nums, l, r);
+            if (j > N) r = j-1;
+            else if (j < N) l = j+1;
+            else return;
+        }
+    }
+    private int partition(int[] nums, int l, int r) {
+        int i=l, j=r+1, pivot = get(nums, l);
+        while(true) {
+            while(get(nums, ++i) < pivot && i<r);
+            while(pivot < get(nums, --j) && l<j);
+            if (i>=j) break;
+            swap(nums, i, j);
+        }
+        swap(nums, l, j);
+        return j;
+    }
+    private void swap(int[] nums, int vi, int vj) {
+        if (vi == vj) return;
+        int i = virtual2real(vi), j = virtual2real(vj), temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+    private int get(int[] nums, int i) {
+        return nums[virtual2real(i)];
+    }
+    private int virtual2real(int i) {
+        if (i <= mid) return (mid-i)*2;
+        return (len-1-i)*2 + 1;
+    }
+    private int real2virtual(int j) {
+        if (j%2 == 0) return mid - (j/2);
+        return len-1-(j-1)/2;
+    }
+}
+```
+
+#### 2019.9.2 
+- time: 78.54%
+- space: 100%
+- interviewLevel
+- cheat
+```java
+class Solution {
+    public void wiggleSort(int[] nums) {
+        for(int i=0; i<nums.length; i++) {
+            if (i%2 == 1) {
+                if (nums[i] < nums[i-1]) swap(nums, i, i-1);
+            } else if (i > 0 && nums[i] > nums[i-1]) swap(nums, i, i-1);
+        }
+    }
+    public void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
+```
+
 ### 394. Decode String
 - [Link](https://leetcode.com/problems/decode-string/)
 - Tags: Stack, DFS
