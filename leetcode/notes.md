@@ -6163,6 +6163,246 @@ class Solution {
 
 ## First 300 Questions
 
+### 294. Flip Game II
+- [Link](https://leetcode.com/problems/flip-game-ii/)
+- Tags: Backtracking, Minmax
+- Stars: 5
+
+#### 2019.9.4 O(N!!) backtracking
+- time: 65.91%
+- space: 100%
+- attention: During backtracking, if you may return the value before restore to be original array, remember to check whether this array will be used or not. e.g. In this case, you may want to write `if (!backtrack(chrs)) return true;` between `chrs[i] = chrs[i-1] = '-'` and `chrs[i] = chrs[i-1] = '+'`. However, the chrs may be further used and edited even if you return true at some point, but `chrs[i] = chrs[i-1] = '+'` will no longer be executed! This will cause an error.
+```java
+class Solution {
+    public boolean canWin(String s) {
+        return backtrack(s.toCharArray());
+    }
+    public boolean backtrack(char[] chrs) {
+        for(int i=1; i<chrs.length; i++) {
+            if (chrs[i] == '-') i++;
+            else if (chrs[i-1] == '+') {
+                chrs[i] = chrs[i-1] = '-';
+                boolean componentCanWin = backtrack(chrs);
+                chrs[i] = chrs[i-1] = '+';
+                if (!componentCanWin) return true;
+            }
+        }
+        return false;
+    }
+}
+```
+
+### 249. Group Shifted Strings
+- [Link](https://leetcode.com/problems/group-shifted-strings/)
+- Tags: Hash Table, String
+- Stars: 3
+
+#### 2019.9.3
+- time: 100%
+- space: 100%
+- language: Simly replacing `map.computeIfAbsent(key, k->new ArrayList<>()).add(s)` with `map.putIfAbsent(key, new ArrayList<>()); map.get(key).add(s);` improves from 32 ms to 1 ms!!! The `putIfAbsent` method puts the specified value to the given key only if the key does not exists or the original value is null.
+```java
+class Solution {
+    public List<List<String>> groupStrings(String[] strings) {
+        Map<String, List<String>> map = new HashMap<>();
+        for(String s: strings) {
+            String key = convertToKey(s);
+            map.putIfAbsent(key, new ArrayList<>());
+            map.get(key).add(s);
+        }
+        List<List<String>> ret = new ArrayList<>();
+        for(List<String> list: map.values()) ret.add(list);
+        return ret;
+    }
+    public String convertToKey(String s) {
+        if (s.length() == 0 || s.charAt(0) == 'a') return s;
+        char[] chrs = s.toCharArray();
+        int diff = chrs[0] - 'a';
+        for(int i=0; i<chrs.length; i++) {
+            if (chrs[i]-'a' >= diff) chrs[i] -= diff;
+            else chrs[i] += (26-diff);
+        }
+        return new String(chrs);
+    }
+}
+```
+
+### 250. Count Univalue Subtrees
+- [Link](https://leetcode.com/problems/count-univalue-subtrees/)
+- Tags: Tree
+- Stars: 2
+
+#### 2019.9.3 DFS
+- time: 87.99%
+- space: 66.67%
+- attention: `if(dfs(root.left) && dfs(root.right)) xxx` may not work, because the second `dfs` statement will not be executed if the first `dfs` returns `false`
+```java
+class Solution {
+    int count = 0;
+    public int countUnivalSubtrees(TreeNode root) {
+        if (root == null) return 0;
+        dfs(root);
+        return count;
+    }
+    public boolean dfs(TreeNode root) {
+        if (root == null) return true;
+        boolean l = dfs(root.left), r = dfs(root.right);
+        if (l && r) {
+            if (root.left != null && root.left.val != root.val) return false;
+            if (root.right != null && root.right.val != root.val) return false;
+            count++;
+            return true;
+        }
+        return false;
+    }
+}
+```
+
+### 286. Walls and Gates
+- [Link](https://leetcode.com/problems/walls-and-gates/)
+- Tags: BFS
+- Stars: 3
+- reviewFlag
+
+#### 2019.9.3 BFS
+- time: 47.35%
+- space: 28.13%
+```java
+class Solution {
+    Queue<int[]> qu;
+    int m, n;
+    int[][] rooms;
+    public void wallsAndGates(int[][] rooms) {
+        if (rooms.length == 0 || rooms[0].length == 0) return;
+        this.rooms = rooms;
+        m = rooms.length; 
+        n = rooms[0].length;
+        qu = new LinkedList<>();
+        for(int i=0; i<m; i++) 
+            for(int j=0; j<n; j++)
+                if (rooms[i][j] == 0) qu.add(new int[]{i, j, 0});
+        while(!qu.isEmpty()) {
+            int[] pos = qu.poll();
+            int i=pos[0], j=pos[1], d=pos[2];
+            if (d == 0 || d < rooms[i][j]) {
+                rooms[i][j] = d;
+                addToQueueAfterCheck(i+1, j, d+1);
+                addToQueueAfterCheck(i-1, j, d+1);
+                addToQueueAfterCheck(i, j+1, d+1);
+                addToQueueAfterCheck(i, j-1, d+1);
+            }
+        }
+    }
+    public void addToQueueAfterCheck(int i, int j, int d) {
+        if (i<0 || i>=m || j<0 || j>=n) return;
+        if (d >= rooms[i][j]) return;
+        qu.add(new int[]{i, j, d});
+    }
+}
+```
+
+Optimized 2019.9.3
+- time: 65.76%
+- space: 78.13%
+- attention: with BFS, you can record `(i, j)` instead of `(i, j, d)`.
+```java
+class Solution {
+    Queue<int[]> qu;
+    int m, n;
+    int[][] rooms;
+    public void wallsAndGates(int[][] rooms) {
+        if (rooms.length == 0 || rooms[0].length == 0) return;
+        this.rooms = rooms;
+        m = rooms.length; 
+        n = rooms[0].length;
+        qu = new LinkedList<>();
+        for(int i=0; i<m; i++) 
+            for(int j=0; j<n; j++)
+                if (rooms[i][j] == 0) qu.add(new int[]{i, j});
+        int count = qu.size(), level = 0;
+        while(!qu.isEmpty()) {
+            int[] pos = qu.poll();
+            count--;
+            int i=pos[0], j=pos[1];
+            if (rooms[i][j] == 0 || rooms[i][j] == Integer.MAX_VALUE) {
+                rooms[i][j] = level;
+                addToQueueAfterCheck(i+1, j);
+                addToQueueAfterCheck(i-1, j);
+                addToQueueAfterCheck(i, j+1);
+                addToQueueAfterCheck(i, j-1);
+            }
+            if (count == 0) {
+                count = qu.size();
+                level++;
+            }
+        }
+    }
+    public void addToQueueAfterCheck(int i, int j) {
+        if (i<0 || i>=m || j<0 || j>=n) return;
+        if (rooms[i][j] == Integer.MAX_VALUE) {
+            qu.add(new int[]{i, j});
+        }
+    }
+}
+```
+
+### 156. Binary Tree Upside Down
+- [Link](https://leetcode.com/problems/binary-tree-upside-down/)
+- Tags: Tree
+- Stars: 2
+
+#### 2019.9.3 
+- time: 100%
+- space: 100%
+- interviewLevel
+```java
+class Solution {
+    public TreeNode upsideDownBinaryTree(TreeNode root) {
+        if (root == null || root.left == null) return root;
+        TreeNode left = root.left, newRoot = upsideDownBinaryTree(left);
+        left.left = root.right;
+        left.right = root;
+        root.left = root.right = null;
+        return newRoot;
+    }
+}
+```
+
+### 94. Binary Tree Inorder Traversal
+- [Link](https://leetcode.com/problems/binary-tree-inorder-traversal/)
+- Tags: Hash Table, Stack, Tree
+- Stars: 2
+
+#### 2019.9.3
+- time: 57.26%
+- space: 100%
+```java
+class Solution {
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> ret = new ArrayList<>();
+        if (root == null) return ret;
+        Stack<TreeNode> st = new Stack<>();
+        TreeNode curr = root;
+        while(curr != null) {
+            st.add(curr);
+            curr = curr.left;
+        }
+        while(!st.isEmpty()) {
+            TreeNode node = st.pop();
+            ret.add(node.val);
+            if (node.right != null) {
+                node = node.right;
+                while(node != null) {
+                    st.add(node);
+                    node = node.left;
+                }
+            }
+        }
+        return ret;
+    }
+}
+```
+
 ### 245. Shortest Word Distance III
 - [Link](https://leetcode.com/problems/shortest-word-distance-iii/)
 - Tags: Array
@@ -8989,6 +9229,7 @@ class Solution {
 - [Link](https://leetcode.com/problems/binary-tree-postorder-traversal/)
 - Tags: Stack, Tree
 - Stars: 3
+- reviewFlag
 
 #### 2019.8.17 iterative Stack<Pair>
 - time: 63.78%
@@ -9058,6 +9299,62 @@ class Solution {
             else curr = st.peek().right;
         }
         return result;
+    }
+}
+```
+
+Updated 2019.9.3 addUntilLeftLeaf
+- time: 64.84%
+- space: 100%
+```java
+class Solution {
+    public List<Integer> postorderTraversal(TreeNode root) {
+        List<Integer> ret = new LinkedList<>();
+        if (root == null) return ret;
+        Stack<TreeNode> st = new Stack<>();
+        addUntilLeftLeaf(st, root);
+        while(!st.isEmpty()) {
+            TreeNode node = st.pop();
+            ret.add(node.val);
+            if (!st.isEmpty() && st.peek().left == node) 
+                addUntilLeftLeaf(st, st.peek().right);
+        }
+        return ret;
+    }
+    public void addUntilLeftLeaf(Stack<TreeNode> st, TreeNode curr) {
+        if (curr == null) return;
+        while(curr.left != null || curr.right != null) {
+            while(curr.left != null) {
+                st.add(curr);
+                curr = curr.left;
+            }
+            if (curr.right != null) {
+                st.add(curr);
+                curr = curr.right;
+            }
+        }
+        st.add(curr);
+    }
+}
+```
+
+#### 2019.9.3 reverse preorder
+- time: 64.84%
+- space: 100%
+```java
+class Solution {
+    public List<Integer> postorderTraversal(TreeNode root) {
+        List<Integer> ret = new LinkedList<>();
+        if (root == null) return ret;
+        Stack<TreeNode> st = new Stack<>();
+        st.add(root);
+        while(!st.isEmpty()) {
+            TreeNode node = st.pop();
+            ret.add(0, node.val);
+            if (node.left != null) st.add(node.left);
+            if (node.right != null) st.add(node.right);
+        }
+        return ret;
     }
 }
 ```
@@ -13330,8 +13627,6 @@ class Solution {
 ## recursive to non-recursive
 
 [101. Symmetric Tree](https://leetcode.com/problems/symmetric-tree/)  
-[94. Binary Tree Inorder Traversal](https://leetcode.com/problems/binary-tree-inorder-traversal/)  
-[144. Binary Tree Preorder Traversal](https://leetcode.com/problems/binary-tree-preorder-traversal/)  
 [148. Sort List](https://leetcode.com/problems/sort-list/)  
 [104. Maximum Depth of Binary Tree](https://leetcode.com/problems/maximum-depth-of-binary-tree/)  
 [226. Invert Binary Tree](https://leetcode.com/problems/invert-binary-tree/)  
