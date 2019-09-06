@@ -6163,10 +6163,164 @@ class Solution {
 
 ## First 300 Questions
 
+### 254. Factor Combinations
+- [Link](https://leetcode.com/problems/factor-combinations/)
+- Tags: Backtracking
+- Stars: 4
+
+#### 2019.9.6 backtracking
+- time: 62.91%
+- space: 100%
+```java
+class Solution {
+    List<List<Integer>> ret = new LinkedList<>();
+    int n;
+    List<Integer> factors;
+    public List<List<Integer>> getFactors(int n) {
+        if (n<=2) return ret;
+        this.n = n;
+        factors = precomputeFactors(n);
+        backtrack(new LinkedList<>(), n, 0);
+        return ret;
+    }
+    public List<Integer> precomputeFactors(int n) {
+        List<Integer> ret = new ArrayList<>();
+        for(int i=2; i<n; i++) {
+            if (n%i == 0) ret.add(i);
+        }
+        return ret;
+    }
+    public void backtrack(LinkedList<Integer> currList, int n, int start) {
+        if (n<=1) {
+            ret.add(new LinkedList<>(currList));
+            return;
+        }
+        int len = factors.size();
+        for(int i=start; i<len; i++) {
+            int factor = factors.get(i);
+            if (factor > n) break;
+            if (n%factor == 0) {
+                currList.addLast(factor);
+                backtrack(currList, n/factor, i);
+                currList.removeLast();
+            }
+        }
+    }
+}
+```
+
+#### 2019.9.6 backtracking with decreasing upper bound
+- time: 91.61%
+- space: 8.33%
+- attention: A decreasing upper bound in each backtrack will reduce the time complexity significantly!!
+- cheatFlag
+```java
+class Solution {
+    List<List<Integer>> ret = new LinkedList<>();
+    int n;
+    public List<List<Integer>> getFactors(int n) {
+        if (n<=2) return ret;
+        this.n = n;
+        backtrack(new LinkedList<>(), n, 2, (int)Math.sqrt(n));
+        return ret;
+    }
+    public void backtrack(LinkedList<Integer> currList, int n, int start, int upper) {
+        if (n<=1) {
+            ret.add(new LinkedList<>(currList));
+            return;
+        }
+        for(int i=start; i<=n; i++) {
+            if (i>upper) i = n;
+            if (n%i == 0 && i < this.n) {
+                currList.addLast(i);
+                backtrack(currList, n/i, i, (int)Math.sqrt(n/i));
+                currList.removeLast();
+            }
+        }
+    }
+}
+```
+
+### 247. Strobogrammatic Number II
+- [Link](https://leetcode.com/problems/strobogrammatic-number-ii/)
+- Tags: Math, Recursion
+- Stars: 2
+
+#### 2019.9.5 backtracking
+- time: 100%
+- space: 100%
+- interviewLevel
+- attention: For case `n==1`, `"0"` should be a possible answer. Thus, be careful of it when you are thinking of the leading zero problem.
+```java
+class Solution {
+    List<String> ret = new ArrayList<>();
+    public List<String> findStrobogrammatic(int n) {
+        backtrack(new char[n], 0, n-1);
+        return ret;
+    }
+    public void backtrack(char[] curr, int l, int r) {
+        if (l > r) {
+            ret.add(new String(curr));
+            return;
+        }
+        curr[l] = curr[r] = '1';
+        backtrack(curr, l+1, r-1);
+        curr[l] = curr[r] = '8';
+        backtrack(curr, l+1, r-1);
+        if (l > 0 || curr.length == 1) {
+            curr[l] = curr[r] = '0';
+            backtrack(curr, l+1, r-1);
+        }
+        if (l != r) {
+            curr[l] = '6';
+            curr[r] = '9';
+            backtrack(curr, l+1, r-1);
+            curr[l] = '9';
+            curr[r] = '6';
+            backtrack(curr, l+1, r-1);
+        }
+    }
+}
+```
+
+### 259. 3Sum Smaller
+- [Link](https://leetcode.com/problems/3sum-smaller/)
+- Tags: Array, Two Pointers
+- Stars: 5
+- cheatFlag
+
+#### 2019.9.5 two pointers
+- time: 79.42%
+- space: 100%
+- interviewLevel
+```java
+class Solution {
+    public int threeSumSmaller(int[] nums, int target) {
+        int ret = 0;
+        Arrays.sort(nums);
+        for(int i=0; i<nums.length-2; i++) {
+            int temp = target - nums[i];
+            int l=i+1, r=nums.length-1;
+            while(l<r) {
+                int sum = nums[l] + nums[r];
+                if (sum < temp) {
+                    ret += r-l;
+                    l++;
+                } else {
+                    r--;
+                }
+            }
+        }
+        return ret;
+    }
+}
+```
+
 ### 294. Flip Game II
 - [Link](https://leetcode.com/problems/flip-game-ii/)
 - Tags: Backtracking, Minmax
 - Stars: 5
+- exploreFlag
 
 #### 2019.9.4 O(N!!) backtracking
 - time: 65.91%
@@ -6670,7 +6824,7 @@ class Solution {
 - time: 78.54%
 - space: 100%
 - interviewLevel
-- cheat
+- cheatFlag
 ```java
 class Solution {
     public void wiggleSort(int[] nums) {

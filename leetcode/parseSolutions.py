@@ -41,23 +41,26 @@ def parseSolution(solution):
 
 if __name__ == '__main__':
 
-    dct = {}
+    # dct = {}
     
     with open('./notes.md') as hd:
         text = hd.read()
 
-    dct['text'] = text
+    # dct['text'] = text
 
     problems = getProblems(text)
-    dct['questions'] = []
-    for problem in problems:
-        question = parseProblem(problem)
+    print('Recorded', len(problems), 'problems')
+    # from IPython import embed
+    # embed()
+    # dct['questions'] = []
+    # for problem in problems:
+    #     question = parseProblem(problem)
 
-        solutions = getSolutions(problem)
-        question['solutions'] = list(map(parseSolution, solutions))
-        dct['questions'].append(question)
+    #     solutions = getSolutions(problem)
+    #     question['solutions'] = list(map(parseSolution, solutions))
+    #     dct['questions'].append(question)
 
-    jsonStr = json.dumps(dct)
-    with open('./static.json', 'w') as hd:
-        hd.write(jsonStr)
+    # jsonStr = json.dumps(dct)
+    # with open('./static.json', 'w') as hd:
+    #     hd.write(jsonStr)
         
