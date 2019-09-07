@@ -2868,7 +2868,8 @@ class Solution {
 ### 395. Longest Substring with At Least K Repeating Characters
 - [Link](https://leetcode.com/problems/longest-substring-with-at-least-k-repeating-characters/)
 - Tags: 
-- Stars: 4
+- Stars: 5
+- reviewFlag
 
 #### two pointers
 ```java
@@ -2911,10 +2912,45 @@ class Solution {
 }
 ```
 
+#### 2019.9.6 DFS
+- time: 100%
+- space: 100%
+- attention: We use all the infrequent elements as splits
+- cheatFlag
+```java
+class Solution {
+    public int longestSubstring(String s, int k) {
+        return longestSubstring(s, k, 0, s.length()-1);
+    }
+    public int longestSubstring(String s, int k, int l, int r) {
+        if (l > r) return 0;
+        int[] stat = new int[26];
+        for(int i=l; i<=r; i++) {
+            stat[s.charAt(i)-'a']++;
+        }
+        boolean flag = true;
+        for(int count: stat)
+            if (count > 0 && count < k) flag = false;
+        if (flag) return r-l+1;
+        
+        int ret = 0, start = l;
+        for(int i=l; i<=r; i++) {
+            if(stat[s.charAt(i)-'a'] < k) {
+                ret = Math.max(ret, longestSubstring(s, k, start, i-1));
+                start = i+1;
+            }
+        }
+        ret = Math.max(ret, longestSubstring(s, k, start, r));
+        return ret;
+    }
+}
+```
+
 ### 207. Course Schedule
 - [Link](https://leetcode.com/problems/course-schedule/)
 - Tags: BFS, DFS, Graph, Topological Sort
-- Stars: 1
+- Stars: 3
+- reviewFlag
 
 #### Topological Sort
 <span id="207-topo-sort"></span>
@@ -2940,6 +2976,40 @@ class Solution {
         for(int degree: degrees)
             if(degree>0) return false;
         return true;
+    }
+}
+```
+
+Optimized 2019.9.6
+- time: 89.87%
+- space: 97.69%
+- interviewLevel
+```java
+class Solution {
+    public boolean canFinish(int n, int[][] edges) {
+        List<Integer>[] graph = new List[n];
+        for(int i=0; i<n; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        int[] degrees = new int[n];
+        for(int[] e: edges) {
+            graph[e[1]].add(e[0]);
+            degrees[e[0]]++;
+        }
+        Queue<Integer> qu = new LinkedList<>();
+        for(int i=0; i<n; i++) {
+            if (degrees[i] == 0) qu.add(i);
+        }
+        int count = 0;
+        while(!qu.isEmpty()) {
+            int leaf = qu.poll();
+            count++;
+            for(int inner: graph[leaf]) {
+                degrees[inner]--;
+                if (degrees[inner] == 0) qu.add(inner);
+            }
+        }
+        return count == n;
     }
 }
 ```
@@ -2971,6 +3041,42 @@ class Solution {
         
         visited[course] = true;
         return true;
+    }
+}
+```
+
+Optimized 2019.9.6
+- time: 99.87%
+- space: 96.92%
+- attention: When initiating dfs, those whose degree are not initially zero may turn to zero. Thus, we need a `visited` to only init dfs on the initially-zero nodes
+```java
+class Solution {
+    public boolean canFinish(int n, int[][] edges) {
+        List<Integer>[] graph = new List[n];
+        for(int i=0; i<n; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        int[] degrees = new int[n];
+        boolean[] visited = new boolean[n];
+        for(int[] e: edges) {
+            graph[e[1]].add(e[0]);
+            degrees[e[0]]++;
+        }
+        for(int i=0; i<n; i++) {
+            if (degrees[i] == 0 && !visited[i]) {
+                dfs(graph, degrees, visited, i);
+            }
+        }
+        for(int d: degrees)
+            if (d > 0) return false;
+        return true;
+    }
+    private void dfs(List<Integer>[] graph, int[] degrees, boolean[] visited, int leaf) {
+        visited[leaf] = true;
+        for(int inner: graph[leaf]) {
+            degrees[inner]--;
+            if (degrees[inner] == 0) dfs(graph, degrees, visited, inner);
+        }
     }
 }
 ```
@@ -4967,6 +5073,7 @@ class Solution {
 - [Link](https://leetcode.com/problems/wiggle-sort-ii/)
 - Tags: Sort
 - Stars: 5
+- exploreFlag
 
 #### 2019.9.1 O(nlogn) time sort 
 - time: 100%
@@ -6163,6 +6270,304 @@ class Solution {
 
 ## First 300 Questions
 
+### 261. Graph Valid Tree
+- [Link](https://leetcode.com/problems/graph-valid-tree/)
+- Tags: DFS, BFS, Union Find, Graph
+- Stars: 4
+- exploreFlag
+
+#### 2019.9.6 Union Find
+- time: 100%
+- space: 97.30%
+```java
+class Solution {
+    public boolean validTree(int n, int[][] edges) {
+        if (n != edges.length+1) return false;
+        int[] nums = new int[n];
+        for(int i=0; i<n; i++)
+            nums[i] = i;
+        for(int[] e: edges)
+            union(nums, e[0], e[1]);
+        int root = find(nums, 0);
+        for(int i=1; i<n; i++)
+            if (find(nums, i) != root) return false;
+        return true;
+    }
+    public int find(int[] nums, int k) {
+        int i=k;
+        while(nums[i] != i) {
+            int pa = nums[i], gpa = nums[pa];
+            nums[i] = gpa;
+            i = pa;
+        }
+        return i;
+    }
+    public void union(int[] nums, int i, int j) {
+        int a = find(nums, i), b = find(nums, j);
+        nums[a] = b;
+    }
+}
+```
+
+Optimized 2019.9.6
+- time: 100%
+- space: 100%
+- interviewLevel
+```java
+class Solution {
+    public boolean validTree(int n, int[][] edges) {
+        if (n != edges.length+1) return false;
+        int[] nums = new int[n];
+        Arrays.fill(nums, -1);
+        for(int[] e: edges) {
+            int a = find(nums, e[0]), b = find(nums, e[1]);
+            if (a == b) return false;
+            nums[a] = b;
+        }
+        return true;
+    }
+    public int find(int[] nums, int k) {
+        if (nums[k] == -1) return k;
+        nums[k] = find(nums, nums[k]);
+        return nums[k];
+    }
+}
+```
+
+### 253. Meeting Rooms II
+- [Link](https://leetcode.com/problems/meeting-rooms-ii/)
+- Tags: Heap, Greedy, Sort
+- Stars: 3
+
+#### 2019.9.6 minHeap
+- time: 69.95%
+- space: 71.79%
+```java
+class Solution {
+    public int minMeetingRooms(int[][] intervals) {
+        if (intervals.length == 0) return 0;
+        Arrays.sort(intervals, new Comparator<int[]>() {
+           @Override
+            public int compare(int[] a, int[] b) {
+                return a[0]-b[0];
+            }
+        });
+        PriorityQueue<Integer> heap = new PriorityQueue<>();
+        int ret = 1;
+        for(int[] interval: intervals) {
+            int start = interval[0], end = interval[1];
+            while(!heap.isEmpty() && heap.peek() <= start) heap.poll();
+            heap.add(end);
+            ret = Math.max(ret, heap.size());
+        }
+        return ret;
+    }
+}
+```
+
+#### 2019.9.6 two pointers
+- time: 100%
+- space: 71.79%
+```java
+class Solution {
+    public int minMeetingRooms(int[][] intervals) {
+        int len = intervals.length;
+        if (len == 0) return 0;
+        int[] starts = new int[len], ends = new int[len];
+        for(int i=0; i<len; i++) {
+            starts[i] = intervals[i][0];
+            ends[i] = intervals[i][1];
+        }
+        Arrays.sort(starts);
+        Arrays.sort(ends);
+        int i=0, j=0, ret=0, count = 0;
+        while(i<len && j<len) {
+            if (ends[j] <= starts[i]) {
+                count--;
+                j++;
+            } else {
+                count++;
+                i++;
+                ret = Math.max(ret, count);
+            }
+        }
+        return ret;
+    }
+}
+```
+
+### 255. Verify Preorder Sequence in Binary Search Tree
+- [Link](https://leetcode.com/problems/verify-preorder-sequence-in-binary-search-tree/)
+- Tags: Stack, Tree
+- Stars: 5
+- reviewFlag
+
+#### 2019.9.6 inorder + preorder --> rebuild tree
+- time: 24.43%
+- space: 100%
+```java
+class Solution {
+    public boolean verifyPreorder(int[] preorder) {
+        int[] inorder = preorder.clone();
+        Arrays.sort(inorder);
+        return verifyPreorder(preorder, inorder, 0, 0, preorder.length, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    }
+    public boolean verifyPreorder(int[] preorder, int[] inorder, int pIdx, int iIdx, int len, int min, int max) {
+        if (len == 0) return true;
+        int rootVal = preorder[pIdx];
+        if (rootVal<min || rootVal > max) return false;
+        int rootiIdx = findIdx(inorder, iIdx, rootVal), 
+            leftLen = rootiIdx-iIdx, rightLen = len - leftLen - 1;
+        return verifyPreorder(preorder, inorder, pIdx+1, iIdx, leftLen, min, rootVal-1) &&
+            verifyPreorder(preorder, inorder, pIdx+1+leftLen, rootiIdx+1, rightLen, rootVal+1, max);
+    }
+    public int findIdx(int[] nums, int start, int target) {
+        for(int i=start; i<nums.length; i++) {
+            if (nums[i] == target) return i;
+        }
+        return nums.length;
+    }
+}
+```
+
+#### 2019.9.6 Stack way of thinking 
+- time: 38.02%
+- space: 100%
+```java
+class Solution {
+    public boolean verifyPreorder(int[] preorder) {
+        Stack<Integer> st = new Stack<>();
+        int curr = Integer.MIN_VALUE;
+        for(int num: preorder) {
+            if (num < curr) return false;
+            if (st.isEmpty() || st.peek() > num) {
+                st.add(num);
+            } else {
+                while(!st.isEmpty() && st.peek() < num) {
+                    curr = Math.max(curr, st.pop());
+                }
+                st.add(num);
+            }
+        }
+        return true;
+    }
+}
+```
+
+Optimized 2019.9.6 O(n) time + O(1) space
+- time: 81.02%
+- space: 100%
+- attention: Actually, you don't need a stack shown above. You just need to do a search operation in a sorted subarray and update `curr`.
+```java
+class Solution {
+    public boolean verifyPreorder(int[] preorder) {
+        if (preorder.length == 0) return true;
+        int start = 0, curr = Integer.MIN_VALUE;
+        for(int i=1; i<preorder.length; i++) {
+            if (preorder[i] < curr) return false;
+            if (preorder[i] < preorder[i-1]) continue;
+            int idx = binarySearch(preorder, start, i, preorder[i]);
+            curr = preorder[idx];
+            if (idx == start) start = i;
+        }
+        return true;
+    }
+    public int binarySearch(int[] nums, int start, int end, int target) {
+        if (start == end) return start;
+        if (target > nums[start]) return start;
+        if (target < nums[end-1]) return end;
+        int l = start, r = end-1;
+        while(l<r) {
+            int mid = l + ((r-l)>>1);
+            if (nums[mid] > target) l = mid+1;
+            else r = mid;
+        }
+        return l;
+    }
+}
+```
+
+#### 2019.9.6 
+- time: 100%
+- space: 100%
+- cheatFlag
+```java
+class Solution {
+    int idx = 0;
+    public boolean verifyPreorder(int[] preorder) {
+        if (preorder.length == 0) return true;
+        return verifyPreorder(preorder, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    }
+    public boolean verifyPreorder(int[] preorder, int min, int max) {
+        if (idx == preorder.length) return true;
+        int rootVal = preorder[idx];
+        if (rootVal < min || rootVal > max) return false;
+        idx++;
+        return verifyPreorder(preorder, min, rootVal-1) || verifyPreorder(preorder, rootVal+1, max);
+    }
+}
+```
+
+### 251. Flatten 2D Vector
+- [Link](https://leetcode.com/problems/flatten-2d-vector/)
+- Tags: Design
+- Stars: 2
+
+#### 2019.9.6
+- time: 81.78%
+- space: 38.89%
+```java
+class Vector2D {
+    int i=0, j=0;
+    int[][] v;
+    public Vector2D(int[][] v) {
+        this.v = v;
+    }
+    public int next() {
+        int ret = v[i][j];
+        j++;
+        while (i<v.length && j == v[i].length) {
+            i++;
+            j = 0;
+        }
+        return ret;
+    }
+    public boolean hasNext() {
+        while (i<v.length && j >= v[i].length) {
+            i++;
+            j = 0;
+        }
+        return i<v.length;
+    }
+}
+```
+
+### 298. Binary Tree Longest Consecutive Sequence
+- [Link](https://leetcode.com/problems/binary-tree-longest-consecutive-sequence/)
+- Tags: Tree
+- Stars: 2
+
+#### 2019.9.6 DFS
+- time: 100%
+- space: 100%
+```java
+class Solution {
+    int ans = 0;
+    public int longestConsecutive(TreeNode root) {
+        dfs(root);
+        return ans;
+    }
+    public int dfs(TreeNode root) {
+        if (root == null) return 0;
+        int leftLen = dfs(root.left), rightLen = dfs(root.right), ret = 1;
+        if (root.left != null) ret = Math.max(ret, root.val+1 == root.left.val ? leftLen+1 : 1);
+        if (root.right != null) ret = Math.max(ret, root.val+1 == root.right.val ? rightLen+1 : 1);
+        ans = Math.max(ret, ans);
+        return ret;
+    }
+}
+```
+
 ### 254. Factor Combinations
 - [Link](https://leetcode.com/problems/factor-combinations/)
 - Tags: Backtracking
@@ -6943,6 +7348,7 @@ class Solution {
 - [Link](https://leetcode.com/problems/number-of-digit-one/)
 - Tags: Math
 - Stars: 4
+- exploreFlag
 
 #### 2019.8.29
 - time: 100%
@@ -7869,6 +8275,50 @@ class Trie {
         int w = prefix.charAt(0) - 'a';
         if (letters[w] == null) return false;
         return letters[w].startsWith(prefix.substring(1, prefix.length()));
+    }
+}
+```
+
+Optimized 2019.9.6
+- time: 86.90%
+- space: 100%
+- interviewLevel
+- cheatFlag
+- attention: use class `Node` instead of `Trie` itself can better reduce resource consumption.
+```java
+class Trie {
+    private final Node root = new Node();
+    public Trie() {}
+    public void insert(String word) {
+        Node node = root;
+        for(char c: word.toCharArray()) {
+            int idx = c-'a';
+            if (node.next[idx] == null) node.next[idx] = new Node();
+            node = node.next[idx];
+        }
+        node.isWord = true;
+    }
+    public boolean search(String word) {
+        Node node = root;
+        for(char c: word.toCharArray()) {
+            int idx = c-'a';
+            if (node.next[idx] == null) return false;
+            node = node.next[idx];
+        }
+        return node.isWord;
+    }
+    public boolean startsWith(String prefix) {
+        Node node = root;
+        for(char c: prefix.toCharArray()) {
+            int idx = c-'a';
+            if (node.next[idx] == null) return false;
+            node = node.next[idx];
+        }
+        return true;
+    }
+    private class Node {
+        boolean isWord = false;
+        Node[] next = new Node[26];
     }
 }
 ```
@@ -11913,6 +12363,7 @@ class NumMatrix {
 - [Link](https://leetcode.com/problems/integer-replacement/)
 - Tags: Math, Bit Manipulation
 - Stars: 4
+- exploreFlag
 
 #### 2019.8.28 DP
 - time: 50.43%
@@ -13192,39 +13643,90 @@ class Solution {
 - [Link](https://leetcode.com/problems/palindrome-partitioning/)
 - Tags: Backtracking
 - Stars: 2
+- reviewFlag
 
-#### sub-optimal palindrome method
+#### 2019.9.6 backtracking
+- time: 97.28%
+- space: 100%
 ```java
 class Solution {
-    List<List<String>> result = new ArrayList<>();
+    String s;
+    int len;
+    List<List<String>> ret = new ArrayList<>();
     public List<List<String>> partition(String s) {
-        backtrack(s, 0, new ArrayList<>());
-        return result;
+        this.s = s;
+        len = s.length();
+        backtrack(new ArrayList<>(), 0);
+        return ret;
     }
-    private void backtrack(String s, int start, List<String> list){
-        if(start == s.length()){
-            result.add(list);
+    public void backtrack(List<String> currList, int start) {
+        if (start == len) {
+            ret.add(new ArrayList<>(currList));
             return ;
         }
-        for(int i=start; i<s.length(); i++){
-            if(isPalindrome(s, start, i)){
-                List<String> newList = new ArrayList<>(list);
-                newList.add(s.substring(start, i+1));
-                backtrack(s, i+1, newList);
+        for(int i=start; i<len; i++) {
+            if (isPalindrome(s, start, i)) {
+                currList.add(s.substring(start, i+1));
+                backtrack(currList, i+1);
+                currList.remove(currList.size()-1);
             }
         }
     }
-    private boolean isPalindrome(String s, int i, int j){
-        while(i<j){
-            if(s.charAt(i++)!=s.charAt(j--))
-                return false;
+    public boolean isPalindrome(String s, int i, int j) {
+        while(i<j) {
+            if (s.charAt(i++) != s.charAt(j--)) return false;
         }
         return true;
     }
 }
 ```
 
-#### Manacher's Algorithm 
+Optimized 2019.9.6 backtracking + memoization
+- time: 100%
+- space: 100%
+```java
+class Solution {
+    String s;
+    int len;
+    List<List<String>> ret = new ArrayList<>();
+    int[][] dp;
+    public List<List<String>> partition(String s) {
+        this.s = s;
+        len = s.length();
+        dp = new int[len][len];
+        backtrack(new ArrayList<>(), 0);
+        return ret;
+    }
+    public void backtrack(List<String> currList, int start) {
+        if (start == len) {
+            ret.add(new ArrayList<>(currList));
+            return ;
+        }
+        for(int i=start; i<len; i++) {
+            if (isPalindrome(s, start, i)) {
+                currList.add(s.substring(start, i+1));
+                backtrack(currList, i+1);
+                currList.remove(currList.size()-1);
+            }
+        }
+    }
+    public boolean isPalindrome(String s, int l, int r) {
+        if (dp[l][r] != 0) return dp[l][r] == 1;
+        int i=l, j=r;
+        while(i<j) {
+            if (s.charAt(i++) != s.charAt(j--)) {
+                dp[l][r] = -1;
+                return false;
+            }
+        }
+        dp[l][r] = 1;
+        return true;
+    }
+}
+```
+
+#### Manacher's Algorithm
+- cheatFlag
 The Manacher method is copied from [a CSDN blog](https://blog.csdn.net/u014771464/article/details/79120964)
 ```java
 class Solution {
