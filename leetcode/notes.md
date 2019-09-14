@@ -93,7 +93,7 @@ class Solution {
 }
 ```
 
-Another version by 大雪菜
+Another version by [大雪菜]
 - time: 100%
 - space: 98.92%
 ```java
@@ -1733,7 +1733,7 @@ class Solution {
 }
 ```
 
-Optimized 2019.9.13 大雪菜
+Optimized 2019.9.13 [大雪菜]
 - time: 92.48%
 - space: 100%
 ```java
@@ -2128,6 +2128,29 @@ class Solution {
             result[c-'a']++;
         }
         return result;
+    }
+}
+```
+
+#### 2019.9.14 sort [大雪菜]
+- time: 80.38%
+- space: 94.74%
+```java
+class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        List<List<String>> ret = new ArrayList<>();
+        Map<String, List<String>> map = new HashMap<>();
+        for(String s: strs) {
+            char[] chrs = s.toCharArray();
+            Arrays.sort(chrs);
+            String key = new String(chrs);
+            map.putIfAbsent(key, new ArrayList<>());
+            map.get(key).add(s);
+        }
+        for(List<String> list: map.values()) {
+            ret.add(list);
+        }
+        return ret;
     }
 }
 ```
@@ -2872,7 +2895,7 @@ class Solution {
 }
 ```
 
-#### 2019.9.13 DFS with memoization by 大雪菜
+#### 2019.9.13 DFS with memoization by [大雪菜]
 - time: 97.50%
 - space: 17.76%
 - reviewFlag
@@ -3774,7 +3797,7 @@ class Solution {
 }
 ```
 
-#### 2019.9.13 standard method by 大雪菜
+#### 2019.9.13 standard method by [大雪菜]
 - time: 100%
 - space: 15.73%
 - interviewLevel
@@ -4156,7 +4179,6 @@ Updated 2019.8.12
 - time: 91.66%
 - space: 99.76%
 - interviewLevel
-
 ```java
 class Solution {
     public int lengthOfLongestSubstring(String s) {
@@ -9636,7 +9658,7 @@ class Solution {
 }
 ```
 
-#### 2019.9.13 Method by 大雪菜
+#### 2019.9.13 Method by [大雪菜]
 - time: 100%
 - space: 100%
 - interviewLevel
@@ -9804,7 +9826,6 @@ class Solution {
 #### 2019.7.31
 - time: 72.51%
 - space: 84.49%
-
 ```java
 class Solution {
     public String reverseWords(String s) {
@@ -9831,6 +9852,40 @@ class Solution {
         if (start >= s.length()) return s.length();
         while(start < s.length() && s.charAt(start) == ' ') start++;
         return start;
+    }
+}
+```
+
+#### 2019.9.14 double reverse method [大雪菜]
+- time: 84.35%
+- space: 64.52%
+```java
+class Solution {
+    public String reverseWords(String s) {
+        StringBuilder sb = new StringBuilder();
+        char[] chrs = s.toCharArray();
+        reverse(chrs, 0, chrs.length-1);
+        for(int i=0; i<chrs.length; i++) {
+            if (chrs[i] == ' ') continue;
+            int j = i;
+            while(j<chrs.length && chrs[j] != ' ') j++;
+            reverse(chrs, i, j-1);
+            if (sb.length() > 0) sb.append(' ');
+            for(int k=i; k<j; k++) {
+                sb.append(chrs[k]);
+            }
+            i = j;
+        }
+        return sb.toString();
+    }
+    public void reverse(char[] chrs, int i, int j) {
+        while(i < j) {
+            char c = chrs[i];
+            chrs[i] = chrs[j];
+            chrs[j] = c;
+            i++;
+            j--;
+        }
     }
 }
 ```
@@ -9951,7 +10006,6 @@ class Solution {
 #### 2019.8.11
 - time: 31.06%
 - space: 89.36%
-
 ```java
 class Solution {
     public String convert(String s, int numRows) {
@@ -9995,6 +10049,29 @@ class Solution {
             sbs[0].append(sbs[k]);
         }
         return sbs[0].toString();
+    }
+}
+```
+
+#### 2019.9.14 [大雪菜]
+- time: 96.04%
+- space: 92.55%
+- cheatFlag
+```java
+class Solution {
+    public String convert(String s, int n) {
+        if (n == 1) return s;
+        StringBuilder sb = new StringBuilder();
+        int d = 2*(n-1), len = s.length();
+        for(int i=0; i<len; i+=d) sb.append(s.charAt(i));
+        for(int i=1; i<n-1; i++) {
+            for(int j=i, k=d-i; j<len || k<len; j+=d, k+=d) {
+                if (j<len) sb.append(s.charAt(j));
+                if (k<len) sb.append(s.charAt(k));
+            }
+        }
+        for(int i=n-1; i<len; i+=d) sb.append(s.charAt(i));
+        return sb.toString();
     }
 }
 ```
@@ -10373,6 +10450,42 @@ class Solution {
             else if (num1 > num2) return 1;
             i++;
         }
+        return 0;
+    }
+}
+```
+
+#### 2019.9.14
+- time: 100%
+- space: 100%
+- attention: use `i<len1 || j<len2` instead of `i<len1 && j<len2`.
+```java
+class Solution {
+    public int compareVersion(String s1, String s2) {
+        int i=0, j=0, len1 = s1.length(), len2 = s2.length();
+        while(i<len1 || j<len2) {
+            int p = i, q = j;
+            while(p<len1 && s1.charAt(p) != '.') p++;
+            while(q<len2 && s2.charAt(q) != '.') q++;
+            int res = compare(s1, i, p, s2, j, q);
+            if (res != 0) return res;
+            i = p+1;
+            j = q+1;
+        }
+        return 0;
+    }
+    public int compare(String s1, int i, int p, String s2, int j, int q) {
+        int a=0, b=0;
+        for(int k=i; k<p; k++) {
+            a *= 10;
+            a += s1.charAt(k) - '0';
+        }
+        for(int k=j; k<q; k++) {
+            b *= 10;
+            b += s2.charAt(k) - '0';
+        }
+        if (a<b) return -1;
+        else if (a>b) return 1;
         return 0;
     }
 }
@@ -11476,6 +11589,31 @@ class Solution {
         sb.append(j-i);
         sb.append(s.charAt(i));
         return sb.toString();
+    }
+}
+```
+
+#### 2019.9.14 divide by chars [大雪菜]
+- time: 62.55%
+- space: 100%
+- interviewLevel
+- attention: standard template to divide string by same chars
+```java
+class Solution {
+    public String countAndSay(int n) {
+        String s = "1";
+        for(int i=0; i<n-1; i++) {
+            StringBuilder sb = new StringBuilder();
+            for(int j=0; j<s.length(); j++) {
+                int k=j;
+                while(k<s.length() && s.charAt(k) == s.charAt(j)) k++;
+                sb.append(k-j);
+                sb.append(s.charAt(j));
+                j = k-1;
+            }
+            s = sb.toString();
+        }
+        return s;
     }
 }
 ```
@@ -13811,6 +13949,196 @@ class Solution {
 
 ## Facebook
 
+### 523. Continuous Subarray Sum
+- [Link](https://leetcode.com/problems/continuous-subarray-sum/)
+- Tags: Math, Dynamic Programming
+- Stars: 4
+- exploreFlag
+
+#### 2019.9.14
+- time: 49.26%
+- space: 88.24%
+- attention: k can be 0
+```java
+class Solution {
+    public boolean checkSubarraySum(int[] nums, int k) {
+        if (nums.length < 2) return false;
+        if (k < 0) return checkSubarraySum(nums, -k);
+        for(int i=1; i<nums.length; i++) nums[i] += nums[i-1];
+        Map<Integer, Integer> map = new HashMap<>();
+        map.put(0, -1);
+        for(int i=0; i<nums.length; i++) {
+            int key = k == 0 ? nums[i] : nums[i]%k;
+            if (map.containsKey(key)) {
+                int idx = map.get(key);
+                if (idx < i-1) return true;
+            } else {
+                map.put(key, i);
+            }
+        }
+        return false;
+    }
+}
+```
+
+### 273. Integer to English Words
+- [Link](https://leetcode.com/problems/integer-to-english-words/)
+- Tags: Math, String
+- Stars: 3
+
+#### 2019.9.14
+- time: 6.48%
+- space: 6.38%
+- attention: Don't forget `if (num == 0) return "Zero";`
+- attention: Only when `copy > 0` can we append a base string.
+```java
+class Solution {
+    public String numberToWords(int num) {
+        if (num == 0) return "Zero";
+        Stack<Integer> st = new Stack<>();
+        int base = 1;
+        while(num > 0) {
+            st.add(num%1000);
+            st.add(base);
+            num /= 1000;
+            base *= 1000;
+        }
+        StringBuilder sb = new StringBuilder();
+        Map<Integer, String> map = new HashMap<>();
+        map.put(1, "One");
+        map.put(2, "Two");
+        map.put(3, "Three");
+        map.put(4, "Four");
+        map.put(5, "Five");
+        map.put(6, "Six");
+        map.put(7, "Seven");
+        map.put(8, "Eight");
+        map.put(9, "Nine");
+        map.put(10, "Ten");
+        map.put(11, "Eleven");
+        map.put(12, "Twelve");
+        map.put(13, "Thirteen");
+        map.put(14, "Fourteen");
+        map.put(15, "Fifteen");
+        map.put(16, "Sixteen");
+        map.put(17, "Seventeen");
+        map.put(18, "Eighteen");
+        map.put(19, "Nineteen");
+        map.put(20, "Twenty");
+        map.put(30, "Thirty");
+        map.put(40, "Forty");
+        map.put(50, "Fifty");
+        map.put(60, "Sixty");
+        map.put(70, "Seventy");
+        map.put(80, "Eighty");
+        map.put(90, "Ninety");
+        map.put(1000, "Thousand");
+        map.put(1000000, "Million");
+        map.put(1000000000, "Billion");
+        while(!st.isEmpty()) {
+            base = st.pop();
+            int n = st.pop(), copy = n;
+            if (n >= 100) {
+                if (sb.length() > 0) sb.append(' ');
+                sb.append(map.get(n/100));
+                sb.append(' ');
+                sb.append("Hundred");
+                n %= 100;
+            }
+            if (n > 0) {
+                if (sb.length() > 0) sb.append(' ');
+                if (n <= 20) {
+                    sb.append(map.get(n));
+                } else {
+                    sb.append(map.get(n/10*10));
+                    n %= 10;
+                    if (n > 0) {
+                        sb.append(' ');
+                        sb.append(map.get(n));
+                    }
+                }
+            }
+            if (base > 1 && copy > 0) {
+                sb.append(' ');
+                sb.append(map.get(base));
+            }
+        }
+        return sb.toString();
+    }
+}
+```
+
+#### 2019.9.14 [大雪菜]
+- time: 78.17%
+- space: 100%
+- reviewFlag
+```java
+class Solution {
+    public final String[] small = new String[]{"", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"};
+    public final String[] decade = new String[]{"", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"};
+    public final String[] big = new String[]{"Billion", "Million", "Thousand", ""};
+    
+    public String numberToWords(int num) {
+        if (num == 0) return "Zero";
+        StringBuilder sb = new StringBuilder();
+        for(int i=1000000000, j=0; i>0; i/=1000, j++) {
+            if (num >= i) {
+                getPart(num/i, sb);
+                sb.append(big[j]);
+                sb.append(' ');
+                num %= i;
+            }
+        }
+        while (sb.charAt(sb.length()-1) == ' ') sb.deleteCharAt(sb.length()-1);
+        return sb.toString();
+    }
+    
+    public void getPart(int n, StringBuilder sb) {
+        if (n >= 100) {
+            sb.append(small[n/100]);
+            sb.append(' ');
+            sb.append("Hundred");
+            sb.append(' ');
+            n %= 100;
+        }
+        if (n >= 20) {
+            sb.append(decade[n/10]);
+            sb.append(' ');
+            n %= 10;
+        }
+        if (n > 0) {
+            sb.append(small[n]);
+            sb.append(' ');
+        }
+    }
+}
+```
+
+### 560. Subarray Sum Equals K
+- [Link](https://leetcode.com/problems/subarray-sum-equals-k/)
+- Tags: Array, Hash Table
+- Stars: 4
+- reviewFlag
+
+#### 2019.9.14
+- time: 36.50%
+- space: 98.91%
+```java
+class Solution {
+    public int subarraySum(int[] nums, int k) {
+        int ret = 0, sum = 0;
+        Map<Integer, Integer> map = new HashMap<>();
+        for(int i=0; i<nums.length; i++) {
+            sum += nums[i];
+            if (sum == k) ret++;
+            ret += map.getOrDefault(sum - k, 0);
+            map.put(sum, map.getOrDefault(sum, 0) + 1);
+        }
+        return ret;
+    }
+}
+```
+
 ### 973. K Closest Points to Origin
 - [Link](https://leetcode.com/problems/k-closest-points-to-origin/)
 - Tags: Divide and Conquer, Heap, Sort
@@ -13896,7 +14224,7 @@ class Solution {
 
 # bili 视频
 
-## 小雪菜 -- Tree
+## 大雪菜 -- Tree
 
 ### 652. Find Duplicate Subtrees
 - [Link](https://leetcode.com/problems/find-duplicate-subtrees/)
@@ -14055,7 +14383,35 @@ public class Codec {
 }
 ```
 
-## 小雪菜 -- 基本数据结构专题
+## 大雪菜 -- 字符串
+
+### 5. Longest Palindromic Substring
+- [Link](https://leetcode.com/problems/longest-palindromic-substring/)
+- Tags: String, Dynamic Programming
+- Stars: 4
+- exploreFlag
+
+#### 2019.9.14 O(n^2) [大雪菜]
+- time: 32.16%
+- space: 52.42%
+```java
+class Solution {
+    public String longestPalindrome(String s) {
+        String ret = "";
+        for(int i=0; i<s.length(); i++) {
+            for(int j=i, k=i; j>=0 && k<s.length() && s.charAt(j) == s.charAt(k); j--, k++) {
+                if (ret.length() < k-j+1) ret = s.substring(j, k+1);
+            }
+            for(int j=i, k=i+1; j>=0 && k<s.length() && s.charAt(j) == s.charAt(k); j--, k++) {
+                if (ret.length() < k-j+1) ret = s.substring(j, k+1);
+            }
+        }
+        return ret;
+    }
+}
+```
+
+## 大雪菜 -- 基本数据结构专题
 
 ### 706. Design HashMap
 - [Link](https://leetcode.com/problems/design-hashmap/)
@@ -14378,6 +14734,28 @@ class Solution {
 }
 ```
 
+#### 2019.9.14 [大雪菜] binary numbers
+- time: 41.21%
+- space: 96.72%
+- reviewFlag
+```java
+class Solution {
+    List<List<Integer>> ret = new ArrayList<>();
+    public List<List<Integer>> subsets(int[] nums) {
+        for(int i=0; i<(1<<nums.length); i++) {
+            List<Integer> path = new ArrayList<>();
+            for(int j=0; j<nums.length; j++) {
+                if ((i>>j & 1) == 1) {
+                    path.add(nums[j]);
+                }
+            }
+            ret.add(path);
+        }
+        return ret;
+    }
+}
+```
+
 ### 90. Subsets II
 - [Link](https://leetcode.com/problems/subsets-ii/)
 - Tags: Array, Backtracking
@@ -14437,10 +14815,9 @@ class Solution {
 }
 ```
 
-#### 20190708 backtrack
+#### 2019.7.8 backtrack
 - time: 100%
 - space: 99.36%
-
 ```java
 class Solution {
     List<List<Integer>> result = new ArrayList<>();
@@ -14462,6 +14839,35 @@ class Solution {
         curr.add(nums[start]);
         backtrack(nums, curr, start+1);
         curr.remove(curr.size()-1);
+    }
+}
+```
+
+#### 2019.9.14 [大雪菜]
+- time: 100%
+- space: 98.53%
+```java
+class Solution {
+    List<List<Integer>> ret = new ArrayList<>();
+    List<Integer> path = new ArrayList<>();
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        Arrays.sort(nums);
+        dfs(nums, 0);
+        return ret;
+    }
+    public void dfs(int[] nums, int u) {
+        if (u == nums.length) {
+            ret.add(new ArrayList<>(path));
+            return;
+        }
+        int k=u;
+        while(k<nums.length && nums[k] == nums[u]) k++;
+        dfs(nums, k);
+        for(int i=u; i<k; i++) {
+            path.add(nums[u]);
+            dfs(nums, k);
+        }
+        for(int i=u; i<k; i++) path.remove(path.size()-1);
     }
 }
 ```
@@ -14556,7 +14962,7 @@ class Solution {
 ### 47. Permutations II
 - [Link](https://leetcode.com/problems/permutations-ii/)
 - Tags: Backtracking
-- Stars: 2
+- Stars: 4
 
 #### Marking along the backtracking paths (general solution)
 Notice that the DP-like solution in [46. Permutations](#46-DP) does not work here because of the presence of duplicates. 
@@ -14651,6 +15057,75 @@ class Solution {
 }
 ```
 
+#### 2019.9.14 [大雪菜] assign each number in nums to different possitions
+- time: 56.76%
+- space: 98.51%
+- reviewFlag
+```java
+class Solution {
+    List<List<Integer>> ret = new ArrayList<>();
+    Integer[] path;
+    boolean[] used;
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        if (nums.length == 0) return ret;
+        path = new Integer[nums.length];
+        used = new boolean[nums.length];
+        Arrays.sort(nums);
+        dfs(nums, 0, 0);
+        return ret;
+    }
+    public void dfs(int[] nums, int u, int start) {
+        if (u == nums.length) {
+            ret.add(new ArrayList<>(Arrays.asList(path)));
+            return;
+        }
+        for(int i=start; i<nums.length; i++) {
+            if (!used[i]) {
+                used[i] = true;
+                path[i] = nums[u];
+                dfs(nums, u+1, u+1 < nums.length && nums[u+1] == nums[u] ? i+1 : 0);
+                used[i] = false;
+            }
+        }
+    }
+}
+```
+
+#### 2019.9.14 [大雪菜] assign each position with different numbers from nums
+- time: 56.76%
+- space: 97.01%
+- reviewFlag
+```java
+class Solution {
+    List<List<Integer>> ret = new ArrayList<>();
+    Integer[] path;
+    boolean[] used;
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        if (nums.length == 0) return ret;
+        path = new Integer[nums.length];
+        used = new boolean[nums.length];
+        Arrays.sort(nums);
+        dfs(nums, 0);
+        return ret;
+    }
+    public void dfs(int[] nums, int u) {
+        if (u == nums.length) {
+            ret.add(new ArrayList<>(Arrays.asList(path)));
+            return;
+        }
+        for(int i=0; i<nums.length; i++) {
+            if (!used[i]) {
+                used[i] = true;
+                path[u] = nums[i];
+                dfs(nums, u+1);
+                used[i] = false;
+                while(i+1<nums.length && nums[i+1] == nums[i]) i++;
+            }
+        }
+    }
+}
+```
+
 ### 22. Generate Parentheses
 - [Link](https://leetcode.com/problems/generate-parentheses/)
 - Tags: String, Backtracking
@@ -14719,6 +15194,31 @@ class Solution {
             backtrack(digits, start+1, currsb);
             currsb.delete(currsb.length()-1, currsb.length());
         }
+    }
+}
+```
+
+#### 2019.9.14 [大雪菜]
+- time: 63.60%
+- space: 98.63%
+- interviewLevel
+```java
+class Solution {
+    List<String> ret = new ArrayList<>();
+    final String[] map = new String[]{"","","abc","def","ghi","jkl", "mno", "pqrs", "tuv", "wxyz"};
+    public List<String> letterCombinations(String digits) {
+        if (digits.length() == 0) return ret;
+        ret.add("");
+        for(char digit: digits.toCharArray()) {
+            List<String> newRet = new ArrayList<>();
+            for(char c: map[digit-'0'].toCharArray()) {
+                for(String prefix: ret) {
+                    newRet.add(prefix + c);
+                }
+            }
+            ret = newRet;
+        }
+        return ret;
     }
 }
 ```
@@ -15024,9 +15524,10 @@ class Solution {
 }
 ```
 
-#### 2019.8.11 backtrack
+#### 2019.8.11 backtrack O(n^2 * 4^k)
 - time: 99.90%
 - space: 97.96%
+- thoughts: Generally, a matrix-related problem is a DP or DFS problem
 
 ```java
 class Solution {
