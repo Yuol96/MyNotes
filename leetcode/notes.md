@@ -93,6 +93,25 @@ class Solution {
 }
 ```
 
+Another version by 大雪菜
+- time: 100%
+- space: 98.92%
+```java
+class Solution {
+    public ListNode reverseList(ListNode head) {
+        if (head == null) return null;
+        ListNode prev = null, curr = head;
+        while(curr != null) {
+            ListNode next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+        return prev;
+    }
+}
+```
+
 #### Recursive
 ```java
 class Solution {
@@ -1551,6 +1570,7 @@ class Solution {
 
 
 #### slow-fast two pointers
+- cheatFlag
 <span id="287-two-pointers"></span>
 Similar to [142. Linked List Cycle II](#142-two-pointers)
 ```java
@@ -1709,6 +1729,32 @@ class Solution {
             }
         }
         return result;
+    }
+}
+```
+
+Optimized 2019.9.13 大雪菜
+- time: 92.48%
+- space: 100%
+```java
+class Solution {
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        List<List<Integer>> ret = new ArrayList<>();
+        if (root == null) return ret;
+        Queue<TreeNode> q = new LinkedList<>();
+        q.add(root);
+        while(!q.isEmpty()) {
+            int len = q.size();
+            List<Integer> level = new ArrayList<>();
+            for(int i=0; i<len; i++) {
+                TreeNode node = q.poll();
+                level.add(node.val);
+                if (node.left != null) q.add(node.left);
+                if (node.right != null) q.add(node.right);
+            }
+            ret.add(level);
+        }
+        return ret;
     }
 }
 ```
@@ -2800,7 +2846,7 @@ class Solution {
 ### 105. Construct Binary Tree from Preorder and Inorder Traversal
 - [Link](https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/)
 - Tags: Array, Tree, DFS
-- Stars: 1
+- Stars: 3
 
 #### DFS
 ```java
@@ -2822,6 +2868,30 @@ class Solution {
             if(nums[i]==target)
                 return i;
         return -1;
+    }
+}
+```
+
+#### 2019.9.13 DFS with memoization by 大雪菜
+- time: 97.50%
+- space: 17.76%
+- reviewFlag
+```java
+class Solution {
+    Map<Integer, Integer> pos = new HashMap<>();
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        for(int i=0; i<inorder.length; i++) {
+            pos.put(inorder[i], i);
+        }
+        return buildTree(preorder, inorder, 0, 0, preorder.length);
+    }
+    public TreeNode buildTree(int[] preorder, int[] inorder, int pl, int il, int len) {
+        if (len == 0) return null;
+        TreeNode root = new TreeNode(preorder[pl]);
+        int iroot = pos.get(preorder[pl]), lLen = iroot-il, rLen = len-1-lLen;
+        root.left = buildTree(preorder, inorder, pl+1, il, lLen);
+        root.right = buildTree(preorder, inorder, pl+1+lLen, iroot+1, rLen);
+        return root;
     }
 }
 ```
@@ -3117,6 +3187,42 @@ class Solution {
 }
 ```
 
+Optimized 2019.9.6
+- time: 8 ms
+- space: 45.4 MB
+```java
+class Solution {
+    public int[] findOrder(int n, int[][] edges) {
+        List<Integer>[] graph = new List[n];
+        for(int i=0; i<n; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        int[] degrees = new int[n];
+        for(int[] e: edges) {
+            graph[e[1]].add(e[0]);
+            degrees[e[0]]++;
+        }
+        List<Integer> leaves = new LinkedList<>();
+        int p=0;
+        for(int i=0; i<n; i++) {
+            if (degrees[i] == 0) leaves.add(i);
+        }
+        while(p < leaves.size()) {
+            int leaf = leaves.get(p++);
+            for(int inner: graph[leaf]) {
+                degrees[inner]--;
+                if (degrees[inner] == 0) leaves.add(inner);
+            }
+        }
+        if (leaves.size() != n) return new int[0];
+        int[] ret = new int[n];
+        for(int i=0; i<n; i++)
+            ret[i] = leaves.get(i);
+        return ret;
+    }
+}
+```
+
 ### 34. Find First and Last Position of Element in Sorted Array
 - [Link](https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/)
 - Tags: Array, Binary Search
@@ -3182,6 +3288,32 @@ class Solution {
             int mid = l + ((r-l)>>1);
             if (nums[mid] < target) l = mid + 1;
             else if (nums[mid] >= target) r = mid;
+        }
+        return l;
+    }
+}
+```
+
+Updated 2019.9.12
+- time: 100%
+- space: 100%
+- attention: `r` is initiated with `nums.length` instead of `nums.length-1`. `if (target == Integer.MAX_VALUE) return new int[]{i, nums.length-1};` is used to avoid overflow of `target+1`.
+```java
+class Solution {
+    public int[] searchRange(int[] nums, int target) {
+        if (nums.length == 0 || target > nums[nums.length-1]) return new int[]{-1, -1};
+        int i = binarySearch(nums, target);
+        if (nums[i] != target) return new int[]{-1, -1};
+        if (target == Integer.MAX_VALUE) return new int[]{i, nums.length-1};
+        int j = binarySearch(nums, target+1);
+        return new int[]{i, j-1};
+    }
+    public int binarySearch(int[] nums, int target) {
+        int l = 0, r = nums.length;
+        while(l<r) {
+            int mid = l+r >> 1;
+            if (nums[mid] >= target) r = mid;
+            else l = mid + 1;
         }
         return l;
     }
@@ -3637,6 +3769,38 @@ class Solution {
         }
         if (nums[l] == target) return l;
         else if (nums[r] == target) return r;
+        return -1;
+    }
+}
+```
+
+#### 2019.9.13 standard method by 大雪菜
+- time: 100%
+- space: 15.73%
+- interviewLevel
+- attention: `if (nums[l] == target) return l;` only. `if (nums[r] == target) return l;` is wrong. 
+```java
+class Solution {
+    public int search(int[] nums, int target) {
+        if (nums.length == 0) return -1;
+        int l = 0, r = nums.length - 1;
+        while(l<r) {
+            int mid = l+r >> 1;
+            if (nums[mid] <= nums[nums.length-1]) r = mid;
+            else l = mid + 1;
+        }
+        if (target <= nums[nums.length - 1]) {
+            r = nums.length - 1;
+        } else {
+            l = 0;
+            r--;
+        }
+        while(l<r) {
+            int mid = l+r >> 1;
+            if (nums[mid] >= target) r = mid;
+            else l = mid + 1;
+        }
+        if (nums[l] == target) return l;
         return -1;
     }
 }
@@ -4986,23 +5150,72 @@ class Solution {
 }
 ```
 
+#### 2019.9.13 iterative
+- time: 44.53%
+- space: 63.26%
+- cheatFlag
+```java
+class Solution {
+    public boolean isSymmetric(TreeNode root) {
+        if (root == null) return true;
+        Stack<TreeNode> t1 = new Stack<>(), t2 = new Stack<>();
+        TreeNode p1 = root.left, p2 = root.right;
+        while(p1 != null || !t1.isEmpty() || p2 != null || !t2.isEmpty()) {
+            while(p1 != null && p2 != null) {
+                t1.add(p1);
+                p1 = p1.left;
+                t2.add(p2);
+                p2 = p2.right;
+            }
+            if (p1 != null || p2 != null) return false;
+            p1 = t1.pop();
+            p2 = t2.pop();
+            if (p1.val != p2.val) return false;
+            p1 = p1.right;
+            p2 = p2.left;
+        }
+        return true;
+    }
+}
+```
+
 ### 69. Sqrt(x)
 - [Link](https://leetcode.com/problems/sqrtx/)
 - Tags: Math, Binary Search
 - Stars: 1
 
-#### binary search
+#### 2019.9.12
+- time: 100%
+- space: 5%
+- attention: `Math.min(x, (int)Math.sqrt(Integer.MAX_VALUE))` can avoid overflow problems. Otherwise, we need to use `int mid = l + (long)r + 1 >> 1` and `mid > x/mid` to avoid overflows.
 ```java
 class Solution {
     public int mySqrt(int x) {
-        int l = 0, r = 46340;
-        while(l+1<r) {
-            int mid = l + ((r-l)>>1);
-            if(mid*mid == x) return mid;
-            else if(mid*mid > x) r = mid-1;
-            else l = mid;
+        int l = 0, r = Math.min(x, (int)Math.sqrt(Integer.MAX_VALUE));
+        while(l<r) {
+            int mid = l+r+1 >> 1;
+            if (mid*mid > x) r = mid-1;
+            else if (mid*mid < x) l = mid;
+            else return mid;
         }
-        if(r*r <= x) return r;
+        return l;
+    }
+}
+```
+
+Another version:
+- time: 100%
+- space: 5%
+```java
+class Solution {
+    public int mySqrt(int x) {
+        int l = 0, r = x;
+        while(l<r) {
+            int mid = (int)((long)l+r+1 >> 1);
+            if (mid > x/mid) r = mid-1;
+            else if (mid < x/mid) l = mid;
+            else return mid;
+        }
         return l;
     }
 }
@@ -6020,6 +6233,27 @@ class Solution {
 }
 ```
 
+Updated 2019.9.13
+- time: 100%
+- space: 24.68%
+- reviewFlag
+- attention: The return value of dfs is the number of nodes along the deepest path from `root` to the leaf node.
+```java
+class Solution {
+    int ret = 0;
+    public int diameterOfBinaryTree(TreeNode root) {
+        dfs(root);
+        return ret;
+    }
+    public int dfs(TreeNode root) {
+        if (root == null) return 0;
+        int left = dfs(root.left), right = dfs(root.right);
+        ret = Math.max(ret, left + right);
+        return Math.max(left, right) + 1;
+    }
+}
+```
+
 ### 437. Path Sum III
 - [Link](https://leetcode.com/problems/path-sum-iii/)
 - Tags: Tree
@@ -6269,6 +6503,399 @@ class Solution {
 ```
 
 ## First 300 Questions
+
+### 270. Closest Binary Search Tree Value
+- [Link](https://leetcode.com/problems/closest-binary-search-tree-value/)
+- Tags: Binary Search, Tree
+- Stars: 2
+
+#### 2019.9.11 iterative
+- time: 100%
+- space: 100%
+```java
+class Solution {
+    public int closestValue(TreeNode root, double target) {
+        int ret = root.val;
+        double diff = Math.abs(root.val - target);
+        while(root != null) {
+            if (diff == 0) break;
+            double curr = Math.abs(root.val-target);
+            if (curr < diff) {
+                ret = root.val;
+                diff = curr;
+            } 
+            if (target < root.val) root = root.left;
+            else root = root.right;
+        }
+        return ret;
+    }
+}
+```
+
+#### 2019.9.11 recursive
+- time: 100%
+- space: 97.44%
+```java
+class Solution {
+    public int closestValue(TreeNode root, double target) {
+        if (root.val == target) return root.val;
+        if (target > root.val) {
+            if (root.right == null) return root.val;
+            int right = closestValue(root.right, target);
+            if (Math.abs(right-target) < Math.abs(root.val-target)) return right;
+            return root.val;
+        }
+        if (root.left == null) return root.val;
+        int left = closestValue(root.left, target);
+        if (Math.abs(left-target) < Math.abs(root.val-target)) return left;
+        return root.val;
+    }
+}
+```
+
+### 256. Paint House
+- [Link](https://leetcode.com/problems/paint-house/)
+- Tags: Dynamic Programming
+- Stars: 2
+
+#### 2019.9.11 DP state machine
+- time: 100%
+- space: 5.88%
+```java
+class Solution {
+    public int minCost(int[][] costs) {
+        if (costs.length == 0) return 0;
+        int[] dp = costs[0];
+        for(int i=1; i<costs.length; i++) {
+            int red = Math.min(dp[1], dp[2]) + costs[i][0],
+                blue = Math.min(dp[0], dp[2]) + costs[i][1],
+                green = Math.min(dp[0], dp[1]) + costs[i][2];
+            dp[0] = red;
+            dp[1] = blue;
+            dp[2] = green;
+        }
+        return Math.min(dp[0], Math.min(dp[1], dp[2]));
+    }
+}
+```
+
+### 82. Remove Duplicates from Sorted List II
+- [Link](https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii/)
+- Tags: Linked List
+- Stars: 3
+- reviewFlag
+
+#### 2019.9.6
+- time: 75.73%
+- space: 100%
+- attention: Always remember to set `tail.next = null` when you use a `tail` point in LinkedList problems
+```java
+class Solution {
+    public ListNode deleteDuplicates(ListNode head) {
+        ListNode dmy = new ListNode(0), tail = dmy, cur = head;
+        while(cur != null) {
+            if (cur.next == null) {
+                tail.next = cur;
+                break;
+            } else if (cur.val == cur.next.val) {
+                int target = cur.val;
+                while(cur != null && cur.val == target) {
+                    cur = cur.next;
+                }
+            } else {
+                tail.next = cur;
+                tail = tail.next;
+                cur = cur.next;
+                tail.next = null;
+            }
+        }
+        return dmy.next;
+    }
+}
+```
+
+### 148. Sort List
+- [Link](https://leetcode.com/problems/sort-list/)
+- Tags: Linked List, Sort
+- Stars: 3
+- exploreFlag
+
+#### 2019.9.6 Merge Sort
+- time: 97.54%
+- space: 78.95%
+```java
+class Solution {
+    public ListNode sortList(ListNode head) {
+        if (head == null || head.next == null) return head;
+        ListNode slow = head, fast = head.next;
+        while(fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        ListNode right = sortList(slow.next);
+        slow.next = null;
+        head = sortList(head);
+        return merge(head, right);
+    }
+    public ListNode merge(ListNode l1, ListNode l2) {
+        ListNode head = null;
+        if (l1 != null) {
+            if (l2 != null) {
+                if (l1.val < l2.val) {
+                    head = l1;
+                    l1 = l1.next;
+                } else {
+                    head = l2;
+                    l2 = l2.next;
+                }
+            } else {
+                head = l1;
+                l1 = l1.next;
+            }
+        } else return l2;
+        ListNode tail = head;
+        while(l1 != null || l2 != null) {
+            if (l1 == null) {
+                tail.next = l2;
+                break;
+            } else if (l2 == null) {
+                tail.next = l1;
+                break;
+            } else if (l1.val < l2.val) {
+                tail.next = l1;
+                l1 = l1.next;
+                tail = tail.next;
+                tail.next = null;
+            } else {
+                tail.next = l2;
+                l2 = l2.next;
+                tail = tail.next;
+                tail.next = null;
+            }
+        }
+        return head;
+    }
+}
+```
+
+### 277. Find the Celebrity
+- [Link](https://leetcode.com/problems/find-the-celebrity/)
+- Tags: Array
+- Stars: 3
+
+#### 2019.9.6 
+- time: 62.09%
+- space: 58.33%
+```java
+public class Solution extends Relation {
+    public int findCelebrity(int n) {
+        boolean[] candidates = new boolean[n];
+        Arrays.fill(candidates, true);
+        for(int i=0; i<n-1; i++) {
+            if (!candidates[i]) continue;
+            for(int j=i+1; j<n; j++) {
+                if (!candidates[j]) continue;
+                if (knows(i, j)) {
+                    candidates[i] = false;
+                    break;
+                } else {
+                    candidates[j] = false;
+                }
+            }
+        }
+        for(int i=0; i<n; i++) {
+            if (candidates[i]) {
+                for(int j=0; j<n; j++) {
+                    if (i == j) continue;
+                    if (knows(i, j) || !knows(j, i)) return -1;
+                }
+                return i;
+            }
+        }
+        return -1;
+    }
+}
+```
+
+Optimized 2019.9.6
+- time: 62.09%
+- space: 58.33%
+- interviewLevel
+```java
+public class Solution extends Relation {
+    public int findCelebrity(int n) {
+        int cel = 0;
+        for(int i=0; i<n; i++) {
+            if (cel == i) continue;
+            if (knows(cel, i)) {
+                cel = i;
+            }
+        }
+        for(int i=0; i<n; i++) {
+            if (cel == i) continue;
+            if (knows(cel, i) || !knows(i, cel)) return -1;
+        }
+        return cel;
+    }
+}
+```
+
+### 267. Palindrome Permutation II
+- [Link](https://leetcode.com/problems/palindrome-permutation-ii/)
+- Tags: Backtracking
+- Stars: 3
+
+#### 2019.9.6 
+- time: 100%
+- space: 100%
+- attention: "Basically, we use only 128 total character which is used mostly during program. But total number of Character in ASCII table is 256 (0 to 255). 0 to 31(total 32 character ) is called as ASCII control characters (character code 0-31). 32 to 127 character is called as ASCII printable characters (character code 32-127). 128 to 255 is called as The extended ASCII codes (character code 128-255)."
+
+```java
+class Solution {
+    List<String> ret = new ArrayList<>();
+    int len;
+    public List<String> generatePalindromes(String s) {
+        len = s.length();
+        int[] stat = new int[128];
+        for(char c: s.toCharArray()) stat[c]++;
+        int count = 0, mid = len/2;
+        char[] chrs = new char[len];
+        for(int i=0; i<128; i++) {
+            if (stat[i] % 2 == 1) {
+                count++;
+                chrs[mid] = (char)i;
+            }
+        }
+        if (count >= 2) return ret;
+        backtrack(stat, chrs, 0, len-1);
+        return ret;
+    }
+    public void backtrack(int[] stat, char[] curr, int l, int r) {
+        if (l >= r) {
+            ret.add(new String(curr));
+            return;
+        }
+        for(int i=0; i<128; i++) {
+            if (stat[i] > 1) {
+                stat[i] -= 2;
+                curr[l] = curr[r] = (char)i;
+                backtrack(stat, curr, l+1, r-1);
+                stat[i] += 2;
+            }
+        }
+    }
+}
+```
+
+### 227. Basic Calculator II
+- [Link](https://leetcode.com/problems/basic-calculator-ii/)
+- Tags: String
+- Stars: 3
+
+#### 2019.9.6 
+- time: 17.46%
+- space: 97.01%
+```java
+class Solution {
+    public int calculate(String s) {
+        Stack<Integer> nums = new Stack<>();
+        Stack<Character> ops = new Stack<>();
+        int p = 0, len = s.length();
+        while(p<len) {
+            char c = s.charAt(p);
+            if (c == ' ') p++;
+            else if (Character.isDigit(c)) {
+                int i=p, num = 0;
+                do {
+                    num *= 10;
+                    num += s.charAt(i) - '0';
+                    i++;
+                } while(i<len && Character.isDigit(s.charAt(i)));
+                nums.add(num);
+                p = i;
+            } else {
+                if (c == '*' || c == '/') {
+                    while(!ops.isEmpty() && (ops.peek() == '*' || ops.peek() == '/')) {
+                        compute(nums, ops);
+                    }
+                    ops.add(c);
+                } else {
+                    while(!ops.isEmpty()) {
+                        compute(nums, ops);
+                    }
+                    ops.add(c);
+                }
+                p++;
+            }
+        }
+        while(!ops.isEmpty()) compute(nums, ops);
+        return nums.pop();
+    }
+    public void compute(Stack<Integer> nums, Stack<Character> ops) {
+        int b = nums.pop(), a = nums.pop(), ret;
+        char c = ops.pop();
+        if (c == '+') ret = a+b;
+        else if (c == '-') ret = a-b;
+        else if (c == '*') ret = a*b;
+        else ret = a/b;
+        nums.add(ret);
+    }
+}
+```
+
+### 285. Inorder Successor in BST
+- [Link](https://leetcode.com/problems/inorder-successor-in-bst/)
+- Tags: Tree
+- Stars: 4
+- reviewFlag
+
+#### 2019.9.6 DFS
+- time: 100%
+- space: 5.26%
+- attention: Function `inorderSuccessor` is defined to return the node with the smallest value that is greater than `p.val` in the subtree `root`. If no such node exists (all the nodes in the subtree are smaller or equal than `p.val`), return `null`.
+```java
+class Solution {
+    public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
+        if (root == null) return null;
+        if (root.val <= p.val) return inorderSuccessor(root.right, p);
+        TreeNode left = inorderSuccessor(root.left, p);
+        return left == null ? root : left;
+    }
+}
+```
+
+### 186. Reverse Words in a String II
+- [Link](https://leetcode.com/problems/reverse-words-in-a-string-ii/)
+- Tags: String
+- Stars: 3
+
+#### 2019.9.6
+- time: 100%
+- space: 46%
+```java
+class Solution {
+    public void reverseWords(char[] s) {
+        reverse(s, 0, s.length-1);
+        int start = 0;
+        while(start < s.length) {
+            int end = start;
+            while(end < s.length && s[end] != ' ') end++;
+            reverse(s, start, end-1);
+            start = end+1;
+        }
+    }
+    public void reverse(char[] s, int l, int r) {
+        while(l<r) {
+            swap(s, l++, r--);
+        }
+    }
+    public void swap(char[] s, int i, int j) {
+        char c = s[i];
+        s[i] = s[j];
+        s[j] = c;
+    }
+}
+```
 
 ### 261. Graph Valid Tree
 - [Link](https://leetcode.com/problems/graph-valid-tree/)
@@ -6956,6 +7583,29 @@ class Solution {
                     node = node.left;
                 }
             }
+        }
+        return ret;
+    }
+}
+```
+
+Updated 2019.9.13
+- time: 57.61%
+- space: 100%
+```java
+class Solution {
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> ret = new ArrayList<>();
+        Stack<TreeNode> st = new Stack<>();
+        TreeNode p = root;
+        while(p != null || !st.isEmpty()) {
+            while(p != null) {
+                st.add(p);
+                p = p.left;
+            }
+            p = st.pop();
+            ret.add(p.val);
+            p = p.right;
         }
         return ret;
     }
@@ -7799,6 +8449,23 @@ class Solution {
 }
 ```
 
+Another version
+- time: 100%
+- space: 100%
+```java
+class Solution {
+    public int findMin(int[] nums) {
+        int l = 0, r = nums.length - 1;
+        while(l < r) {
+            int mid = l + r >> 1;
+            if (nums[mid] <= nums[nums.length-1]) r = mid;
+            else l = mid + 1;
+        }
+        return nums[l];
+    }
+}
+```
+
 ### 16. 3Sum Closest
 - [Link](https://leetcode.com/problems/3sum-closest/)
 - Tags: Array, Two Pointers
@@ -8531,7 +9198,8 @@ class Solution {
 ### 187. Repeated DNA Sequences
 - [Link](https://leetcode.com/problems/repeated-dna-sequences/)
 - Tags: Hash Table, Bit Manipulation
-- Stars: 2
+- Stars: 3
+- reviewFlag
 
 #### bit encoding
 - time: 29.88%
@@ -8623,12 +9291,12 @@ class Solution {
 ### 275. H-Index II
 - [Link](https://leetcode.com/problems/h-index-ii/)
 - Tags: Binary Search
-- Stars: 2
+- Stars: 3
+- reviewFlag
 
 #### binary search with out of array check!
 - time: 100%
 - space: 100%
-- interviewLevel
 - attention: `h` might be 0, which means `mid` might be `citations.length`. That's why we need this line: `if (citations[citations.length - 1] == 0) return 0;`
 
 ```java
@@ -8645,6 +9313,25 @@ class Solution {
             else return h;
         }
         return citations.length - l;
+    }
+}
+```
+
+Updated 2019.9.13
+- time: 100%
+- space: 100%
+- interviewLevel
+```java
+class Solution {
+    public int hIndex(int[] nums) {
+        if (nums.length == 0 || nums[nums.length-1] == 0) return 0;
+        int l = 1, r = nums.length;
+        while(l<r) {
+            int mid = l + r + 1 >> 1;
+            if (nums[nums.length-mid] >= mid) l = mid;
+            else r = mid - 1;
+        }
+        return l;
     }
 }
 ```
@@ -8912,7 +9599,6 @@ class Solution {
 #### 2019.7.30
 - time: 100%
 - space: 100%
-- interviewLevel
 
 ```java
 class Solution {
@@ -8946,6 +9632,33 @@ class Solution {
             head = next;
         }
         return handle.next;
+    }
+}
+```
+
+#### 2019.9.13 Method by 大雪菜
+- time: 100%
+- space: 100%
+- interviewLevel
+- reviewFlag
+```java
+class Solution {
+    public ListNode reverseBetween(ListNode head, int m, int n) {
+        ListNode dmy = new ListNode(0);
+        dmy.next = head;
+        ListNode a = dmy, c = dmy;
+        for(int i=0; i<m-1; i++) a = a.next;
+        for(int i=0; i<n; i++) c = c.next;
+        ListNode b = a.next, d = c.next;
+        for(ListNode p=b, q=b.next; q!=d;) {
+            ListNode next = q.next;
+            q.next = p;
+            p = q;
+            q = next;
+        }
+        a.next = c;
+        b.next = d;
+        return dmy.next;
     }
 }
 ```
@@ -10579,15 +11292,20 @@ public class Solution {
 - Tags: Linked List
 - Stars: 1
 
-#### O(n) time
+#### 2019.9.6
+- time: 100%
+- space: 100%
 ```java
 class Solution {
     public ListNode deleteDuplicates(ListNode head) {
-        if(head == null) return null;
+        if (head == null) return null;
         ListNode curr = head;
-        while(curr.next != null){
-            if(curr.next.val == curr.val) curr.next = curr.next.next;
-            else curr = curr.next;
+        while(curr.next != null) {
+            if (curr.next.val == curr.val) {
+                curr.next = curr.next.next;
+            } else {
+                curr = curr.next;
+            }
         }
         return head;
     }
@@ -10624,16 +11342,17 @@ class Solution {
 - Tags: Array, Binary Search
 - Stars: 1
 
-#### lower bound binary search insertion
+#### 2019.9.12
+- time: 100%
+- space: 100%
 ```java
 class Solution {
     public int searchInsert(int[] nums, int target) {
         int l = 0, r = nums.length;
-        while(l<r){
-            int mid = l + ((r-l)>>1);
-            if(nums[mid] == target) return mid;
-            else if(nums[mid] < target) l = mid+1;
-            else r = mid;
+        while(l<r) {
+            int mid = l + r >> 1;
+            if (nums[mid] >= target) r = mid;
+            else l = mid + 1;
         }
         return l;
     }
@@ -11611,6 +12330,80 @@ class Solution {
 ```
 
 ## 300 - 399 Questions
+
+### 331. Verify Preorder Serialization of a Binary Tree
+- [Link](https://leetcode.com/problems/verify-preorder-serialization-of-a-binary-tree/)
+- Tags: Stack
+- Stars: 3
+- reviewFlag
+
+#### 2019.9.12 Stack Simulation
+- time: 31.89%
+- space: 100%
+```java
+class Solution {
+    public boolean isValidSerialization(String preorder) {
+        String[] list = preorder.split(",");
+        Stack<Boolean> st = new Stack<>();
+        int i=0;
+        while(i<list.length) {
+            if (list[i].equals("#")) {
+                while(!st.isEmpty() && st.peek()) st.pop();
+                if (st.isEmpty()) return i == list.length-1;
+                st.pop();
+                st.add(true);
+            } else {
+                st.add(false);
+            }
+            i++;
+        }
+        return st.size() == 0;
+    }
+}
+```
+
+#### 2019.9.12 recursive
+- time: 94.47%
+- space: 100%
+- attention: The `parse` function parses the string list and return the pointer where the parsing ends up. If encountered an invalid situation, the funciton will return `-1`.
+- attention: Pay attention that the final condition should be `parse(list, 0) == list.length`, not `parse(list, 0) == -1`.
+- interviewLevel
+```java
+class Solution {
+    public boolean isValidSerialization(String preorder) {
+        String[] list = preorder.split(",");
+        return parse(list, 0) == list.length;
+    }
+    public int parse(String[] list, int start) {
+        if (start >= list.length) return -1;
+        if (list[start].equals("#")) return start+1;
+        int left = parse(list, start+1);
+        if (left == -1) return -1;
+        int right = parse(list, left);
+        if (right == -1) return -1;
+        return right;
+    }
+}
+```
+
+#### 2019.9.12 SMART IDEA!!
+- time: 94.43%
+- space: 12.50%
+- reference: https://leetcode.com/problems/verify-preorder-serialization-of-a-binary-tree/discuss/78551/7-lines-Easy-Java-Solution
+```java
+class Solution {
+    public boolean isValidSerialization(String preorder) {
+        int out = 1, in = 0;
+        String[] nodes = preorder.split(",");
+        for(String node: nodes) {
+            in++;
+            if (out-in < 0) return false;
+            if (!node.equals("#")) out += 2;
+        }
+        return out - in == 0;
+    }
+}
+```
 
 ### 376. Wiggle Subsequence
 - [Link](https://leetcode.com/problems/wiggle-subsequence/)
@@ -13015,6 +13808,329 @@ class Solution {
     }
 }
 ```
+
+## Facebook
+
+### 973. K Closest Points to Origin
+- [Link](https://leetcode.com/problems/k-closest-points-to-origin/)
+- Tags: Divide and Conquer, Heap, Sort
+- Stars: 3
+- reviewFlag
+
+#### 2019.9.6 quick select
+- time: 99.75%
+- space: 77.64%
+- interviewLevel
+```java
+class Solution {
+    public int[][] kClosest(int[][] points, int K) {
+        int l = 0, r = points.length-1, j=0;
+        while(true) {
+            j = partition(points, l, r);
+            if (j+1 > K) {
+                r = j - 1;
+            } else if (j+1 < K) {
+                l = j + 1;
+            } else break;
+        }
+        return Arrays.copyOfRange(points, 0, j+1);
+    }
+    public int partition(int[][] points, int l, int r) {
+        int i=l, j=r+1, pivot = distance(points[l]);
+        while(true) {
+            while(distance(points[++i]) < pivot && i<r);
+            while(pivot < distance(points[--j]) && l<j);
+            if (i>=j) break;
+            swap(points, i, j);
+        }
+        swap(points, l, j);
+        return j;
+    }
+    public int distance(int[] p) {
+        return p[0]*p[0] + p[1]*p[1];
+    }
+    public void swap(int[][] points, int i, int j) {
+        if (i == j) return;
+        int[] temp = points[i];
+        points[i] = points[j];
+        points[j] = temp;
+    }
+}
+```
+
+### 953. Verifying an Alien Dictionary
+- [Link](https://leetcode.com/problems/verifying-an-alien-dictionary/)
+- Tags: Hash Table
+- Stars: 2
+
+#### 2019.9.6
+- time: 100%
+- space: 100%
+- attention: When a function has two similar inputs like `compare(T xxx, T xxx)`, don't use varname like `a` and `b`. Instead, use `xx1` and `xx2` to avoid some mistakes. 
+```java
+class Solution {
+        int[] map;
+    public boolean isAlienSorted(String[] words, String order) {
+        map = new int[26];
+        for(int i=0; i<26; i++) {
+            map[order.charAt(i)-'a'] = i;
+        }
+        for(int i=0; i<words.length-1; i++) {
+            if (compare(words[i], words[i+1]) > 0) return false;
+        }
+        return true;
+    }
+    public int compare(String a, String b) {
+        int i=0, j=0, len1 = a.length(), len2 = b.length();
+        while(i<len1 && j<len2) {
+            int idx1 = map[a.charAt(i++)-'a'], idx2 = map[b.charAt(j++)-'a'];
+            if (idx1 < idx2) return -1;
+            else if (idx1 > idx2) return 1;
+        }
+        if (i < len1) return 1;
+        else if (j < len2) return -1;
+        return 0;
+    }
+}
+```
+
+# bili 视频
+
+## 小雪菜 -- Tree
+
+### 652. Find Duplicate Subtrees
+- [Link](https://leetcode.com/problems/find-duplicate-subtrees/)
+- Tags: Tree
+- Stars: 4
+
+#### 2019.9.12 encoding a tree recursively
+- time: 77.06%
+- space: 86.36%
+```java
+class Solution {
+    List<TreeNode> ret = new ArrayList<>();
+    public List<TreeNode> findDuplicateSubtrees(TreeNode root) {
+        if(root == null) return ret;
+        Map<String, Integer> map = new HashMap<>();
+        addToMap(root, map);
+        return ret;
+    }
+    public String addToMap(TreeNode root, Map<String, Integer> map) {
+        if (root == null) return "#";
+        String left = addToMap(root.left, map), right = addToMap(root.right, map);
+        StringBuilder sb = new StringBuilder();
+        sb.append(root.val);
+        sb.append(',');
+        sb.append(left);
+        sb.append(',');
+        sb.append(right);
+        String code = sb.toString();
+        int count = map.getOrDefault(code, 0) + 1;
+        map.put(code, count);
+        if (count == 2) ret.add(root);
+        return code;
+    }
+}
+```
+
+### 428. Serialize and Deserialize N-ary Tree
+- [Link](https://leetcode.com/problems/serialize-and-deserialize-n-ary-tree/)
+- Tags: Tree
+- Stars: 3
+
+#### 2019.9.12 record the number of children
+- time: 87.19%
+- space: 27.78%
+```java
+class Codec {
+    public String serialize(Node root) {
+        if (root == null) return "";
+        StringBuilder sb = new StringBuilder();
+        sb.append(root.val);
+        sb.append(',');
+        sb.append(root.children.size());
+        for(Node child: root.children) {
+            sb.append(',');
+            sb.append(serialize(child));
+        }
+        return sb.toString();
+    }
+    public Node deserialize(String s) {
+        if (s.length() == 0) return null;
+        String[] nodes = s.split(",");
+        int[] index = new int[1];
+        return deserialize(nodes, index);
+    }
+    public Node deserialize(String[] nodes, int[] index) {
+        if (index[0] >= nodes.length) return null;
+        int node = Integer.parseInt(nodes[index[0]++]);
+        int N = Integer.parseInt(nodes[index[0]++]);
+        Node root = new Node(node, new ArrayList<>());
+        for(int i=0; i<N; i++) {
+            root.children.add(deserialize(nodes, index));
+        }
+        return root;
+    }
+}
+```
+
+### 449. Serialize and Deserialize BST
+- [Link](https://leetcode.com/problems/serialize-and-deserialize-bst/)
+- Tags: Tree
+- Stars: 3
+
+#### 2019.9.12 Preorder in enough
+- time: 92.23%
+- space: 89.58%
+```java
+public class Codec {
+    public String serialize(TreeNode root) {
+        if (root == null) return "";
+        String left = serialize(root.left), right = serialize(root.right);
+        StringBuilder sb = new StringBuilder();
+        sb.append(root.val);
+        if (left.length() > 0) {
+            sb.append(',');
+            sb.append(left);
+        }
+        if (right.length() > 0) {
+            sb.append(',');
+            sb.append(right);
+        }
+        return sb.toString();
+    }
+    public TreeNode deserialize(String s) {
+        if (s.length() == 0) return null;
+        int[] index = new int[1];
+        return deserialize(s.split(","), index, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    }
+    public TreeNode deserialize(String[] nodes, int[] index, int min, int max) {
+        if (index[0] == nodes.length) return null;
+        int val = Integer.parseInt(nodes[index[0]]);
+        if (val < min || val > max) return null;
+        TreeNode root = new TreeNode(val);
+        index[0]++;
+        root.left = deserialize(nodes, index, min, val-1);
+        root.right = deserialize(nodes, index, val+1, max);
+        return root;
+    }
+}
+```
+
+### 297. Serialize and Deserialize Binary Tree
+- [Link](https://leetcode.com/problems/serialize-and-deserialize-binary-tree/)
+- Tags: Tree, Design
+- Stars: 3
+
+#### 2019.9.12 Preorder + "#"
+- time: 88.78%
+- space: 30.47%
+```java
+public class Codec {
+    public String serialize(TreeNode root) {
+        if (root == null) return "#";
+        StringBuilder sb = new StringBuilder();
+        sb.append(root.val);
+        sb.append(',');
+        sb.append(serialize(root.left));
+        sb.append(',');
+        sb.append(serialize(root.right));
+        return sb.toString();
+    }
+    public TreeNode deserialize(String s) {
+        if (s.length() == 0) return null;
+        String[] nodes = s.split(",");
+        int[] index = new int[1];
+        return deserialize(nodes, index);
+    }
+    public TreeNode deserialize(String[] nodes, int[] index) {
+        if (index[0] == nodes.length) return null;
+        String node = nodes[index[0]++];
+        if (node.equals("#")) return null;
+        TreeNode root = new TreeNode(Integer.parseInt(node));
+        root.left = deserialize(nodes, index);
+        root.right = deserialize(nodes, index);
+        return root;
+    }
+}
+```
+
+## 小雪菜 -- 基本数据结构专题
+
+### 706. Design HashMap
+- [Link](https://leetcode.com/problems/design-hashmap/)
+- Tags: Hash Table, Design
+- Stars: 3
+
+#### 2019.9.11
+- time: 86.57%
+- space: 97.30%
+- attention: It's better to use a prime for the value of `len`.
+```java
+class MyHashMap {
+    private int len = 20011;
+    private Node[] map;
+    public MyHashMap() {
+        map = new Node[len];
+    }
+    public void put(int key, int value) {
+        int h = Integer.hashCode(key)%len;
+        if (map[h] == null) {
+            map[h] = new Node(key, value);
+        } else {
+            Node node = map[h];
+            while(node != null) {
+                if (node.k == key) {
+                    node.v = value;
+                    return;
+                } else {
+                    node = node.next;
+                }
+            }
+            node = map[h];
+            map[h] = new Node(key, value);
+            map[h].next = node;
+        }
+    }    
+    public int get(int key) {
+        int h = Integer.hashCode(key)%len;
+        if (map[h] == null) return -1;
+        Node node = map[h];
+        while(node != null) {
+            if (node.k == key) return node.v;
+            node = node.next;
+        }
+        return -1;
+    }
+    public void remove(int key) {
+        int h = Integer.hashCode(key)%len;
+        if (map[h] == null) return;
+        if (map[h].k == key) {
+            map[h] = map[h].next;
+            return;
+        }
+        Node prev = map[h], node = prev.next;
+        while(node != null) {
+            if (node.k == key) {
+                prev.next = node.next;
+                return;
+            }
+            prev = node;
+            node = node.next;
+        }
+    }
+    private class Node {
+        int k, v;
+        Node next;
+        public Node(int key, int value) {
+            k = key;
+            v = value;
+            next = null;
+        }
+    }
+}
+```
+
 
 # Topics
 
