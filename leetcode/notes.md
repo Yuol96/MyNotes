@@ -911,7 +911,9 @@ class Solution {
 - Stars: 2
 
 #### Use two stacks
-Store series of minValue into another stack to obtain O(1) time!
+- time: 32.66%
+- space: 29.71%
+- notes: [大雪菜] Similar to minimum of prefixes
 ```java
 class MinStack {
     Stack<Integer> minst, numst;
@@ -6526,6 +6528,83 @@ class Solution {
 
 ## First 300 Questions
 
+### 271. Encode and Decode Strings
+- [Link](https://leetcode.com/problems/encode-and-decode-strings/)
+- Tags: String
+- Stars: 3
+
+#### 2019.9.15 
+- time: 17.82%%
+- space: 88.24%
+```java
+public class Codec {
+    // Encodes a list of strings to a single string.
+    public String encode(List<String> strs) {
+        StringBuilder sb = new StringBuilder();
+        for(String s: strs) {
+            for(char c: s.toCharArray()) {
+                if (c == '%') sb.append('%');
+                sb.append(c);
+            }
+            sb.append("% ");
+        }
+        return sb.toString();
+    }
+    // Decodes a single string to a list of strings.
+    public List<String> decode(String s) {
+        List<String> ret = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        for(int i=0; i<s.length(); i++) {
+            char c = s.charAt(i);
+            if (c == '%') {
+                if (s.charAt(i+1) == '%') {
+                    sb.append('%');
+                    i++;
+                }
+                else {
+                    i++;
+                    ret.add(sb.toString());
+                    sb = new StringBuilder();
+                }
+            } else {
+                sb.append(c);
+            }
+        }
+        return ret;
+    }
+}
+```
+
+### 170. Two Sum III - Data structure design
+- [Link](https://leetcode.com/problems/two-sum-iii-data-structure-design/)
+- Tags: Hash Table, Design
+- Stars: 4
+- reviewFlag
+
+#### 2019.9.15 Hash Table
+- time: 48.69%
+- space: 5%
+```java
+class TwoSum {
+    Map<Integer, Integer> map = new HashMap<>();
+    public TwoSum() {}
+    public void add(int number) {
+        map.put(number, map.getOrDefault(number, 0) + 1);
+    }
+    public boolean find(int value) {
+        for(int a: map.keySet()) {
+            int b = value-a;
+            if (a == b) {
+                if (map.get(a) >= 2) return true;
+            } else {
+                if (map.containsKey(b)) return true;
+            }
+        }
+        return false;
+    }
+}
+```
+
 ### 270. Closest Binary Search Tree Value
 - [Link](https://leetcode.com/problems/closest-binary-search-tree-value/)
 - Tags: Binary Search, Tree
@@ -12068,7 +12147,7 @@ class Solution {
 ### 216. Combination Sum III
 - [Link](https://leetcode.com/problems/combination-sum-iii/)
 - Tags: Array, Backtracking
-- Stars: 1
+- Stars: 2
 
 #### backtrack
 Notice that the numbers from 1 to 9 cannot be selected twice
@@ -14224,6 +14303,242 @@ class Solution {
 
 # bili 视频
 
+## 大雪菜 -- 滑动窗口、双指针、单调队列、单调栈
+
+### 32. Longest Valid Parentheses
+- [Link](https://leetcode.com/problems/longest-valid-parentheses/)
+- Tags: String, Dynamic Programming
+- Stars: 5
+- cheatFlag
+
+#### 2019.9.16 [大雪菜]
+- time: 100%
+- space: 100%
+- notes: Valid parenthesis string  <===>  all prefix sum >= 0 && the whole string sum == 0
+- notes: In a valid parenthesis string, each '(' or ')' corresponds to a specific ')' or '('. So when we find `count < 0` at some point, we can directly set `i = j` instead of `i++`;
+```java
+class Solution {
+    public int longestValidParentheses(String s) {
+        // from left to right
+        int i = 0, len = s.length(), ret = 0;
+        while(i<len) {
+            int j=i, count = 0;
+            while(j<len && count >= 0) {
+                count += s.charAt(j++) == '(' ? 1 : -1;
+                if (count == 0) {
+                    ret = Math.max(ret, j-i);
+                }
+            }
+            i = j;
+        }
+        // from right to left
+        i = len-1;
+        while(i>=0) {
+            int j=i, count = 0;
+            while(j>=0 && count >= 0) {
+                count += s.charAt(j--) == ')' ? 1 : -1;
+                if (count == 0) {
+                    ret = Math.max(ret, i-j);
+                }
+            }
+            i = j;
+        }
+        return ret;
+    }
+}
+```
+
+Another version [大雪菜]
+- time: 71.68%
+- space: 72.55%
+- notes: use `chrs[i] ^= 1` to switch between `(` and `)`
+```java
+class Solution {
+    int ret = 0;
+    public int longestValidParentheses(String s) {
+        work(s);
+        char[] chrs = s.toCharArray();
+        for(int i=0, j=s.length()-1; i<j; i++, j--) {
+            char c = chrs[i];
+            chrs[i] = chrs[j];
+            chrs[j] = c;
+        }
+        for(int i=0; i<chrs.length; i++) chrs[i] ^= 1;
+        s = new String(chrs);
+        work(s);
+        return ret;
+    }
+    public void work(String s) {
+        int i=0, len = s.length();
+        while(i<len) {
+            int j=i, count = 0;
+            while(j<len && count >= 0) {
+                count += s.charAt(j++) == '(' ? 1 : -1;
+                if (count == 0) ret = Math.max(ret, j-i);
+            }
+            i = j;
+        }
+    }
+}
+```
+
+### 76. Minimum Window Substring
+- [Link](https://leetcode.com/problems/minimum-window-substring/)
+- Tags: Hash Table, Two Pointers, String, Sliding Window
+- Stars: 4
+- reviewFlag
+
+#### 2019.9.15 sliding window
+- time: 88.59%
+- space: 97.87%
+```java
+class Solution {
+    public String minWindow(String s, String t) {
+        if (s.length() < t.length()) return "";
+        int[] template = new int[128], stat = new int[128];
+        int k=0;
+        for(char c: t.toCharArray()) {
+            template[c]++;
+            if (template[c] == 1) k++;
+        }
+        
+        String ret = "";
+        int i=0, j=0, len=s.length(), count=0;
+        while(j<len) {
+            while(j<len && count < k) {
+                char c = s.charAt(j++);
+                stat[c]++;
+                if (stat[c] == template[c]) count++;
+            }
+            if (count < k) break;
+            while(i<j && (stat[s.charAt(i)] > template[s.charAt(i)])) {
+                stat[s.charAt(i++)]--;
+            }
+            if (ret.length() == 0 || ret.length() > j-i) ret = s.substring(i, j);
+            stat[s.charAt(i++)]--;
+            count--;
+        }
+        return ret;
+    }
+}
+```
+
+## 大雪菜 -- DFS + Backtracking
+
+### 473. Matchsticks to Square
+- [Link](https://leetcode.com/problems/matchsticks-to-square/)
+- Tags: DFS
+- Stars: 5
+
+#### 2019.9.15 
+- time: 71.62%
+- space: 66.67%
+```java
+class Solution {
+    int d = 0;
+    public boolean makesquare(int[] nums) {
+        if (nums.length < 4) return false;
+        for(int num: nums) d += num;
+        if (d%4 != 0) return false;
+        d /= 4;
+        
+        Arrays.sort(nums);
+        reverse(nums);
+        boolean[] used = new boolean[nums.length];
+        return dfs(nums, used, d, 4, 0);
+    }
+    public boolean dfs(int[] nums, boolean[] used, int target, int n, int start) {
+        if (target == 0) {
+            target = d;
+            start = 0;
+            n--;
+            if (n == 0) return true;
+        }
+        for(int i=start; i<used.length-n+1; i++) {
+            if (!used[i]) {
+                int j = i;
+                while(j<used.length && nums[j] == nums[i]) j++;
+                if (dfs(nums, used, target, n, j)) return true;
+                for(int k=i; k<j; k++) {
+                    if (target < nums[k]*(k-i+1)) break;
+                    used[k] = true;
+                    if (dfs(nums, used, target-nums[k]*(k-i+1), n, j)) return true;
+                }
+                for(int k=i; k<j; k++) used[k] = false;
+                i = j-1;
+            }
+        }
+        return false;
+    }
+    public void reverse(int[] nums) {
+        int i=0, j=nums.length-1;
+        while(i<j) {
+            int temp = nums[i];
+            nums[i] = nums[j];
+            nums[j] = temp;
+            i++;
+            j--;
+        }
+    }
+}
+```
+
+#### 2019.9.15 [大雪菜]
+- time: 100%
+- space: 66.67%
+- cheatFlag
+```java
+class Solution {
+    int d = 0;
+    boolean[] used;
+    
+    public boolean makesquare(int[] nums) {
+        for(int num: nums) d += num;
+        if (d == 0 || d % 4 != 0) return false;
+        d /= 4;
+        
+        Arrays.sort(nums);
+        reverse(nums);
+        
+        used = new boolean[nums.length];
+        return dfs(nums, d, 4);
+    }
+    
+    public boolean dfs(int[] nums, int target, int n) {
+        if (target == 0) {
+            n--;
+            target = d;
+        }
+        if (n == 0) return true;
+        
+        for(int i=0; i<nums.length; i++) {
+            if (target < nums[i]) continue;
+            if (!used[i]) {
+                used[i] = true;
+                if (dfs(nums, target-nums[i], n)) return true;
+                used[i] = false;
+                
+                if (target == d) return false;
+                if (target == nums[i]) return false;
+                while(i+1<nums.length && nums[i+1] == nums[i]) i++;
+            }
+        }
+        return false;
+    }
+    
+    public void reverse(int[] nums) {
+        int i=0, j=nums.length-1;
+        while(i<j) {
+            int temp = nums[i];
+            nums[i] = nums[j];
+            nums[j] = temp;
+            i++;
+            j--;
+        }
+    }
+}
+```
+
 ## 大雪菜 -- Tree
 
 ### 652. Find Duplicate Subtrees
@@ -15527,7 +15842,7 @@ class Solution {
 #### 2019.8.11 backtrack O(n^2 * 4^k)
 - time: 99.90%
 - space: 97.96%
-- thoughts: Generally, a matrix-related problem is a DP or DFS problem
+- notes: Generally, a matrix-related problem is a DP or DFS problem
 
 ```java
 class Solution {
