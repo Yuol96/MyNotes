@@ -5441,7 +5441,7 @@ class Solution {
 ### 42. Trapping Rain Water
 - [Link](https://leetcode.com/problems/trapping-rain-water/)
 - Tags: Array, Two Pointers, Stack
-- Stars: 3
+- Stars: 5
 
 #### My Solution, O(n) time, O(1) space
 1. Iterate `height` from left to right: each iteration, check if height[i] is the highest height (higher than `currHeight`). If true, count the volume of water between `currIdx`(i.e. the index of the currHeight position) and `i`. 
@@ -5525,6 +5525,30 @@ class Solution {
             }
         }
         return result;
+    }
+}
+```
+
+#### 2019.9.18 [大雪菜] 单调栈
+- time: 13.61%
+- space: 100%
+- cheatFlag
+```java
+class Solution {
+    public int trap(int[] heights) {
+        int n = heights.length, ret = 0;
+        Stack<Integer> stk = new Stack<>();
+        for(int i=0; i<n; i++) {
+            int last = 0;
+            while(!stk.isEmpty() && heights[stk.peek()] < heights[i]) {
+                int j = stk.pop();
+                ret += (heights[j] - last) * (i - j - 1);
+                last = heights[j];
+            }
+            if (!stk.isEmpty()) ret += (heights[i] - last) * (i - stk.peek() - 1);
+            stk.add(i);
+        }
+        return ret;
     }
 }
 ```
@@ -5756,7 +5780,7 @@ class Solution {
 ### 239. Sliding Window Maximum
 - [Link](https://leetcode.com/problems/sliding-window-maximum/)
 - Tags: Heap, Sliding Window
-- Stars: 4
+- Stars: 5
 
 #### My solution, MaxQueue
 MaxQueue is implemented by two MaxStack.
@@ -5842,6 +5866,31 @@ class Solution {
             }
         }
         return result;
+    }
+}
+```
+
+#### 2019.9.18 [大雪菜] 单调队列
+- time: 74.24%
+- space: 93.75%
+- cheatFlag
+- attention: you cannot `q.removeFirst()` for each `i >= k-1`, because it might be removed in the while loop.
+- language: `Deque<Integer> q = new LinkedList<>()`
+```java
+class Solution {
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        if (nums.length == 0) return new int[0];
+        int[] ret = new int[nums.length - k + 1];
+        Deque<Integer> q = new LinkedList<>();
+        for(int i=0; i<nums.length; i++) {
+            while(!q.isEmpty() && nums[q.peekLast()] <= nums[i]) q.removeLast();
+            q.addLast(i);
+            if (i >= k-1) {
+                ret[i-k+1] = nums[q.peekFirst()];
+                if (q.peekFirst() <= i-k+1) q.removeFirst();
+            }
+        }
+        return ret;
     }
 }
 ```
@@ -14304,6 +14353,76 @@ class Solution {
 # bili 视频
 
 ## 大雪菜 -- 滑动窗口、双指针、单调队列、单调栈
+
+### 918. Maximum Sum Circular Subarray
+- [Link](https://leetcode.com/problems/maximum-sum-circular-subarray/)
+- Tags: Array
+- Stars: 5
+- cheatFlag
+
+#### 2019.9.18 [大雪菜] 单调队列
+- time: 10.98%
+- space: 10%
+- notes: For circle arrays, we can copy the array and append it to the original array, so that we get a `2*n` length array. In this new `2*n` array, we can find all the subarray in the circle.
+```java
+class Solution {
+    public int maxSubarraySumCircular(int[] A) {
+        int n = A.length;
+        if (n == 0) return 0;
+        int[] S = new int[2*n];
+        S[0] = A[0];
+        for(int i=1; i<2*n; i++) {
+            S[i] = S[i-1] + (i>=n ? A[i-n] : A[i]);
+        }
+        
+        Deque<Integer> q = new LinkedList<>();
+        int ret = S[0];
+        for(int i=0; i<2*n; i++) {
+            if (!q.isEmpty() && i>=n) {
+                ret = Math.max(ret, S[i] - S[q.peekFirst()]);
+            }
+            while(!q.isEmpty() && S[q.peekLast()] >= S[i]) q.removeLast();
+            q.addLast(i);
+            if (q.peekFirst() <= i-n) q.removeFirst();
+        }
+        return ret;
+    }
+}
+```
+
+### 84. Largest Rectangle in Histogram
+- [Link](https://leetcode.com/problems/largest-rectangle-in-histogram/)
+- Tags: Array, Stack
+- Stars: 5
+- cheatFlag
+
+#### 2019.9.18 [大雪菜] 单调栈
+- time: 24.88%
+- space: 90.91%
+```java
+class Solution {
+    public int largestRectangleArea(int[] heights) {
+        int n = heights.length, ret = 0;
+        int[] left = new int[n], right = new int[n];
+        Stack<Integer> stk = new Stack<>();
+        for(int i=0; i<n; i++) {
+            while(!stk.isEmpty() && heights[stk.peek()] >= heights[i]) stk.pop();
+            left[i] = stk.isEmpty() ? -1 : stk.peek();
+            stk.add(i);
+        }
+        stk = new Stack<>();
+        for(int i=n-1; i>=0; i--) {
+            while(!stk.isEmpty() && heights[stk.peek()] >= heights[i]) stk.pop();
+            right[i] = stk.isEmpty() ? n : stk.peek();
+            stk.add(i);
+        }
+        for(int i=0; i<n; i++) {
+            ret = Math.max(ret, heights[i] * (right[i] - left[i] - 1));
+        }
+        return ret;
+    }
+}
+```
 
 ### 32. Longest Valid Parentheses
 - [Link](https://leetcode.com/problems/longest-valid-parentheses/)
