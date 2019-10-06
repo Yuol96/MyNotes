@@ -2703,7 +2703,8 @@ class Solution {
 ### 322. Coin Change
 - [Link](https://leetcode.com/problems/coin-change/)
 - Tags: Dynamic Programming
-- Stars: 2
+- Stars: 3
+- reviewFlag
 
 #### DP
 <span id="322-DP" />
@@ -16137,7 +16138,6 @@ class Solution {
 #### 2019.9.1 
 - time 65 ms
 - space 119.9 MB
-
 `count` is the number of characters that occurs odd times
 ```java
 class Solution {
@@ -16313,6 +16313,226 @@ class Solution {
             }
         }
         return null;
+    }
+}
+```
+
+# Mock Inteviews
+
+### 986. Interval List Intersections
+- [Link](https://leetcode.com/problems/interval-list-intersections/)
+- Tags: Two Pointers
+- Stars: 3
+
+#### 2019.9.29
+- time: 83.96%
+- space: 78.38%
+```java
+class Solution {
+    public int[][] intervalIntersection(int[][] A, int[][] B) {
+        int i=0, j=0;
+        List<int[]> ret = new ArrayList<>();
+        while(i<A.length && j<B.length) {
+            int[] a = A[i], b = B[j];
+            if (a[1]-a[0] + b[1]-b[0] >= Math.max(a[1], b[1]) - Math.min(a[0], b[0])) {
+                ret.add(new int[]{Math.max(a[0], b[0]), Math.min(a[1], b[1])});
+            }
+            if (a[1] < b[1]) i++;
+            else j++;
+        }
+        int[][] arr = new int[ret.size()][2];
+        for(int k=0; k<arr.length; k++) {
+            arr[k] = ret.get(k);
+        }
+        return arr;
+    }
+}
+```
+
+### 1048. Longest String Chain
+- [Link](https://leetcode.com/problems/longest-string-chain/)
+- Tags: Hash Table
+- Stars: 3
+
+#### 2019.9.29
+- time: 73.51%
+- space: 100%
+```java
+class Solution {
+    int[] records;
+    
+    public int longestStrChain(String[] words) {
+        if (words.length == 0) return 0;
+        int n = words.length;
+        List<Integer>[] graph = new List[n];
+        for(int i=0; i<n; i++) graph[i] = new ArrayList<>();
+        Arrays.sort(words, new Comparator<String>() {
+           @Override
+            public int compare(String a, String b) {
+                return a.length() - b.length();
+            }
+        });
+        
+        int[] indegrees = new int[n];
+        for(int i=0; i<n-1; i++) {
+            for(int j=i+1; j<n; j++) {
+                if (words[i].length() < words[j].length() - 1) break;
+                if (isPredecessor(words[i], words[j])) {
+                    graph[i].add(j);
+                    indegrees[j]++;
+                }
+            }
+        }
+        
+        int ret = 0;
+        records = new int[n];
+        Arrays.fill(records, -1);
+        for(int i=0; i<n; i++) {
+            if (indegrees[i] == 0) {
+                ret = Math.max(ret, findLongestPath(graph, i));
+            }
+        }
+        return ret;
+    }
+    
+    public int findLongestPath(List<Integer>[] graph, int root) {
+        if (records[root] != -1) return records[root];
+        int ret = 0;
+        for(int child: graph[root]) {
+            ret = Math.max(ret, findLongestPath(graph, child));
+        }
+        records[root] = ret + 1;
+        return records[root];
+    }
+    
+    public boolean isPredecessor(String a, String b) {
+        if (a.length() != b.length() - 1) return false;
+        int count = 0;
+        for(int i=0; i<a.length(); i++) {
+            if (a.charAt(i) != b.charAt(i+count)) {
+                count++;
+                if (count > 1) return false;
+                i--;
+            }
+        }
+        return true;
+    }
+}
+```
+
+### 1057. Campus Bikes
+- [Link](https://leetcode.com/problems/campus-bikes/)
+- Tags: Greedy, Sort
+- Stars: 3
+
+#### 2019.9.25
+- time: 25.27%
+- space: 100%
+```java
+class Solution {
+    public int[] assignBikes(int[][] workers, int[][] bikes) {
+        int N = workers.length, M = bikes.length;
+        boolean[] bikeUsed = new boolean[M], workerAssigned = new boolean[N];
+        PriorityQueue<Pair> heap = new PriorityQueue<>();
+        for(int i=0; i<N; i++) for(int j=0; j<M; j++) {
+            int[] w = workers[i], b = bikes[j];
+            int dist = Math.abs(w[0]-b[0]) + Math.abs(w[1]-b[1]);
+            heap.add(new Pair(dist, i, j));
+        }
+        
+        int[] ret = new int[N];
+        int count = N;
+        while(count > 0) {
+            Pair p = heap.poll();
+            while(workerAssigned[p.worker] || bikeUsed[p.bike]) p = heap.poll();
+            ret[p.worker] = p.bike;
+            workerAssigned[p.worker] = true;
+            bikeUsed[p.bike] = true;
+            count--;
+        }
+        return ret;
+    }
+    
+    public class Pair implements Comparable<Pair> {
+        int dist, worker, bike;
+        public Pair(int a, int b, int c) {
+            dist = a;
+            worker = b;
+            bike = c;
+        }
+        @Override
+        public int compareTo(Pair p) {
+            if (this.dist != p.dist) return this.dist - p.dist;
+            if (this.worker != p.worker) return this.worker - p.worker;
+            return this.bike - p.bike;
+        }
+        public String toString() {
+            return "dist=" + dist + " worker=" + worker + " bike=" + bike;
+        }
+    }
+}
+```
+
+Optimized 2019.9.25
+- time: 77.82%
+- space: 100%
+```java
+class Solution {
+    public int[] assignBikes(int[][] workers, int[][] bikes) {
+        int N = workers.length, M = bikes.length;
+        boolean[] used = new boolean[M];
+        List<Pair>[] graph = new List[N];
+        for(int i=0; i<N; i++) graph[i] = new ArrayList<>();
+        for(int i=0; i<N; i++) for(int j=0; j<M; j++) {
+            int[] w = workers[i], b = bikes[j];
+            int dist = Math.abs(w[0]-b[0]) + Math.abs(w[1]-b[1]);
+            graph[i].add(new Pair(dist, i, j, -1));
+        }
+        
+        for(int i=0; i<N; i++) {
+            Collections.sort(graph[i]);
+            List<Pair> list = graph[i];
+            for(int j=0; j<list.size(); j++) list.get(j).idx = j;
+        }
+        
+        PriorityQueue<Pair> heap = new PriorityQueue<>();
+        for(int i=0; i<N; i++) {
+            heap.add(graph[i].get(0));
+        }
+        
+        int[] ret = new int[N];
+        Arrays.fill(ret, -1);
+        int count = N;
+        while(count > 0) {
+            Pair p = heap.poll();
+            if (used[p.bike]) {
+                int idx = p.idx+1;
+                while(used[graph[p.worker].get(idx).bike]) idx++;
+                p = graph[p.worker].get(idx);
+                heap.add(p);
+                continue;
+            }
+            ret[p.worker] = p.bike;
+            used[p.bike] = true;
+            count--;
+        }
+        return ret;
+    }
+    
+    public class Pair implements Comparable<Pair> {
+        int dist, worker, bike, idx;
+        public Pair(int a, int b, int c, int d) {
+            dist = a;
+            worker = b;
+            bike = c;
+            idx = d;
+        }
+        @Override
+        public int compareTo(Pair p) {
+            if (this.dist != p.dist) return this.dist - p.dist;
+            if (this.worker != p.worker) return this.worker - p.worker;
+            return this.bike - p.bike;
+        }
     }
 }
 ```
