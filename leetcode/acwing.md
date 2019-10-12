@@ -452,3 +452,58 @@ public class Main {
     }
 }
 ```
+
+### 838. 堆排序
+- [Link](https://www.acwing.com/problem/content/840/)
+- Tags: 模板题
+- Stars: 3
+
+#### 2019.9.25
+```java
+public class Main {
+    
+    final static int N = 100010;
+    static int[] h = new int[N];
+    static int size = 0;
+    
+    public static void down(int x) {
+        int t = x;
+        if (x*2 <= size && h[x*2] < h[t]) t = x*2;
+        if (x*2+1 <= size && h[x*2+1] < h[t]) t = x*2+1;
+        if (x != t) {
+            int temp = h[x];
+            h[x] = h[t];
+            h[t] = temp;
+            down(t);
+        }
+    }
+    
+    public static void up(int x) {
+        while(x / 2 > 0 && h[x/2] > h[x]) {
+            int temp = h[x/2];
+            h[x/2] = h[x];
+            h[x] = temp;
+            x >>= 1;
+        }
+    }
+    
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt(), m = sc.nextInt();
+        for(int i=0; i<n; i++) {
+            h[++size] = sc.nextInt();
+        }
+        
+        for(int i=n/2; i>0; i--) down(i);
+        
+        StringBuilder sb = new StringBuilder();
+        while(m > 0) {
+            m--;
+            sb.append(h[1]).append(' ');
+            h[1] = h[size--];
+            down(1);
+        }
+        System.out.println(sb.toString());
+    }
+}
+```

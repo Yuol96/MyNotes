@@ -6578,13 +6578,63 @@ class Solution {
 
 ## First 300 Questions
 
+### 164. Maximum Gap
+- [Link](https://leetcode.com/problems/maximum-gap/)
+- Tags: Sort
+- Stars: 5
+
+#### 2019.10.7 抽屉原理
+- time: 78.20%
+- space: 68.97%
+- cheatFlag
+```java
+class Solution {
+    public int maximumGap(int[] nums) {
+        int n = nums.length;
+        if (n < 2) return 0;
+        
+        int MIN = Integer.MAX_VALUE, MAX = Integer.MIN_VALUE;
+        for(int num: nums) {
+            MIN = Math.min(MIN, num);
+            MAX = Math.max(MAX, num);
+        }
+        if (MAX == MIN) return 0;
+        
+        Bucket[] bkts = new Bucket[n];
+        for(int i=0; i<bkts.length; i++) bkts[i] = new Bucket();
+        int size = (int)Math.ceil( (MAX-MIN+0.0)/(n-1) );
+        
+        for(int num: nums) {
+            int idx = (num - MIN) / size;
+            bkts[idx].used = true;
+            bkts[idx].min = Math.min(bkts[idx].min, num);
+            bkts[idx].max = Math.max(bkts[idx].max, num);
+        }
+        
+        int ret = 0, curr = MIN;
+        for(int i=0; i<bkts.length; i++) {
+            if (bkts[i].used) {
+                ret = Math.max(ret, bkts[i].min - curr);
+                curr = bkts[i].max;
+            }
+        }
+        return ret;
+    }
+    
+    public class Bucket {
+        int min = Integer.MAX_VALUE, max=Integer.MIN_VALUE;
+        boolean used = false;
+    }
+}
+```
+
 ### 271. Encode and Decode Strings
 - [Link](https://leetcode.com/problems/encode-and-decode-strings/)
 - Tags: String
 - Stars: 3
 
 #### 2019.9.15 
-- time: 17.82%%
+- time: 17.82%
 - space: 88.24%
 ```java
 public class Codec {
@@ -9293,6 +9343,30 @@ class Solution {
 }
 ```
 
+Updated 2019.10.7
+- time: 97.09%
+- space: 54.55%
+```java
+class Solution {
+    public int nthUglyNumber(int n) {
+        int index2 = 0, index3 = 0, index5 = 0;
+        int[] list = new int[n];
+        list[0] = 1;
+        for(int i=1; i<n; i++) {
+            int ugly2 = list[index2] * 2;
+            int ugly3 = list[index3] * 3;
+            int ugly5 = list[index5] * 5;
+            int ugly = Math.min(ugly2, Math.min(ugly3, ugly5));
+            list[i] = ugly;
+            if (ugly == ugly2) index2++;
+            if (ugly == ugly3) index3++;
+            if (ugly == ugly5) index5++;
+        }
+        return list[n-1];
+    }
+}
+```
+
 ### 201. Bitwise AND of Numbers Range
 - [Link](https://leetcode.com/problems/bitwise-and-of-numbers-range/)
 - Tags: Bit Manipulation
@@ -11144,6 +11218,7 @@ class Solution {
 - [Link](https://leetcode.com/problems/recover-binary-search-tree/)
 - Tags: Tree, DFS
 - Stars: 5
+- exploreFlag
 
 #### 2019.8.19 
 - time: 99.56%
@@ -14351,6 +14426,201 @@ class Solution {
 }
 ```
 
+## Alibaba
+
+### 456. 132 Pattern
+- [Link](https://leetcode.com/problems/132-pattern/)
+- Tags: Stack
+- Stars: 4
+
+#### 2019.10.7 单调栈
+- time: 100%
+- space: 100%
+```java
+class Solution {
+    public boolean find132pattern(int[] nums) {
+        int n = nums.length;
+        int[] stk = new int[n+10];
+        int tt = 0;
+        
+        int thre = Integer.MIN_VALUE;
+        for(int i=n-1; i>=0; i--) {
+            if (nums[i] < thre) return true;
+            while (tt > 0 && stk[tt] < nums[i]) {
+                thre = stk[tt];
+                tt--;
+            }
+            stk[++tt] = nums[i];
+        }
+        return false;
+    }
+}
+```
+
+#### 2019.10.7
+- time: 100%
+- space: 57.14%
+```java
+class Solution {
+    public boolean find132pattern(int[] nums) {
+        int[] arr = new int[3];
+        int idx = 0, max = Integer.MIN_VALUE, min = Integer.MAX_VALUE;
+        arr[0] = Integer.MAX_VALUE;
+        for(int num: nums) {
+            if (num < max && num > min) return true;
+            
+            if (idx == 0) {
+                if (arr[0] < num) {
+                    idx++;
+                    arr[1] = num;
+                } else {
+                    arr[0] = num;
+                }
+            } else if (idx == 1) {
+                if (arr[1] <= num) {
+                    arr[1] = num;
+                } else {
+                    if (arr[0] < num) return true;
+                    min = Math.min(min, arr[0]);
+                    max = Math.max(max, arr[1]);
+                    arr[0] = num;
+                    idx = 0;
+                }
+            }
+        }
+        return false;
+    }
+}
+```
+
+## Roblox
+
+### 829. Consecutive Numbers Sum
+- [Link](https://leetcode.com/problems/consecutive-numbers-sum/)
+- Tags: Math
+- Stars: 4
+
+#### 2019.10.9 
+- time: 90.05%
+- space: 9.09%
+- cheatFlag
+- reference: https://leetcode.com/problems/consecutive-numbers-sum/discuss/209317/topic
+```java
+class Solution {
+    public int consecutiveNumbersSum(int N) {
+        int ret = 0;
+        for(int m=1;; m++) {
+            int temp = 2*N - m * (m-1);
+            if (temp <= 0) break;
+            if (temp % (2*m) == 0) ret++;
+        }
+        return ret;
+    }
+}
+```
+
+### 811. Subdomain Visit Count
+- [Link](https://leetcode.com/problems/subdomain-visit-count/)
+- Tags: Hash Table
+- Stars: 3
+
+#### 2019.10.9 
+- time: 68.30%
+- space: 96.97%
+```java
+class Solution {
+    public List<String> subdomainVisits(String[] cpdomains) {
+        Map<String, Integer> map = new HashMap<>();
+        for(String cp: cpdomains) {
+            String[] split = cp.split(" ");
+            int count = Integer.parseInt(split[0]);
+            String domain = split[1];
+            int len = domain.length();
+            for(int i=len-1; i>=0; i--) {
+                if (domain.charAt(i) == '.') {
+                    String key = domain.substring(i+1, len);
+                    map.put(key, map.getOrDefault(key, 0) + count);
+                }
+            }
+            map.put(domain, map.getOrDefault(domain, 0) + count);
+        }
+        
+        List<String> ret = new ArrayList<>(map.size());
+        for(Map.Entry<String, Integer> e: map.entrySet()) {
+            ret.add(e.getValue() + " " + e.getKey());
+        }
+        return ret;
+    }
+}
+```
+
+#### 2019.10.9 Trie (小题大做)
+- time: 55.76%
+- space: 6.06%
+```java
+class Solution {
+    public List<String> subdomainVisits(String[] cpdomains) {
+        Trie trie = new Trie();
+        
+        for(String cp: cpdomains) {
+            String[] split1 = cp.split(" ");
+            int count = Integer.parseInt(split1[0]);
+            trie.insert(split1[1], count);
+        }
+        
+        return trie.output();
+    }
+    
+    public class Trie {
+        final int N = 500;
+        int[][] son = new int[N][26];
+        int[] cnt = new int[N];
+        int idx = 0;
+        
+        public void insert(String word, int count) {
+            int p = 0, len = word.length();
+            for(int i=len - 1; i>=0; i--) {
+                char c = word.charAt(i);
+                if (c == '.') {
+                    cnt[p] += count;
+                    continue;
+                }
+                int u = c - 'a';
+                if (son[p][u] == 0) son[p][u] = ++idx;
+                p = son[p][u];
+            }
+            cnt[p] += count;
+        }
+        
+        public List<String> output() {
+            StringBuilder sb = new StringBuilder();
+            List<String> ret = new ArrayList<>();
+            dfs(sb, ret, 0);
+            return ret;
+        }
+        public void dfs(StringBuilder sb, List<String> ret, int p) {
+            if (cnt[p] > 0) {
+                ret.add(cnt[p] + " " + sb.reverse().toString());
+                sb.reverse();
+                sb.append('.');
+            }
+            
+            for(int i=0; i<26; i++) {
+                if (son[p][i] != 0) {
+                    sb.append((char)('a' + i));
+                    dfs(sb, ret, son[p][i]);
+                    sb.deleteCharAt(sb.length() - 1);
+                }
+            }
+            
+            if (cnt[p] > 0) {
+                sb.deleteCharAt(sb.length() - 1);
+            }
+        }
+    }
+}
+```
+
 # bili 视频
 
 ## 大雪菜 -- 滑动窗口、双指针、单调队列、单调栈
@@ -16318,6 +16588,158 @@ class Solution {
 ```
 
 # Mock Inteviews
+
+### 962. Maximum Width Ramp
+- [Link](https://leetcode.com/problems/maximum-width-ramp/)
+- Tags: Array
+- Stars: 5
+
+#### 2019.9.29 O(n)
+- time: 90.49%
+- space: 100%
+- cheatFlag
+- reference: https://www.acwing.com/solution/LeetCode/content/672/
+- notes: O(n)很明显需要双指针，在这里应该使用**同向双指针**。那么就要求两个指针有同样的单调性（同时递增或递减），即两个指针从0开始向右移动，`i<=j`。注意到i右侧所有比`A[i]`大的元素都不用考虑，因此要求i向右移动过程中递减；且j左侧所有比`A[j]`大的元素也不用考虑，需要考虑的是j右侧所有元素的最大值，因此用**前缀和**的思想，构造**从右侧开始的最大值数组**。
+```java
+class Solution {
+    public int maxWidthRamp(int[] A) {
+        int n = A.length;
+        if (n == 0) return 0;
+        int[] minl = new int[n], maxr = new int[n];
+        minl[0] = A[0];
+        for(int i=1; i<n; i++) {
+            minl[i] = Math.min(minl[i-1], A[i]);
+        }
+        maxr[n-1] = A[n-1];
+        for(int i=n-2; i>=0; i--) {
+            maxr[i] = Math.max(maxr[i+1], A[i]);
+        }
+        
+        int i=0, j=0, ret = 0;
+        while(true) {
+            while(j<n && maxr[j] >= minl[i]) j++;
+            ret = Math.max(ret, j-i-1);
+            if (j == n) break;
+            while(i<=j && minl[i] > maxr[j]) i++;
+        }
+        return ret;
+    }
+}
+```
+
+#### 2019.9.29 O(nlogn)
+- time: 87.54%
+- space: 100%
+- cheatFlag
+- reference: https://www.acwing.com/solution/LeetCode/content/672/
+- notes: 从左到右遍历，记录每一个刷新最小值记录的`A[i]`的value和index，这些被称为`candidates`
+```java
+class Solution {
+    public int maxWidthRamp(int[] A) {
+        int n = A.length;
+        if (n == 0) return 0;
+        int[] arr = new int[n+10];
+        int[] indices = new int[n+10];
+        int len = 0, ret = 0;
+        for(int i=0; i<n; i++) {
+            int idx = binarySearch(arr, 0, len-1, A[i]); // arr[idx] <= A[i]
+            if (idx < len && arr[idx] <= A[i]) {
+                ret = Math.max(ret, i - indices[idx]);
+            }
+            if (len == 0 || arr[len-1] > A[i]) {
+                arr[len] = A[i];
+                indices[len++] = i;
+            }
+        }
+        return ret;
+    }
+    
+    public int binarySearch(int[] arr, int i, int j, int target) {
+        if (i >= j) return i;
+        if (arr[j] > target) return j+1;
+        int l = i, r = j;
+        while(l<r) {
+            int mid = l + r >> 1;
+            if (arr[mid] <= target) r = mid;
+            else l = mid+1;
+        }
+        return l;
+    }
+}
+```
+
+### 958. Check Completeness of a Binary Tree
+- [Link](https://leetcode.com/problems/check-completeness-of-a-binary-tree/)
+- Tags: Tree
+- Stars: 3
+
+#### 2019.9.29 BFS
+- time: 91.71%
+- space: 100%
+```java
+class Solution {
+    public boolean isCompleteTree(TreeNode root) {
+        if (root == null) return true;
+        Queue<TreeNode> qnode = new LinkedList<>();
+        Queue<Integer> qlabel = new LinkedList<>();
+        
+        qnode.add(root);
+        qlabel.add(1);
+        int idx = 0;
+        while(!qnode.isEmpty()) {
+            idx++;
+            TreeNode node = qnode.poll();
+            int label = qlabel.poll();
+            if (label != idx) return false;
+            if (node.left != null) {
+                qnode.add(node.left);
+                qlabel.add(2*label);
+            }
+            if (node.right != null) {
+                qnode.add(node.right);
+                qlabel.add(2*label+1);
+            }
+        }
+        return true;
+    }
+}
+```
+
+### 333. Largest BST Subtree
+- [Link](https://leetcode.com/problems/largest-bst-subtree/)
+- Tags: Tree
+- Stars: 3
+
+#### 2019.9.29
+- time: 93.85%
+- space: 100%
+```java
+class Solution {
+    TreeNode ret = null;
+	int count = 0;
+    
+    public int largestBSTSubtree(TreeNode root) {
+        dfs(root);
+		return count;
+    }
+    
+    public int[] dfs(TreeNode root) {
+		if (root == null) 
+            return new int[]{0, Integer.MAX_VALUE, Integer.MIN_VALUE};
+        int[] left = dfs(root.left);
+        int[] right = dfs(root.right);
+        // System.out.printf("root=%d left=%s right=%s\n", root.val, Arrays.toString(left), Arrays.toString(right));
+        if (left[0] == -1 || right[0] == -1 || root.val <= left[2] || root.val >= right[1]) 
+            return new int[] {-1, 0, 0};
+        int num = 1+left[0] + right[0];
+        if (count < num) {
+            count = num;
+            ret = root;
+        }
+        return new int[]{num, left[0] == 0 ? root.val : left[1], right[0] == 0 ? root.val : right[2]};
+    }
+}
+```
 
 ### 986. Interval List Intersections
 - [Link](https://leetcode.com/problems/interval-list-intersections/)
